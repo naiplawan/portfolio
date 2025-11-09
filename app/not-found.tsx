@@ -1,128 +1,124 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Home, ArrowLeft, Search } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Home, ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 300,
-        damping: 24
-      }
-    }
-  }
-
-  const floatingVariants = {
-    float: {
-      y: [-10, 10, -10],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut" as const
-      }
-    }
-  }
+  const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-accent/10 flex items-center justify-center px-6">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="text-center max-w-2xl mx-auto"
-      >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full text-center">
         <motion.div
-          variants={floatingVariants}
-          animate="float"
-          className="mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="text-8xl md:text-9xl font-bold text-blue-600 mb-4">
-            404
+          {/* 404 Number */}
+          <div className="relative mb-8">
+            <motion.h1
+              className="text-[150px] sm:text-[200px] md:text-[250px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 leading-none"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              404
+            </motion.h1>
+            <motion.div
+              className="absolute inset-0 blur-3xl opacity-30 bg-gradient-to-r from-blue-600 to-purple-600"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            />
           </div>
-        </motion.div>
 
-        <motion.div variants={itemVariants} className="space-y-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-            Page Not Found
-          </h1>
-          
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            The page you&apos;re looking for doesn&apos;t exist. It might have been moved, 
-            deleted, or you entered the wrong URL.
-          </p>
-        </motion.div>
-
-        <motion.div 
-          variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
-        >
-          <Button 
-            asChild
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+          {/* Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="space-y-4 mb-8"
           >
-            <Link href="/">
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Link>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            size="lg"
-            className="border-border text-muted-foreground px-8 py-3 rounded-full font-medium hover:bg-accent transition-all duration-200"
-            onClick={() => window.history.back()}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Go Back
-          </Button>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="mt-12">
-          <div className="bg-card rounded-2xl p-8 shadow-sm border border-border">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                <Search className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">
-              Looking for something specific?
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              Try visiting these popular pages instead:
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+              Page Not Found
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              Oops! The page you're looking for seems to have wandered off into the digital void.
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
-              <Button variant="ghost" size="sm" asChild className="text-primary hover:bg-primary/10">
-                <Link href="/about">About</Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild className="text-primary hover:bg-primary/10">
-                <Link href="/contact">Contact</Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild className="text-primary hover:bg-primary/10">
-                <Link href="/projects">Projects</Link>
-              </Button>
+          </motion.div>
+
+          {/* Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Button
+              size="lg"
+              onClick={() => router.push('/')}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8"
+            >
+              <Home className="w-5 h-5 mr-2" />
+              Go Home
+            </Button>
+            
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => router.back()}
+              className="px-8"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Go Back
+            </Button>
+          </motion.div>
+
+          {/* Quick Links */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700"
+          >
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              Popular pages you might be looking for:
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {[
+                { label: 'Projects', href: '/projects' },
+                { label: 'About', href: '/about' },
+                { label: 'Contact', href: '/contact' },
+                { label: 'Blog', href: '/blog' },
+              ].map((link) => (
+                <Button
+                  key={link.href}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.push(link.href)}
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                >
+                  {link.label}
+                </Button>
+              ))}
             </div>
-          </div>
+          </motion.div>
+
+          {/* Decorative Elements */}
+          <motion.div
+            className="mt-12 flex justify-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 1 }}
+          >
+            <div className="w-64 h-64 relative opacity-20">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl" />
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
-  )
+  );
 }

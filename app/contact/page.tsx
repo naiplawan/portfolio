@@ -10,6 +10,8 @@ import NavBar from '@/components/portfolio/NavBar';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { contactFormLimiter, formatTimeRemaining } from '@/lib/rate-limit';
+import { trackContactFormSubmit } from '@/lib/analytics';
 
 export default function ContactPage() {
   const form = useRef<HTMLFormElement>(null);
@@ -59,6 +61,16 @@ export default function ContactPage() {
       return;
     }
 
+    // Rate limiting check
+    const rateLimitCheck = contactFormLimiter.check();
+    if (!rateLimitCheck.allowed) {
+      setStatus('error');
+      setErrors({
+        email: `Too many attempts. Please try again in ${formatTimeRemaining(rateLimitCheck.resetIn)}.`,
+      });
+      return;
+    }
+
     if (!validateForm()) {
       return;
     }
@@ -74,6 +86,8 @@ export default function ContactPage() {
         (result) => {
           console.log('Email sent successfully:', result.text);
           setStatus('success');
+          contactFormLimiter.increment(); // Increment rate limit counter
+          trackContactFormSubmit(true); // Track success
           // Clear form after successful submission
           setSenderEmail('');
           setSenderName('');
@@ -83,6 +97,7 @@ export default function ContactPage() {
         (error) => {
           console.error('Email send failed:', error.text);
           setStatus('error');
+          trackContactFormSubmit(false); // Track error
         }
       )
       .finally(() => {

@@ -10,7 +10,7 @@ import Mail from '@/components/ui/icons/Mail';
 import Send from '@/components/ui/icons/Send';
 import { CheckCircle, MapPin } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { trackEvent } from '@/lib/analytics';
+import { event } from '@/lib/analytics';
 
 export default function Contact() {
   const form = useRef<HTMLFormElement>(null);
@@ -47,9 +47,10 @@ export default function Contact() {
     }
 
     try {
-      trackEvent('contact_form_submit', {
-        subject: formData.subject,
-        messageLength: formData.message.length
+      event({
+        action: 'submit',
+        category: 'Contact Form',
+        label: formData.subject,
       });
 
       await emailjs.send(serviceId, templateId, {
@@ -62,11 +63,19 @@ export default function Contact() {
       setIsSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
 
-      trackEvent('contact_form_success', { subject: formData.subject });
+      event({
+        action: 'success',
+        category: 'Contact Form',
+        label: formData.subject,
+      });
     } catch (error) {
       console.error('Email send failed:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      trackEvent('contact_form_error', { error: errorMessage });
+      event({
+        action: 'error',
+        category: 'Contact Form',
+        label: errorMessage,
+      });
       alert('Failed to send message. Please try again later.');
     } finally {
       setIsSubmitting(false);
