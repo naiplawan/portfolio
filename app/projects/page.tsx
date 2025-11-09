@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import NavBar from '@/components/portfolio/NavBar';
+import ProjectFilter from '@/components/portfolio/ProjectFilter';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -291,8 +292,37 @@ const FeaturedProject = React.memo(({ project }: { project: Project }) => {
 FeaturedProject.displayName = 'FeaturedProject';
 
 export default function ProjectsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTechnology, setSelectedTechnology] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+
   const featuredProjects = useMemo(() => getFeaturedProjects(), []);
-  // const regularProjects = useMemo(() => projects.filter(p => !p.featured), []);
+
+  // Get all unique technologies
+  const allTechnologies = useMemo(() => {
+    const techSet = new Set<string>();
+    projects.forEach((project) => {
+      project.technologies.forEach((tech) => techSet.add(tech));
+    });
+    return Array.from(techSet).sort();
+  }, []);
+
+  // Filter projects based on search and filters
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      const matchesSearch =
+        searchQuery === '' ||
+        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesTechnology =
+        selectedTechnology === 'all' || project.technologies.includes(selectedTechnology);
+
+      const matchesStatus = selectedStatus === 'all' || project.status === selectedStatus;
+
+      return matchesSearch && matchesTechnology && matchesStatus;
+    });
+  }, [searchQuery, selectedTechnology, selectedStatus]);
 
   return (
     <>
@@ -310,6 +340,19 @@ export default function ProjectsPage() {
             solutions to enterprise-grade platforms.
           </p>
         </motion.header>
+
+        {/* Filter Component */}
+        <div className="max-w-7xl mx-auto">
+          <ProjectFilter
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedTechnology={selectedTechnology}
+            onTechnologyChange={setSelectedTechnology}
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
+            technologies={allTechnologies}
+          />
+        </div>
 
         {/* Featured Project Section */}
         {featuredProjects.length > 0 && (
@@ -338,14 +381,22 @@ export default function ProjectsPage() {
             transition={{ delay: 0.5 }}
             className="text-2xl font-semibold mb-8 text-center"
           >
-            All Projects
+            All Projects {filteredProjects.length < projects.length && `(${filteredProjects.length})`}
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
-            ))}
-          </div>
+          {filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredProjects.map((project, index) => (
+                <ProjectCard key={project.id} project={project} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-lg text-muted-foreground">
+                No projects found matching your filters. Try adjusting your search criteria.
+              </p>
+            </div>
+          )}
         </section>
       </main>
 

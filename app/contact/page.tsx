@@ -14,12 +14,55 @@ import React from 'react';
 export default function ContactPage() {
   const form = useRef<HTMLFormElement>(null);
   const [senderEmail, setSenderEmail] = useState('');
+  const [senderName, setSenderName] = useState('');
   const [message, setMessage] = useState('');
+  const [honeypot, setHoneypot] = useState(''); // Spam prevention
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errors, setErrors] = useState<{ email?: string; message?: string; name?: string }>({});
+
+  const validateForm = () => {
+    const newErrors: { email?: string; message?: string; name?: string } = {};
+
+    // Name validation
+    if (!senderName.trim()) {
+      newErrors.name = 'Please enter your name';
+    } else if (senderName.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!senderEmail.trim()) {
+      newErrors.email = 'Please enter your email';
+    } else if (!emailRegex.test(senderEmail)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Message validation
+    if (!message.trim()) {
+      newErrors.message = 'Please enter a message';
+    } else if (message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Honeypot check - if filled, it's likely a bot
+    if (honeypot) {
+      console.log('Spam detected');
+      return;
+    }
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     setStatus('idle');
 
@@ -33,7 +76,9 @@ export default function ContactPage() {
           setStatus('success');
           // Clear form after successful submission
           setSenderEmail('');
+          setSenderName('');
           setMessage('');
+          setErrors({});
         },
         (error) => {
           console.error('Email send failed:', error.text);
@@ -95,31 +140,70 @@ export default function ContactPage() {
                 </motion.div>
               )}
               <form ref={form} onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field (hidden from users) */}
+                <input
+                  type="text"
+                  name="bot-field"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  style={{ display: 'none' }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+
+                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+                  <Input
+                    name="senderName"
+                    type="text"
+                    value={senderName}
+                    onChange={(e) => setSenderName(e.target.value)}
+                    maxLength={100}
+                    placeholder="Your name"
+                    className={`h-12 ${errors.name ? 'border-red-500' : ''}`}
+                    disabled={isLoading}
+                    aria-label="Your name"
+                    aria-invalid={!!errors.name}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
+                </motion.div>
+
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
                   <Input
                     name="senderEmail"
                     type="email"
                     value={senderEmail}
                     onChange={(e) => setSenderEmail(e.target.value)}
-                    required
                     maxLength={500}
                     placeholder="Your email"
-                    className="h-12"
+                    className={`h-12 ${errors.email ? 'border-red-500' : ''}`}
                     disabled={isLoading}
+                    aria-label="Your email address"
+                    aria-invalid={!!errors.email}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </motion.div>
 
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
                   <Textarea
                     name="message"
                     placeholder="Your message"
-                    required
                     maxLength={5000}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="min-h-[150px] resize-none"
+                    className={`min-h-[150px] resize-none ${errors.message ? 'border-red-500' : ''}`}
                     disabled={isLoading}
+                    aria-label="Your message"
+                    aria-invalid={!!errors.message}
                   />
+                  {errors.message && (
+                    <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">{message.length}/5000 characters</p>
                 </motion.div>
 
                 <motion.div className="flex justify-center" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -127,6 +211,7 @@ export default function ContactPage() {
                     type="submit"
                     disabled={isLoading}
                     className="w-full sm:w-1/2 h-12 text-lg rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 disabled:opacity-50"
+                    aria-label="Send message"
                   >
                     {isLoading ? 'Sending...' : 'Send Message'}
                   </Button>

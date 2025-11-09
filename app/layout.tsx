@@ -147,11 +147,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Analytics />
             <PerformanceMonitor />
             <ScrollProgress />
-            <PageTransition>
-              <main id="main-content" tabIndex={-1} className="focus:outline-none">
+            <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen">
+              <PageTransition>
                 {children}
-              </main>
-            </PageTransition>
+              </PageTransition>
+            </main>
             <FloatingActions />
           </AuthProvider>
         </ThemeProvider>

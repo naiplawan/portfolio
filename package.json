@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@heroui/react": "^2.8.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.13",
@@ -28,7 +27,6 @@
     "@uiw/react-markdown-preview": "^5.1.4",
     "@uiw/react-md-editor": "^4.0.8",
     "animate-icons": "^1.0.1",
-    "antd": "^5.10.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "file-saver": "^2.0.5",
@@ -57,7 +55,6 @@
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.16",
-    "daisyui": "^5.0.46",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.4.2",
     "eslint-plugin-react": "^7.32.2",

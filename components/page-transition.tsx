@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 10,
+    y: 20,
   },
   in: {
     opacity: 1,
@@ -15,13 +15,13 @@ const pageVariants = {
   },
   out: {
     opacity: 0,
-    y: -10,
+    y: -20,
   },
 }
 
 const pageTransition = {
   type: 'tween' as const,
-  duration: 0.3,
+  duration: 0.4,
   ease: [0.4, 0, 0.2, 1] as const,
 }
 
@@ -41,7 +41,6 @@ export default function PageTransition({ children }: PageTransitionProps) {
         exit="out"
         variants={pageVariants}
         transition={pageTransition}
-        className="min-h-screen w-full"
       >
         {children}
       </motion.div>
