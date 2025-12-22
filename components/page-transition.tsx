@@ -1,27 +1,26 @@
 'use client'
 
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 20,
+    x: 0,
   },
   in: {
     opacity: 1,
-    y: 0,
+    x: 0,
   },
   out: {
     opacity: 0,
-    y: -20,
+    x: 0,
   },
 }
 
 const pageTransition = {
   type: 'tween' as const,
-  duration: 0.4,
+  duration: 0.2,
   ease: [0.4, 0, 0.2, 1] as const,
 }
 

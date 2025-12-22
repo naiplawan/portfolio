@@ -6,10 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-import NavBar from '@/components/portfolio/NavBar';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import React from 'react';
 import { contactFormLimiter, formatTimeRemaining } from '@/lib/rate-limit';
 import { trackContactFormSubmit } from '@/lib/analytics';
 
@@ -106,9 +104,8 @@ export default function ContactPage() {
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white py-16 px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white pt-14 px-6 lg:px-8">
+      <div className="py-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -236,6 +233,6 @@ export default function ContactPage() {
           </Card>
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }

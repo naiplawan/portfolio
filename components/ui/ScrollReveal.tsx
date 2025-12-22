@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import { ReactNode, Children } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface ScrollRevealProps {
@@ -92,7 +92,7 @@ export function StaggerContainer({
 }: StaggerContainerProps) {
   return (
     <div className={className}>
-      {React.Children.map(children, (child, index) => (
+      {Children.map(children, (child, index) => (
         <ScrollReveal animation="slideUp" delay={index * staggerDelay}>
           {child}
         </ScrollReveal>

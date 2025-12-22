@@ -1,5 +1,4 @@
 import './globals.css'
-import React from 'react'
 import PageTransition from '@/components/page-transition'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Analytics } from '@/components/analytics'
@@ -8,6 +7,10 @@ import { SkipLink } from '@/components/accessibility/skip-link'
 import { AuthProvider } from '@/components/auth/AuthContext'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import FloatingActions from '@/components/ui/FloatingActions'
+import { RoutePrefetch } from '@/components/performance/route-prefetch'
+import ClientErrorBoundary from '@/components/ErrorBoundary.client'
+import NavBar from '@/components/portfolio/NavBar'
+import Footer from '@/components/portfolio/Footer'
 
 export const metadata = {
   metadataBase: new URL('https://rachaphol-portfolio.vercel.app'),
@@ -146,12 +149,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <AuthProvider>
             <Analytics />
             <PerformanceMonitor />
+            <RoutePrefetch />
             <ScrollProgress />
-            <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen">
-              <PageTransition>
-                {children}
-              </PageTransition>
+            <NavBar />
+            <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
+              <ClientErrorBoundary>
+                <PageTransition>
+                  {children}
+                </PageTransition>
+              </ClientErrorBoundary>
             </main>
+            <Footer />
             <FloatingActions />
           </AuthProvider>
         </ThemeProvider>

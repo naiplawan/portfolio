@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState, Suspense, memo } from 'react';
 import { motion } from 'framer-motion';
-import NavBar from '@/components/portfolio/NavBar';
 import ProjectFilter from '@/components/portfolio/ProjectFilter';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +13,9 @@ import { Project, ProjectCardProps } from '@/lib/types';
 import ExternalLink from '@/components/ui/icons/ExternalLink';
 import Github from '@/components/ui/icons/Github';
 import { Star, TrendingUp, Users, Zap, Clock } from 'lucide-react';
+import { ProjectCardSkeleton } from '@/components/ui/loading-states';
 
-const StatusBadge = React.memo(({ status }: { status: Project['status'] }) => {
+const StatusBadge = memo(({ status }: { status: Project['status'] }) => {
   const statusConfig = {
     live: { label: 'Live', color: 'bg-green-500', icon: Zap },
     development: { label: 'In Development', color: 'bg-yellow-500', icon: Clock },
@@ -35,7 +35,7 @@ const StatusBadge = React.memo(({ status }: { status: Project['status'] }) => {
 
 StatusBadge.displayName = 'StatusBadge';
 
-const MetricsCard = React.memo(({ metrics }: { metrics: Project['metrics'] }) => {
+const MetricsCard = memo(({ metrics }: { metrics: Project['metrics'] }) => {
   if (!metrics) return null;
 
   return (
@@ -70,7 +70,7 @@ const MetricsCard = React.memo(({ metrics }: { metrics: Project['metrics'] }) =>
 
 MetricsCard.displayName = 'MetricsCard';
 
-const ProjectCard = React.memo(({ project, index }: ProjectCardProps) => {
+const ProjectCard = memo(({ project, index }: ProjectCardProps) => {
   const handleGithubClick = useCallback(() => {
     window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
   }, [project.githubUrl]);
@@ -191,7 +191,7 @@ const ProjectCard = React.memo(({ project, index }: ProjectCardProps) => {
 
 ProjectCard.displayName = 'ProjectCard';
 
-const FeaturedProject = React.memo(({ project }: { project: Project }) => {
+const FeaturedProject = memo(({ project }: { project: Project }) => {
   const handleGithubClick = useCallback(() => {
     window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
   }, [project.githubUrl]);
@@ -295,6 +295,9 @@ export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTechnology, setSelectedTechnology] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedYear, setSelectedYear] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const featuredProjects = useMemo(() => getFeaturedProjects(), []);
 
@@ -305,6 +308,24 @@ export default function ProjectsPage() {
       project.technologies.forEach((tech) => techSet.add(tech));
     });
     return Array.from(techSet).sort();
+  }, []);
+
+  // Get all unique years
+  const allYears = useMemo(() => {
+    const yearSet = new Set<number>();
+    projects.forEach((project) => {
+      yearSet.add(project.completedYear);
+    });
+    return Array.from(yearSet).sort((a, b) => b - a);
+  }, []);
+
+  // Get all unique tags
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    projects.forEach((project) => {
+      project.highlights?.forEach(tag => tagSet.add(tag));
+    });
+    return Array.from(tagSet).sort();
   }, []);
 
   // Filter projects based on search and filters
@@ -320,14 +341,23 @@ export default function ProjectsPage() {
 
       const matchesStatus = selectedStatus === 'all' || project.status === selectedStatus;
 
-      return matchesSearch && matchesTechnology && matchesStatus;
+      const matchesYear =
+        selectedYear === 'all' || project.completedYear === parseInt(selectedYear);
+
+      const matchesCategory =
+        selectedCategory === 'all' || project.category === selectedCategory;
+
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some(tag => project.highlights?.includes(tag));
+
+      return matchesSearch && matchesTechnology && matchesStatus && matchesYear && matchesCategory && matchesTags;
     });
-  }, [searchQuery, selectedTechnology, selectedStatus]);
+  }, [searchQuery, selectedTechnology, selectedStatus, selectedYear, selectedCategory, selectedTags]);
 
   return (
     <>
-      <NavBar />
-      <main className="pt-24 pb-16 px-6 lg:px-8">
+      <main className="pt-8 pb-16 px-6 lg:px-8">
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -350,7 +380,15 @@ export default function ProjectsPage() {
             onTechnologyChange={setSelectedTechnology}
             selectedStatus={selectedStatus}
             onStatusChange={setSelectedStatus}
+            selectedYear={selectedYear}
+            onYearChange={setSelectedYear}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            selectedTags={selectedTags}
+            onTagsChange={setSelectedTags}
             technologies={allTechnologies}
+            years={allYears}
+            allTags={allTags}
           />
         </div>
 
@@ -384,19 +422,27 @@ export default function ProjectsPage() {
             All Projects {filteredProjects.length < projects.length && `(${filteredProjects.length})`}
           </motion.h2>
 
-          {filteredProjects.length > 0 ? (
+          <Suspense fallback={
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredProjects.map((project, index) => (
-                <ProjectCard key={project.id} project={project} index={index} />
+              {[...Array(4)].map((_, i) => (
+                <ProjectCardSkeleton key={i} />
               ))}
             </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-lg text-muted-foreground">
-                No projects found matching your filters. Try adjusting your search criteria.
-              </p>
-            </div>
-          )}
+          }>
+            {filteredProjects.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredProjects.map((project, index) => (
+                  <ProjectCard key={project.id} project={project} index={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-lg text-muted-foreground">
+                  No projects found matching your filters. Try adjusting your search criteria.
+                </p>
+              </div>
+            )}
+          </Suspense>
         </section>
       </main>
 
