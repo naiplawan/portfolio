@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
 import Menu from '@/components/ui/icons/Menu';
-import { X } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 function NavBar() {
   const router = useRouter();
@@ -16,7 +16,7 @@ function NavBar() {
 
   const navItems = [
     { label: 'About', href: '/about' },
-    { label: 'Projects', href: '/projects' },
+    { label: 'Services', href: '/services' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },
   ];
@@ -87,6 +87,22 @@ function NavBar() {
                 </Button>
               </motion.div>
             ))}
+            <motion.a
+              href="/Rachaphol_Resume.pdf"
+              download="Rachaphol_Plookaom_Resume.pdf"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: navItems.length * 0.1 }}
+            >
+              <Button
+                variant="default"
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-primary hover:bg-primary/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                role="menuitem"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Resume
+              </Button>
+            </motion.a>
             <DarkModeToggle />
           </div>
 
@@ -140,6 +156,27 @@ function NavBar() {
                         </Button>
                       </motion.div>
                     ))}
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: navItems.length * 0.1 }}
+                      className="pt-4 mt-4 border-t border-border"
+                    >
+                      <a
+                        href="/Rachaphol_Resume.pdf"
+                        download="Rachaphol_Plookaom_Resume.pdf"
+                        className="block"
+                      >
+                        <Button
+                          variant="default"
+                          className="w-full justify-start px-3 py-4 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-200"
+                          role="menuitem"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Resume
+                        </Button>
+                      </a>
+                    </motion.div>
                   </nav>
                 </div>
               </SheetContent>

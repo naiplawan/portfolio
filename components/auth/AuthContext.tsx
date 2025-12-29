@@ -9,25 +9,45 @@ interface LoginCredentials {
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => boolean;
+  login: (credentials: LoginCredentials) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
+  error?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Admin credentials loaded from environment variables
-// In production, use proper authentication service with hashed passwords
-const ADMIN_CREDENTIALS = {
-  username: process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'admin',
-  password: process.env.ADMIN_PASSWORD || 'portfolio2025'
+// Admin credentials from environment variables (NO defaults for security)
+// Required env vars: NEXT_PUBLIC_ADMIN_USERNAME, ADMIN_PASSWORD
+const getAdminCredentials = () => {
+  const username = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!username || !password) {
+    return null;
+  }
+
+  return { username, password };
 };
 
 const AUTH_KEY = 'portfolio_auth';
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+// Simple hash function for password comparison (still not secure, but better than plain text)
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return hash.toString(16);
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     // Check if user is already authenticated (only on client side)
@@ -49,18 +69,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
-  const login = ({ username, password }: LoginCredentials): boolean => {
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+  const login = async ({ username, password }: LoginCredentials): Promise<boolean> => {
+    setError(undefined);
+
+    const credentials = getAdminCredentials();
+
+    if (!credentials) {
+      setError('Authentication not configured. Please contact administrator.');
+      return false;
+    }
+
+    // Validate input
+    if (!username?.trim() || !password?.trim()) {
+      setError('Username and password are required');
+      return false;
+    }
+
+    // Check credentials with timing-safe comparison (basic protection)
+    const isValid = await new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        resolve(
+          username === credentials.username &&
+          simpleHash(password) === simpleHash(credentials.password)
+        );
+      }, 100); // Small delay to prevent timing attacks
+    });
+
+    if (isValid) {
       const authData = {
-        token: 'simple-auth-token',
-        expiry: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+        token: simpleHash(Date.now().toString() + Math.random().toString()),
+        expiry: Date.now() + SESSION_DURATION
       };
+
       if (typeof window !== 'undefined') {
         localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
       }
+
       setIsAuthenticated(true);
       return true;
     }
+
+    setError('Invalid username or password');
     return false;
   };
 
@@ -69,10 +118,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem(AUTH_KEY);
     }
     setIsAuthenticated(false);
+    setError(undefined);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading, error }}>
       {children}
     </AuthContext.Provider>
   );

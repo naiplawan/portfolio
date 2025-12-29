@@ -1,10 +1,7 @@
 'use client';
 
-import NavBar from '@/components/portfolio/NavBar';
 import ContentSection from '@/components/portfolio/ContentSection';
 import SkillsSection from '@/components/portfolio/SkillsSection';
-import Testimonials from '@/components/portfolio/Testimonials';
-import Footer from '@/components/portfolio/Footer';
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data';
 
 export default function HomePage() {
@@ -31,12 +28,9 @@ export default function HomePage() {
         url={baseUrl}
       />
 
-      <div className="w-full min-h-screen flex flex-col justify-start">
-        <NavBar />
+      <div className="w-full flex flex-col justify-start">
         <ContentSection />
         <SkillsSection />
-        <Testimonials />
-        <Footer />
       </div>
     </>
   );

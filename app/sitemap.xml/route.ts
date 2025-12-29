@@ -1,6 +1,6 @@
 export function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app';
-  
+
   const pages = [
     {
       url: baseUrl,
@@ -15,7 +15,7 @@ export function GET() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/projects`,
+      url: `${baseUrl}/blog`,
       lastModified: new Date(),
       changeFreq: 'weekly',
       priority: 0.9,
@@ -25,6 +25,18 @@ export function GET() {
       lastModified: new Date(),
       changeFreq: 'monthly',
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/booking`,
+      lastModified: new Date(),
+      changeFreq: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFreq: 'monthly',
+      priority: 0.8,
     },
   ];
 

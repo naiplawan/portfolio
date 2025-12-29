@@ -8,9 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Calendar, Clock, Search, Tag, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import NavBar from '@/components/portfolio/NavBar';
-import Footer from '@/components/portfolio/Footer';
-import { BlogPost, getPublishedBlogPosts } from '@/lib/blog';
+import {
+  BlogPost,
+  getPublishedPosts,
+  getFeaturedPosts,
+  getAllTags
+} from '@/lib/data/blog-data';
 
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,10 +21,10 @@ export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    setBlogPosts(getPublishedBlogPosts());
+    setBlogPosts(getPublishedPosts());
   }, []);
 
-  const allTags = Array.from(new Set(blogPosts.flatMap((post) => post.tags)));
+  const allTags = getAllTags();
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch =
@@ -31,7 +34,11 @@ export default function BlogPage() {
     return matchesSearch && matchesTag;
   });
 
-  const featuredPosts = filteredPosts.filter((post) => post.featured);
+  const featuredPosts = getFeaturedPosts().filter(post =>
+    (post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (!selectedTag || post.tags.includes(selectedTag))
+  );
   const regularPosts = filteredPosts.filter((post) => !post.featured);
 
   const formatDate = (dateString: string) => {
@@ -67,10 +74,7 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <NavBar />
-
-      <section className="pt-24 pb-16 px-6 lg:px-8">
+    <section className="pt-10 pb-16 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -145,7 +149,7 @@ export default function BlogPage() {
                           <Badge className="bg-blue-100 text-blue-800">Featured</Badge>
                           <div className="flex items-center text-sm text-gray-500">
                             <Clock className="w-4 h-4 mr-1" />
-                            {post.readTime} min read
+                            {post.readingTime} min read
                           </div>
                         </div>
                         <h3 className="text-xl font-bold text-gray-900 mb-2">{post.title}</h3>
@@ -195,7 +199,7 @@ export default function BlogPage() {
                           </div>
                           <div className="flex items-center text-sm text-gray-500">
                             <Clock className="w-4 h-4 mr-1" />
-                            {post.readTime} min
+                            {post.readingTime} min
                           </div>
                         </div>
                         <h3 className="text-lg font-bold text-gray-900 mb-2">{post.title}</h3>
@@ -239,8 +243,5 @@ export default function BlogPage() {
           )}
         </div>
       </section>
-
-      <Footer />
-    </div>
   );
 }

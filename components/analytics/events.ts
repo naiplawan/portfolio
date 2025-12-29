@@ -1,6 +1,12 @@
 // Google Analytics event tracking utilities
 
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+import { GA_TRACKING_ID } from './constants';
+
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
+}
 
 // Track page views
 export const pageview = (url: string) => {

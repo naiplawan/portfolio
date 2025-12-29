@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// Server-side GitHub API service (no React hooks)
+// This file can be imported by both server and client components
 
 interface GitHubUser {
   login: string;
@@ -9,15 +10,28 @@ interface GitHubUser {
   created_at: string;
 }
 
-interface GitHubRepo {
+export interface GitHubRepo {
+  id: number;
   name: string;
+  full_name: string;
+  description: string | null;
   stargazers_count: number;
   forks_count: number;
-  language: string;
+  language: string | null;
   updated_at: string;
+  created_at: string;
+  pushed_at: string | null;
   html_url: string;
+  homepage: string | null;
+  topics: string[];
+  fork: boolean;
+  archived: boolean;
+  has_wiki: boolean;
+  has_pages: boolean;
+  owner: {
+    login: string;
+  };
 }
-
 
 interface LanguageStats {
   [language: string]: number;
@@ -34,7 +48,7 @@ export interface GitHubStatsData {
   error?: string;
 }
 
-const GITHUB_USERNAME = 'naiplawan'; // Replace with your GitHub username
+const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 const GITHUB_API_BASE = 'https://api.github.com';
 
 // Language colors from GitHub
@@ -100,13 +114,16 @@ class GitHubAPIService {
     const perPage = 100;
 
     while (true) {
+      // Request additional fields: topics, homepage, etc.
       const pageRepos = await this.fetchWithRetry(
-        `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=${perPage}&page=${page}&sort=updated`
+        `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?` +
+        `per_page=${perPage}&page=${page}&sort=updated&` +
+        `type=all` // Include both source and forks
       );
-      
+
       if (pageRepos.length === 0) break;
       repos.push(...pageRepos);
-      
+
       if (pageRepos.length < perPage) break;
       page++;
     }
@@ -120,14 +137,14 @@ class GitHubAPIService {
       // We'll estimate based on recent commit activity
       const since = new Date();
       since.setFullYear(since.getFullYear() - 1);
-      
+
       const events = await this.fetchWithRetry(
         `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/events?per_page=100`
       );
 
       // Count push events as a proxy for contributions
-      const pushEvents = events.filter((event: any) => 
-        event.type === 'PushEvent' && 
+      const pushEvents = events.filter((event: any) =>
+        event.type === 'PushEvent' &&
         new Date(event.created_at) >= since
       );
 
@@ -198,45 +215,3 @@ class GitHubAPIService {
 }
 
 export const githubAPI = new GitHubAPIService();
-
-// Hook for using GitHub stats in React components
-export function useGitHubStats() {
-  const [stats, setStats] = useState<GitHubStatsData>({
-    totalRepos: 0,
-    totalStars: 0,
-    totalForks: 0,
-    totalCommits: 0,
-    topLanguages: [],
-    contributions: 0,
-    isLoading: true
-  });
-
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchStats = async () => {
-      try {
-        const data = await githubAPI.getGitHubStats();
-        if (mounted) {
-          setStats(data);
-        }
-      } catch (error) {
-        if (mounted) {
-          setStats(prev => ({
-            ...prev,
-            isLoading: false,
-            error: error instanceof Error ? error.message : 'Failed to fetch GitHub stats'
-          }));
-        }
-      }
-    };
-
-    fetchStats();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  return stats;
-}

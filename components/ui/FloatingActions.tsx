@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import Mail from '@/components/ui/icons/Mail';
 import Download from '@/components/ui/icons/Download';
@@ -16,25 +17,29 @@ export default function FloatingActions() {
       icon: <FaGithub className="w-5 h-5" />,
       label: 'GitHub',
       onClick: () => window.open('https://github.com/naiplawan', '_blank'),
-      className: 'bg-gray-800 hover:bg-gray-900 text-white'
+      variant: 'default' as const,
+      className: 'bg-gray-800 hover:bg-gray-900 text-white border-gray-800'
     },
     {
       icon: <FaLinkedin className="w-5 h-5" />,
-      label: 'LinkedIn', 
+      label: 'LinkedIn',
       onClick: () => window.open('https://www.linkedin.com/in/rachaphol-plookaom', '_blank'),
-      className: 'bg-blue-600 hover:bg-blue-700 text-white'
+      variant: 'default' as const,
+      className: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
     },
     {
       icon: <Mail size={20} />,
       label: 'Email',
       onClick: () => window.location.href = 'mailto:rachaphol.plo@gmail.com',
-      className: 'bg-green-600 hover:bg-green-700 text-white'
+      variant: 'default' as const,
+      className: 'bg-green-600 hover:bg-green-700 text-white border-green-600'
     },
     {
       icon: <Download size={20} />,
       label: 'Resume',
       onClick: () => window.open('/Rachaphol_Resume.pdf', '_blank'),
-      className: 'bg-purple-600 hover:bg-purple-700 text-white'
+      variant: 'default' as const,
+      className: 'bg-purple-600 hover:bg-purple-700 text-white border-purple-600'
     }
   ];
 
@@ -57,13 +62,18 @@ export default function FloatingActions() {
                 transition={{ delay: index * 0.1 }}
                 className="flex items-center gap-3"
               >
-                <span className="bg-white text-gray-800 px-3 py-1 rounded-lg text-sm font-medium shadow-lg border">
+                <Badge
+                  variant="secondary"
+                  className="bg-popover text-popover-foreground px-3 py-1 shadow-lg border"
+                >
                   {action.label}
-                </span>
+                </Badge>
                 <Button
                   size="icon"
+                  variant={action.variant}
                   className={`w-12 h-12 rounded-full shadow-lg ${action.className}`}
                   onClick={action.onClick}
+                  aria-label={action.label}
                 >
                   {action.icon}
                 </Button>
@@ -73,11 +83,12 @@ export default function FloatingActions() {
         )}
       </AnimatePresence>
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+      <Button
+        size="icon"
+        variant="default"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg flex items-center justify-center transition-colors"
+        className="w-14 h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+        aria-label="Toggle floating menu"
       >
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
@@ -85,7 +96,7 @@ export default function FloatingActions() {
         >
           {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
         </motion.div>
-      </motion.button>
+      </Button>
     </div>
   );
 }

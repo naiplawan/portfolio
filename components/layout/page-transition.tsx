@@ -4,18 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 
 const pageVariants = {
-  initial: {
-    opacity: 0,
-    x: 0,
-  },
-  in: {
-    opacity: 1,
-    x: 0,
-  },
-  out: {
-    opacity: 0,
-    x: 0,
-  },
+  initial: { opacity: 0, y: 8 },
+  in: { opacity: 1, y: 0 },
+  out: { opacity: 0, y: -8 },
 }
 
 const pageTransition = {
@@ -25,7 +16,7 @@ const pageTransition = {
 }
 
 interface PageTransitionProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function PageTransition({ children }: PageTransitionProps) {

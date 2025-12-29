@@ -32,17 +32,14 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
       return;
     }
 
-    // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    const success = await login({ username, password });
 
-    const success = login({ username, password });
-    
     if (success) {
       onLogin?.();
     } else {
       setError('Invalid username or password');
     }
-    
+
     setIsLoading(false);
   };
 

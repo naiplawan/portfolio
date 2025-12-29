@@ -23,11 +23,11 @@ export interface Project {
   readonly image: string;
   readonly technologies: readonly string[];
   readonly githubUrl: string;
-  readonly liveUrl: string;
+  readonly liveUrl?: string;
   readonly highlights?: readonly string[];
   readonly metrics?: ProjectMetrics;
   readonly businessImpact?: BusinessImpact;
-  readonly category: 'fullstack' | 'ai' | 'enterprise' | 'wellness';
+  readonly category: 'fullstack' | 'ai' | 'enterprise' | 'wellness' | 'web' | 'mobile' | 'backend' | 'gaming' | 'tools' | 'other';
   readonly status: 'live' | 'development' | 'archived';
   readonly featured: boolean;
   readonly completedYear: number;

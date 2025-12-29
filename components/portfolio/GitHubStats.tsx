@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { GitBranch, Star, Users, AlertCircle, Loader2 } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa'
-import { useGitHubStats } from '@/lib/github-api'
+import { useGitHubStats } from '@/lib/hooks/use-github-stats'
 
 export default function GitHubStats() {
   const stats = useGitHubStats()

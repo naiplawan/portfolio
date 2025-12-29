@@ -8,8 +8,8 @@ import { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { contactFormLimiter, formatTimeRemaining } from '@/lib/rate-limit';
-import { trackContactFormSubmit } from '@/lib/analytics';
+import { contactFormLimiter, formatTimeRemaining } from '@/lib/utils/rate-limit';
+import { trackContactFormSubmit } from '@/components/analytics';
 
 export default function ContactPage() {
   const form = useRef<HTMLFormElement>(null);

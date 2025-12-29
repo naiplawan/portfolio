@@ -13,7 +13,7 @@ interface ErrorBoundaryState {
 
 interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ComponentType<{ error?: Error; reset: () => void }>;
+  fallback?: ComponentType<{ error?: Error; reset: () => void }> | ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
@@ -37,6 +37,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
+
+    // Log to external error reporting service in production
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+      // You can integrate with services like Sentry here
+      // Sentry.captureException(error, { contexts: { react: { componentStack: errorInfo.componentStack } } });
+    }
   }
 
   reset = () => {
@@ -45,8 +51,21 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      const FallbackComponent = this.props.fallback || DefaultErrorFallback;
-      return <FallbackComponent error={this.state.error} reset={this.reset} />;
+      const { fallback } = this.props;
+
+      // If fallback is a function (component), render it with props
+      if (typeof fallback === 'function') {
+        const FallbackComponent = fallback as ComponentType<{ error?: Error; reset: () => void }>;
+        return <FallbackComponent error={this.state.error} reset={this.reset} />;
+      }
+
+      // Otherwise, if it's a ReactNode, render it directly
+      if (fallback) {
+        return <>{fallback}</>;
+      }
+
+      // Default fallback
+      return <DefaultErrorFallback error={this.state.error} reset={this.reset} />;
     }
 
     return this.props.children;
@@ -100,6 +119,52 @@ function DefaultErrorFallback({ error, reset }: { error?: Error; reset: () => vo
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+// Simplified error boundary for specific sections
+export interface SectionErrorBoundaryProps {
+  children: ReactNode;
+  sectionName: string;
+}
+
+export function SectionErrorBoundary({ children, sectionName }: SectionErrorBoundaryProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
+          <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+            {sectionName} Unavailable
+          </h3>
+          <p className="text-red-600 dark:text-red-400 text-sm">
+            This section encountered an error and couldn't load. Please refresh the page or try again later.
+          </p>
+        </div>
+      }
+      onError={(error, errorInfo) => {
+        console.error(`Error in ${sectionName}:`, error, errorInfo);
+      }}
+    >
+      {children}
+    </ErrorBoundary>
+  );
+}
+
+// Client-side error boundary wrapper for Next.js app directory
+export function ClientErrorBoundary({
+  children,
+  fallback,
+  onError,
+}: {
+  children: ReactNode;
+  fallback?: ComponentType<{ error?: Error; reset: () => void }>;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+}) {
+  return (
+    <ErrorBoundary fallback={fallback} onError={onError}>
+      {children}
+    </ErrorBoundary>
   );
 }
 

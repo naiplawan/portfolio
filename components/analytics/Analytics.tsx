@@ -1,29 +1,28 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { GA_TRACKING_ID } from './constants';
+import { pageview } from './events';
 
 declare global {
   interface Window {
-    gtag: (...args: unknown[]) => void
+    gtag: (...args: unknown[]) => void;
   }
 }
 
-const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID
-
 export function Analytics() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!GA_TRACKING_ID || !window.gtag) return
+    if (!GA_TRACKING_ID) return;
 
-    window.gtag('config', GA_TRACKING_ID, {
-      page_path: pathname,
-    })
-  }, [pathname])
+    // Track page view
+    pageview(pathname);
+  }, [pathname]);
 
   if (!GA_TRACKING_ID) {
-    return null
+    return null;
   }
 
   return (
@@ -45,6 +44,7 @@ export function Analytics() {
         }}
       />
     </>
-  )
+  );
 }
 
+export default Analytics;

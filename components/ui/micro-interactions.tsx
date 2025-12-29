@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, Children, ButtonHTMLAttributes, MouseEventHandler, MouseEvent, ReactNode, HTMLAttributes } from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
 
 // Enhanced button with ripple effect
 export function RippleButton({

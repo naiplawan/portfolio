@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
-import { testimonials, getAverageRating } from '@/lib/testimonials-data';
+import { testimonials, getAverageRating } from '@/lib/data/testimonials-data';
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
