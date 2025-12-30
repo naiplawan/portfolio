@@ -133,24 +133,24 @@ export default function SkillsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 space-y-4"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight dark:text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
             Technology Stack
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto font-light px-2">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto font-light px-2">
             Production-ready expertise across modern web technologies, cloud platforms, and AI integration
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-6 px-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-50 rounded-full">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"></div>
-              <span className="text-xs sm:text-sm text-blue-700 font-medium">Currently at Unixdev</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
+              <span className="text-xs sm:text-sm text-foreground font-medium">Currently at Unixdev</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-green-50 rounded-full">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
-              <span className="text-xs sm:text-sm text-green-700 font-medium">Frontend Specialist</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
+              <span className="text-xs sm:text-sm text-foreground font-medium">Frontend Specialist</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-50 rounded-full">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
-              <span className="text-xs sm:text-sm text-purple-700 font-medium">Full Stack Capable</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
+              <span className="text-xs sm:text-sm text-foreground font-medium">Full Stack Capable</span>
             </div>
           </div>
         </motion.div>
@@ -167,16 +167,16 @@ export default function SkillsSection() {
               variants={itemVariants}
               whileHover={{ y: -8 }}
               transition={{ type: 'spring', stiffness: 300 }}
-              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm hover:shadow-lg transition-all duration-300"
+              className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-border hover:border-foreground/20 transition-all duration-300"
             >
               <div className="space-y-4 sm:space-y-6">
                 <div className="flex items-center space-x-3 sm:space-x-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                    <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-secondary rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                    <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">{category.title}</h3>
-                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{category.description}</p>
+                    <h3 className="text-lg sm:text-xl font-semibold text-foreground truncate">{category.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{category.description}</p>
                   </div>
                 </div>
 
@@ -187,11 +187,11 @@ export default function SkillsSection() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: skillIndex * 0.1 }}
-                      className="flex items-center gap-1.5 sm:gap-2 bg-blue-50 px-2 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg border border-blue-100"
+                      className="flex items-center gap-1.5 sm:gap-2 bg-secondary px-2 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg border border-border"
                     >
-                      <span className="text-xs sm:text-sm font-medium text-gray-900">{skill.name}</span>
+                      <span className="text-xs sm:text-sm font-medium text-foreground">{skill.name}</span>
                       {skill.years && (
-                        <Badge variant="outline" className="text-xs text-blue-600 border-blue-200 bg-white px-1 py-0">
+                        <Badge variant="outline" className="text-xs text-foreground border-border px-1 py-0">
                           {skill.years}y
                         </Badge>
                       )}
@@ -209,14 +209,14 @@ export default function SkillsSection() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="mt-20 text-center"
         >
-          <div className="bg-white rounded-2xl p-8 max-w-4xl mx-auto shadow-sm">
+          <div className="bg-card rounded-2xl p-8 max-w-4xl mx-auto border border-border">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-                <Zap className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
+                <Zap className="w-6 h-6 text-foreground" />
               </div>
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">Continuous Learning</h3>
-            <p className="text-lg text-gray-600 font-light leading-relaxed">
+            <h3 className="text-2xl font-semibold text-foreground mb-4">Continuous Learning</h3>
+            <p className="text-lg text-muted-foreground font-light leading-relaxed">
               Technology evolves rapidly, and so do I. I'm constantly exploring new frameworks, tools, and methodologies
               to stay at the forefront of modern development.
             </p>
