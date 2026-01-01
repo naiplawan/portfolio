@@ -12,7 +12,7 @@ export const PROFESSIONAL_INFO = {
   title: 'Frontend Developer',
   company: 'Unixdev Co., Ltd.',
   location: 'Bangkok, Thailand',
-  experience: '6+',
+  experience: '11+',
   technologies: '20+',
 } as const;
 

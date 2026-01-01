@@ -1,78 +1,33 @@
 // Server-side GitHub API service (no React hooks)
 // This file can be imported by both server and client components
 
-interface GitHubUser {
-  login: string;
-  name: string;
-  public_repos: number;
-  followers: number;
-  following: number;
-  created_at: string;
-}
+import {
+  validateGitHubUser,
+  validateGitHubRepos,
+  validateGitHubEvents,
+  GitHubUser,
+  GitHubRepo,
+  GitHubStatsData,
+  getLanguageColor,
+} from './validations/github';
 
-export interface GitHubRepo {
-  id: number;
-  name: string;
-  full_name: string;
-  description: string | null;
-  stargazers_count: number;
-  forks_count: number;
-  language: string | null;
-  updated_at: string;
-  created_at: string;
-  pushed_at: string | null;
-  html_url: string;
-  homepage: string | null;
-  topics: string[];
-  fork: boolean;
-  archived: boolean;
-  has_wiki: boolean;
-  has_pages: boolean;
-  owner: {
-    login: string;
-  };
-}
+// Re-export types for backwards compatibility
+export type { GitHubUser, GitHubRepo, GitHubStatsData };
 
 interface LanguageStats {
   [language: string]: number;
 }
 
-export interface GitHubStatsData {
-  totalRepos: number;
-  totalStars: number;
-  totalForks: number;
-  totalCommits: number;
-  topLanguages: { name: string; percentage: number; color: string }[];
-  contributions: number;
-  isLoading: boolean;
-  error?: string;
-}
-
-const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
+const GITHUB_USERNAME = process.env.GITHUB_USERNAME || process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 const GITHUB_API_BASE = 'https://api.github.com';
+// Use server-only token for better security (not exposed to client)
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-// Language colors from GitHub
-const LANGUAGE_COLORS: { [key: string]: string } = {
-  'TypeScript': '#3178c6',
-  'JavaScript': '#f1e05a',
-  'Python': '#3572A5',
-  'Java': '#b07219',
-  'C++': '#f34b7d',
-  'C': '#555555',
-  'CSS': '#563d7c',
-  'HTML': '#e34c26',
-  'Go': '#00ADD8',
-  'Rust': '#dea584',
-  'PHP': '#4F5D95',
-  'Swift': '#ffac45',
-  'Kotlin': '#A97BFF',
-  'Dart': '#00B4AB',
-  'Ruby': '#701516',
-  'Shell': '#89e051',
-  'Vue': '#41b883',
-  'React': '#61dafb',
-  'Other': '#6b7280'
-};
+// Default fallback contribution count (configurable via env)
+const DEFAULT_CONTRIBUTION_COUNT = parseInt(
+  process.env.DEFAULT_CONTRIBUTION_COUNT || '250',
+  10
+);
 
 class GitHubAPIService {
   private async fetchWithRetry(url: string, retries = 3): Promise<any> {
@@ -82,9 +37,9 @@ class GitHubAPIService {
           headers: {
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': 'Portfolio-App',
-            // Add GitHub token if available (optional for public data)
-            ...(process.env.NEXT_PUBLIC_GITHUB_TOKEN && {
-              'Authorization': `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+            // Use server-only token for better security
+            ...(GITHUB_TOKEN && {
+              'Authorization': `token ${GITHUB_TOKEN}`
             })
           },
         });
@@ -105,7 +60,8 @@ class GitHubAPIService {
   }
 
   async getUserInfo(): Promise<GitHubUser> {
-    return this.fetchWithRetry(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`);
+    const data = await this.fetchWithRetry(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`);
+    return validateGitHubUser(data);
   }
 
   async getUserRepos(): Promise<GitHubRepo[]> {
@@ -115,11 +71,14 @@ class GitHubAPIService {
 
     while (true) {
       // Request additional fields: topics, homepage, etc.
-      const pageRepos = await this.fetchWithRetry(
+      const pageData = await this.fetchWithRetry(
         `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?` +
         `per_page=${perPage}&page=${page}&sort=updated&` +
         `type=all` // Include both source and forks
       );
+
+      // Validate the page data
+      const pageRepos = validateGitHubRepos(pageData);
 
       if (pageRepos.length === 0) break;
       repos.push(...pageRepos);
@@ -138,23 +97,26 @@ class GitHubAPIService {
       const since = new Date();
       since.setFullYear(since.getFullYear() - 1);
 
-      const events = await this.fetchWithRetry(
+      const eventsData = await this.fetchWithRetry(
         `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/events?per_page=100`
       );
 
+      // Validate events data
+      const events = validateGitHubEvents(eventsData);
+
       // Count push events as a proxy for contributions
-      const pushEvents = events.filter((event: any) =>
+      const pushEvents = events.filter((event) =>
         event.type === 'PushEvent' &&
         new Date(event.created_at) >= since
       );
 
       // Estimate contributions (each push event might have multiple commits)
-      return pushEvents.reduce((total: number, event: any) => {
+      return pushEvents.reduce((total, event) => {
         return total + (event.payload?.commits?.length || 1);
       }, 0);
     } catch (error) {
       console.warn('Could not fetch contribution stats:', error);
-      return 250; // Fallback value
+      return DEFAULT_CONTRIBUTION_COUNT; // Use configurable fallback
     }
   }
 
@@ -170,7 +132,7 @@ class GitHubAPIService {
     });
 
     if (totalRepos === 0) {
-      return [{ name: 'No languages detected', percentage: 100, color: LANGUAGE_COLORS.Other }];
+      return [{ name: 'No languages detected', percentage: 100, color: getLanguageColor('Other') }];
     }
 
     const sortedLanguages = Object.entries(languageCounts)
@@ -182,7 +144,7 @@ class GitHubAPIService {
     return sortedLanguages.map(([language, count]) => ({
       name: language,
       percentage: Math.round((count / totalCount) * 100),
-      color: LANGUAGE_COLORS[language] || LANGUAGE_COLORS.Other
+      color: getLanguageColor(language)
     }));
   }
 
@@ -214,4 +176,8 @@ class GitHubAPIService {
   }
 }
 
+// Export singleton instance
 export const githubAPI = new GitHubAPIService();
+
+// Re-export the class for testing
+export { GitHubAPIService };

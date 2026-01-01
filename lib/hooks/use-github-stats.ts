@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { githubAPI, GitHubStatsData } from '@/lib/github-api';
+import { GitHubStatsData } from '@/lib/github-api';
 
 /**
- * Client-side hook for using GitHub stats in React components
- * This is a client component that can be used in 'use client' components
+ * Client-side hook for using GitHub stats in React components.
+ * Fetches data from the internal API route which handles GitHub API calls server-side.
+ * This keeps the GitHub token secure and never exposed to the client.
  */
 export function useGitHubStats() {
   const [stats, setStats] = useState<GitHubStatsData>({
@@ -20,10 +21,21 @@ export function useGitHubStats() {
 
   useEffect(() => {
     let mounted = true;
+    let timeoutId: NodeJS.Timeout;
 
     const fetchStats = async () => {
       try {
-        const data = await githubAPI.getGitHubStats();
+        // Use internal API route instead of direct GitHub API call
+        const response = await fetch('/api/github/stats', {
+          cache: 'no-store', // Always get fresh data
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
         if (mounted) {
           setStats(data);
         }
@@ -40,8 +52,14 @@ export function useGitHubStats() {
 
     fetchStats();
 
+    // Optional: Refresh stats every 5 minutes
+    timeoutId = setInterval(() => {
+      fetchStats();
+    }, 5 * 60 * 1000);
+
     return () => {
       mounted = false;
+      if (timeoutId) clearInterval(timeoutId);
     };
   }, []);
 
