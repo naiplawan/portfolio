@@ -8,12 +8,22 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Save, 
-  FileText, 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  FileText,
   Clock,
   Calendar,
   Star,
@@ -21,7 +31,7 @@ import {
   Tag,
   Search,
   LogOut,
-  User
+  User,
 } from 'lucide-react';
 import NavBar from '@/components/portfolio/NavBar';
 import { BlogPost, BlogPostFormData, getBlogPosts, saveBlogPost, deleteBlogPost } from '@/lib/blog';
@@ -50,13 +60,23 @@ function BlogForm({ post, onSave, onCancel }: BlogFormProps) {
     status: post?.status || 'draft'
   });
   const [tagInput, setTagInput] = useState('');
+  const [errors, setErrors] = useState<{ title?: string; content?: string }>({});
 
   const handleSave = () => {
-    if (!formData.title.trim() || !formData.content.trim()) {
-      alert('Title and content are required');
+    const newErrors: { title?: string; content?: string } = {};
+
+    if (!formData.title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    if (!formData.content.trim()) {
+      newErrors.content = 'Content is required';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    
+
     saveBlogPost(formData, post?.id);
     onSave();
   };
@@ -101,10 +121,16 @@ function BlogForm({ post, onSave, onCancel }: BlogFormProps) {
             <label className="block text-sm font-medium mb-2">Title</label>
             <Input
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) => {
+                setFormData(prev => ({ ...prev, title: e.target.value }));
+                setErrors(prev => ({ ...prev, title: undefined }));
+              }}
               placeholder="Enter post title..."
-              className="text-lg"
+              className={`text-lg ${errors.title ? 'border-red-500' : ''}`}
             />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+            )}
           </div>
 
           <div>
@@ -119,16 +145,22 @@ function BlogForm({ post, onSave, onCancel }: BlogFormProps) {
 
           <div>
             <label className="block text-sm font-medium mb-2">Content</label>
-            <div className="border rounded-lg">
+            <div className={`border rounded-lg ${errors.content ? 'border-red-500' : ''}`}>
               <MDEditor
                 value={formData.content}
-                onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
+                onChange={(value) => {
+                  setFormData(prev => ({ ...prev, content: value || '' }));
+                  setErrors(prev => ({ ...prev, content: undefined }));
+                }}
                 preview="edit"
                 height={400}
                 data-color-mode="light"
                 className="!text-sm sm:!text-base"
               />
             </div>
+            {errors.content && (
+              <p className="text-red-500 text-sm mt-1">{errors.content}</p>
+            )}
           </div>
         </div>
 
@@ -198,6 +230,8 @@ function BlogManageContent() {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -210,11 +244,18 @@ function BlogManageContent() {
     setSelectedPost(null);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this post?')) {
-      deleteBlogPost(id);
+  const handleDeleteClick = (id: string) => {
+    setPostToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (postToDelete) {
+      deleteBlogPost(postToDelete);
       refreshPosts();
     }
+    setDeleteDialogOpen(false);
+    setPostToDelete(null);
   };
 
   const filteredPosts = posts.filter(post => {
@@ -432,7 +473,7 @@ function BlogManageContent() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(post.id)}
+                        onClick={() => handleDeleteClick(post.id)}
                         className="text-red-600 hover:text-red-700 h-8 w-8 sm:h-9 sm:w-auto sm:px-3"
                       >
                         <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -451,7 +492,7 @@ function BlogManageContent() {
                   No posts found
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  {searchTerm || statusFilter !== 'all' 
+                  {searchTerm || statusFilter !== 'all'
                     ? 'Try adjusting your search or filter criteria.'
                     : 'Get started by creating your first blog post.'
                   }
@@ -465,6 +506,27 @@ function BlogManageContent() {
           </motion.div>
         </div>
       </section>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this post? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
