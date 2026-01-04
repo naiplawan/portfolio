@@ -1,11 +1,11 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Home, RefreshCw, AlertTriangle, Mail } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
 import { ROUTES } from '@/lib/constants/routes'
 
 interface ErrorPageProps {
@@ -15,6 +15,11 @@ interface ErrorPageProps {
 
 export default function Error({ error, reset }: ErrorPageProps) {
   const router = useRouter();
+
+  const handleContactClick = useCallback(() => {
+    router.push(ROUTES.CONTACT);
+  }, [router]);
+
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -127,7 +132,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => router.push(ROUTES.CONTACT)}
+                onClick={handleContactClick}
                 className="text-primary hover:bg-primary/10"
               >
                 Contact Support

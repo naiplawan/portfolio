@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -241,6 +242,16 @@ const itemVariants = {
 
 export default function ServicesPage() {
   const router = useRouter();
+
+  // Memoize navigation handlers to prevent unnecessary re-renders
+  const handleContactClick = useCallback(() => {
+    router.push(ROUTES.CONTACT);
+  }, [router]);
+
+  const handleBookingClick = useCallback(() => {
+    router.push(ROUTES.BOOKING);
+  }, [router]);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -266,7 +277,7 @@ export default function ServicesPage() {
               <Button
                 size="lg"
                 className="w-full sm:w-auto"
-                onClick={() => router.push(ROUTES.CONTACT)}
+                onClick={handleContactClick}
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
                 Get a Quote
@@ -275,7 +286,7 @@ export default function ServicesPage() {
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-auto"
-                onClick={() => router.push(ROUTES.BOOKING)}
+                onClick={handleBookingClick}
               >
                 <Calendar className="w-4 h-4 mr-2" />
                 Book a Call
@@ -596,7 +607,7 @@ export default function ServicesPage() {
                           : ''
                       }`}
                       variant={plan.highlighted ? 'default' : 'outline'}
-                      onClick={() => router.push(ROUTES.CONTACT)}
+                      onClick={handleContactClick}
                     >
                       Get Started
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -637,7 +648,7 @@ export default function ServicesPage() {
               size="lg"
               variant="secondary"
               className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50"
-              onClick={() => router.push(ROUTES.CONTACT)}
+              onClick={handleContactClick}
             >
               <Mail className="w-4 h-4 mr-2" />
               Send a Message
@@ -646,7 +657,7 @@ export default function ServicesPage() {
               size="lg"
               variant="outline"
               className="w-full sm:w-auto border-white text-white hover:bg-white/10"
-              onClick={() => router.push(ROUTES.BOOKING)}
+              onClick={handleBookingClick}
             >
               <Calendar className="w-4 h-4 mr-2" />
               Schedule a Call
