@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,7 +21,7 @@ import {
   HeartPulse,
   Building,
 } from 'lucide-react';
-import Link from 'next/link';
+import { ROUTES } from '@/lib/constants/routes';
 
 const services = [
   {
@@ -239,6 +240,7 @@ const itemVariants = {
 };
 
 export default function ServicesPage() {
+  const router = useRouter();
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -261,17 +263,22 @@ export default function ServicesPage() {
               Proven experience building complete multi-app ecosystems with Next.js, Flutter, and Go.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button size="lg" className="w-full sm:w-auto" asChild>
-                <Link href="/contact">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Get a Quote
-                </Link>
+              <Button
+                size="lg"
+                className="w-full sm:w-auto"
+                onClick={() => router.push(ROUTES.CONTACT)}
+              >
+                <MessageSquare className="w-4 h-4 mr-2" />
+                Get a Quote
               </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
-                <Link href="/booking">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Book a Call
-                </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => router.push(ROUTES.BOOKING)}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Book a Call
               </Button>
             </div>
           </motion.div>
@@ -589,12 +596,10 @@ export default function ServicesPage() {
                           : ''
                       }`}
                       variant={plan.highlighted ? 'default' : 'outline'}
-                      asChild
+                      onClick={() => router.push(ROUTES.CONTACT)}
                     >
-                      <Link href="/contact">
-                        Get Started
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
+                      Get Started
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </CardContent>
                 </Card>
@@ -632,23 +637,19 @@ export default function ServicesPage() {
               size="lg"
               variant="secondary"
               className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50"
-              asChild
+              onClick={() => router.push(ROUTES.CONTACT)}
             >
-              <Link href="/contact">
-                <Mail className="w-4 h-4 mr-2" />
-                Send a Message
-              </Link>
+              <Mail className="w-4 h-4 mr-2" />
+              Send a Message
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="w-full sm:w-auto border-white text-white hover:bg-white/10"
-              asChild
+              onClick={() => router.push(ROUTES.BOOKING)}
             >
-              <Link href="/booking">
-                <Calendar className="w-4 h-4 mr-2" />
-                Schedule a Call
-              </Link>
+              <Calendar className="w-4 h-4 mr-2" />
+              Schedule a Call
             </Button>
           </motion.div>
         </div>

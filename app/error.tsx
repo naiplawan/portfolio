@@ -1,10 +1,12 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Home, RefreshCw, AlertTriangle, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { ROUTES } from '@/lib/constants/routes'
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -12,6 +14,7 @@ interface ErrorPageProps {
 }
 
 export default function Error({ error, reset }: ErrorPageProps) {
+  const router = useRouter();
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -121,8 +124,13 @@ export default function Error({ error, reset }: ErrorPageProps) {
               about what you were trying to do.
             </p>
             <div className="flex justify-center">
-              <Button variant="ghost" size="sm" asChild className="text-primary hover:bg-primary/10">
-                <Link href="/contact">Contact Support</Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push(ROUTES.CONTACT)}
+                className="text-primary hover:bg-primary/10"
+              >
+                Contact Support
               </Button>
             </div>
             
