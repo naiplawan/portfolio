@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -44,7 +44,7 @@ function NavBar() {
       className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       role="navigation"
       aria-label="Main navigation"
     >
@@ -85,22 +85,7 @@ function NavBar() {
                 </Button>
               </motion.div>
             ))}
-            <motion.a
-              href="/Rachaphol_Resume.pdf"
-              download="Rachaphol_Plookaom_Resume.pdf"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: navItems.length * 0.1 }}
-            >
-              <Button
-                variant="default"
-                className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2"
-                role="menuitem"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Resume
-              </Button>
-            </motion.a>
+
             <DarkModeToggle />
           </div>
 
@@ -112,11 +97,17 @@ function NavBar() {
                   variant="ghost"
                   size="icon"
                   className="h-9 w-9 sm:h-10 sm:w-10 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 rounded-md"
-                  aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                  aria-label={
+                    isOpen ? 'Close navigation menu' : 'Open navigation menu'
+                  }
                   aria-expanded={isOpen}
                   aria-controls="mobile-menu"
                 >
-                  {isOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu size={20} />}
+                  {isOpen ? (
+                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                  ) : (
+                    <Menu size={20} />
+                  )}
                 </Button>
               </SheetTrigger>
               <SheetContent
@@ -148,7 +139,9 @@ function NavBar() {
                           }`}
                           onClick={() => handleNavigation(item.href)}
                           role="menuitem"
-                          aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                          aria-current={
+                            isActiveRoute(item.href) ? 'page' : undefined
+                          }
                         >
                           {item.label}
                         </Button>

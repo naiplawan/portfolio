@@ -49,37 +49,6 @@ export const timelineData: TimelineItem[] = [
     technologies: ['React.js', 'Node.js', 'Express.js', 'Django', 'MongoDB', 'PostgreSQL', 'DigitalOcean', 'Cloudflare', 'LLM', 'RAG']
   },
 
-  // Projects
-  {
-    id: 'project-1',
-    type: 'project',
-    title: 'Home Service',
-    organization: 'Full Stack Project',
-    date: '2024-06',
-    description: 'A comprehensive web application providing home service listings, booking functionalities, and user reviews with responsive design and seamless backend integration.',
-    highlights: [
-      'Comprehensive home service listings platform',
-      'Booking and review system implementation',
-      'Responsive design for all devices',
-      'Seamless backend integration'
-    ],
-    technologies: ['React.js', 'Node.js', 'Express.js', 'Tailwind CSS', 'Ant Design', 'DigitalOcean', 'Cloudflare']
-  },
-  {
-    id: 'project-2',
-    type: 'project',
-    title: 'CodeCraft Studio',
-    organization: 'AI-Powered Project',
-    date: '2024-09',
-    description: 'A revolutionary AI-powered web application builder that transforms natural language descriptions into production-ready Next.js applications using Anthropic LLM.',
-    highlights: [
-      'Natural language to code transformation',
-      'Production-ready Next.js application generation',
-      'AI-powered development workflow',
-      'Clean architecture implementation'
-    ],
-    technologies: ['Next.js', 'FastAPI', 'Anthropic LLM', 'TypeScript', 'AI Integration']
-  },
 
   // Education
   {
