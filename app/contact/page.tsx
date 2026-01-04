@@ -11,6 +11,22 @@ import { motion } from 'framer-motion';
 import { contactFormLimiter, formatTimeRemaining } from '@/lib/utils/rate-limit';
 import { trackContactFormSubmit } from '@/components/analytics';
 
+// EmailJS configuration from environment variables
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+
+// Input sanitization helper
+const sanitizeInput = (input: string): string => {
+  return input
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;')
+    .trim();
+};
+
 export default function ContactPage() {
   const form = useRef<HTMLFormElement>(null);
   const [senderEmail, setSenderEmail] = useState('');
@@ -31,8 +47,8 @@ export default function ContactPage() {
       newErrors.name = 'Name must be at least 2 characters';
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Email validation (RFC 5322 compliant)
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     if (!senderEmail.trim()) {
       newErrors.email = 'Please enter your email';
     } else if (!emailRegex.test(senderEmail)) {
@@ -78,8 +94,38 @@ export default function ContactPage() {
 
     if (!form.current) return;
 
+    // Validate EmailJS configuration
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      console.error('EmailJS credentials not configured');
+      setStatus('error');
+      setErrors({ email: 'Email service not configured. Please contact directly.' });
+      setIsLoading(false);
+      return;
+    }
+
+    // Sanitize form inputs before sending
+    const formData = new FormData(form.current);
+    formData.set('senderName', sanitizeInput(senderName));
+    formData.set('senderEmail', sanitizeInput(senderEmail));
+    formData.set('message', sanitizeInput(message));
+
+    // Create sanitized form for EmailJS
+    const sanitizedForm = new FormData();
+    sanitizedForm.append('senderName', sanitizeInput(senderName));
+    sanitizedForm.append('senderEmail', sanitizeInput(senderEmail));
+    sanitizedForm.append('message', sanitizeInput(message));
+
     emailjs
-      .sendForm('service_3wygx3u', 'template_p6wyyhb', form.current, 'BG8fz_8Cxun8YIhHv')
+      .send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          senderName: sanitizeInput(senderName),
+          senderEmail: sanitizeInput(senderEmail),
+          message: sanitizeInput(message),
+        },
+        EMAILJS_PUBLIC_KEY
+      )
       .then(
         (result) => {
           console.log('Email sent successfully:', result.text);

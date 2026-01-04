@@ -1,5 +1,27 @@
 'use client';
 
+/**
+ * SECURITY WARNING: THIS IS NOT PRODUCTION-GRADE AUTHENTICATION
+ *
+ * This authentication implementation is CLIENT-SIDE ONLY and provides only
+ * basic UI protection. It is NOT secure against determined attackers because:
+ *
+ * 1. Passwords are verified in the browser (bypassable)
+ * 2. Session tokens are stored in localStorage (bypassable)
+ * 3. Anyone can inspect the code to find credentials
+ * 4. No server-side validation occurs
+ *
+ * For production use, implement proper server-side authentication using:
+ * - NextAuth.js (https://next-auth.js.org)
+ * - Clerk, Auth0, or similar authentication services
+ * - Custom backend with JWT and proper password hashing (bcrypt/argon2)
+ *
+ * This implementation is suitable ONLY for:
+ * - Personal portfolios with non-sensitive content
+ * - Demo/prototype applications
+ * - Basic deterrence of casual users
+ */
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface LoginCredentials {
@@ -33,15 +55,31 @@ const getAdminCredentials = () => {
 const AUTH_KEY = 'portfolio_auth';
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-// Simple hash function for password comparison (still not secure, but better than plain text)
-function simpleHash(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
+// Use Web Crypto API for proper SHA-256 hashing (better than simple hash, but still client-side)
+async function secureHash(str: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Timing-safe comparison for strings
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  if (a.length !== b.length) {
+    return false;
   }
-  return hash.toString(16);
+
+  const encoder = new TextEncoder();
+  const bufferA = encoder.encode(a);
+  const bufferB = encoder.encode(b);
+
+  let result = 0;
+  for (let i = 0; i < bufferA.length; i++) {
+    result |= bufferA[i] ^ bufferB[i];
+  }
+
+  return result === 0;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -85,19 +123,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return false;
     }
 
-    // Check credentials with timing-safe comparison (basic protection)
-    const isValid = await new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(
-          username === credentials.username &&
-          simpleHash(password) === simpleHash(credentials.password)
-        );
-      }, 100); // Small delay to prevent timing attacks
-    });
+    // Hash both passwords and compare using timing-safe comparison
+    const inputPasswordHash = await secureHash(password);
+    const storedPasswordHash = await secureHash(credentials.password);
+    const passwordMatch = await timingSafeEqual(inputPasswordHash, storedPasswordHash);
+
+    const isValid = username === credentials.username && passwordMatch;
 
     if (isValid) {
+      // Generate a random session token using Web Crypto API
+      const tokenData = new Uint8Array(32);
+      crypto.getRandomValues(tokenData);
+      const token = Array.from(tokenData)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
       const authData = {
-        token: simpleHash(Date.now().toString() + Math.random().toString()),
+        token,
         expiry: Date.now() + SESSION_DURATION
       };
 
