@@ -1,10 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import Mail from '@/components/ui/icons/Mail';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { ClayCard } from '@/components/ui/clay-card';
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import TypewriterEffect from '@/components/ui/TypewriterEffect';
 import {
   SOCIAL_LINKS,
@@ -13,21 +12,13 @@ import {
   PROFESSIONAL_INFO,
 } from '@/lib/constants';
 
-const ParticleBackground = dynamic(
-  () => import('@/components/ui/ParticleBackground'),
-  {
-    ssr: false,
-    loading: () => <div className="absolute inset-0 bg-background" />,
-  }
-);
-
 function ContentSection() {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.15,
         delayChildren: 0.1,
       },
     },
@@ -39,134 +30,191 @@ function ContentSection() {
       opacity: 1,
       y: 0,
       transition: {
-        stiffness: 300,
-        damping: 24,
+        type: 'spring' as const,
+        stiffness: 200,
+        damping: 20,
       },
     },
   };
 
   return (
-    <section className="relative pt-20 pb-8 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
-      <ParticleBackground />
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-center space-y-6 sm:space-y-8"
-        >
+    <section className="relative min-h-screen flex items-center pt-20 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Column - Content */}
           <motion.div
-            variants={itemVariants}
-            className="space-y-4 sm:space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6 sm:space-y-8"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground tracking-tight leading-tight">
-              Rachaphol
-              <br />
-              <span className="text-foreground">Plookaom</span>
-            </h1>
+            <motion.div variants={itemVariants} className="space-y-4">
+              <ClayCard variant="sage" className="inline-flex items-center px-4 py-2 rounded-full mb-4">
+                <span className="w-3 h-3 bg-terracotta rounded-full mr-2 animate-bounce"></span>
+                <span className="text-sm font-medium text-foreground">
+                  Available for new opportunities
+                </span>
+              </ClayCard>
 
-            <div className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed px-2">
-              <TypewriterEffect
-                words={TYPEWRITER_WORDS}
-                className="text-foreground font-medium"
-              />
-            </div>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold font-display tracking-tight leading-tight">
+                Rachaphol
+                <br />
+                <span className="earth-text">Plookaom</span>
+              </h1>
 
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto px-4">
-              {SKILL_TAGS.map((tag) => (
+              <div className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl font-light">
+                <TypewriterEffect
+                  words={TYPEWRITER_WORDS}
+                  className="text-foreground font-medium"
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-2 max-w-2xl">
+              {SKILL_TAGS.slice(0, 8).map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary text-foreground border border-border rounded-full text-xs sm:text-sm font-medium"
+                  className="clay-card px-4 py-2 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default"
                 >
                   {tag}
                 </span>
               ))}
-            </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="flex items-center gap-4">
+              <Button
+                className="clay-button px-8 py-6 text-lg font-semibold rounded-2xl"
+                onClick={() => (window.location.href = `mailto:${SOCIAL_LINKS.email}`)}
+              >
+                <FaEnvelope className="mr-2" />
+                Get in Touch
+              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="clay-card h-14 w-14 rounded-2xl hover:scale-110 transition-transform"
+                  onClick={() => window.open(SOCIAL_LINKS.github, '_blank')}
+                  aria-label="Visit my GitHub profile"
+                >
+                  <FaGithub className="w-6 h-6 text-terracotta" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="clay-card h-14 w-14 rounded-2xl hover:scale-110 transition-transform"
+                  onClick={() => window.open(SOCIAL_LINKS.linkedin, '_blank')}
+                  aria-label="Visit my LinkedIn profile"
+                >
+                  <FaLinkedin className="w-6 h-6 text-terracotta" />
+                </Button>
+              </div>
+            </motion.div>
           </motion.div>
 
+          {/* Right Column - Clay Code Card */}
           <motion.div
-            variants={itemVariants}
-            className="flex items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8"
+            initial={{ opacity: 0, x: 50, rotate: -5 }}
+            animate={{ opacity: 1, x: 0, rotate: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, type: 'spring' }}
+            className="relative"
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full transition-all duration-200"
-              onClick={() => window.open(SOCIAL_LINKS.github, '_blank')}
-              aria-label="Visit my GitHub profile"
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <FaGithub className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground hover:text-foreground transition-colors" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full transition-all duration-200"
-              onClick={() => window.open(SOCIAL_LINKS.linkedin, '_blank')}
-              aria-label="Visit my LinkedIn profile"
-            >
-              <FaLinkedin className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground hover:text-foreground transition-colors" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full transition-all duration-200"
-              onClick={() =>
-                (window.location.href = `mailto:${SOCIAL_LINKS.email}`)
-              }
-              aria-label="Send me an email"
-            >
-              <Mail
-                size={20}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              />
-            </Button>
-          </motion.div>
-        </motion.div>
+              <ClayCard variant="terracotta" className="overflow-hidden">
+                {/* Code Editor Header */}
+                <div className="flex items-center gap-2 mb-4 pb-4 border-b-2 border-beige/30">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                  <span className="ml-4 text-xs text-muted-foreground font-mono">developer.ts</span>
+                </div>
 
+                {/* Code Content */}
+                <pre className="text-sm sm:text-base font-mono overflow-x-auto">
+                  <code>
+                    <span className="text-terracotta">const</span>{' '}
+                    <span className="text-sage">developer</span>
+                    <span className="text-foreground"> = {'{'}</span>
+                    <br />
+                    <span className="pl-4 text-beige">name</span>
+                    <span className="text-foreground">:</span>{' '}
+                    <span className="text-green-600">&quot;Rachaphol&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-4 text-beige">role</span>
+                    <span className="text-foreground">:</span>{' '}
+                    <span className="text-green-600">&quot;Fullstack&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-4 text-beige">style</span>
+                    <span className="text-foreground">:</span>{' '}
+                    <span className="text-green-600">&quot;Claymorphism&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-4 text-beige">colors</span>
+                    <span className="text-foreground">:</span>{' '}
+                    <span className="text-foreground">[</span>
+                    <br />
+                    <span className="pl-8 text-green-600">&quot;Sage&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-8 text-green-600">&quot;Terracotta&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-8 text-green-600">&quot;Beige&quot;</span>
+                    <span className="text-foreground">,</span>
+                    <br />
+                    <span className="pl-4 text-foreground">],</span>
+                    <br />
+                    <span className="pl-4 text-beige">passion</span>
+                    <span className="text-foreground">:</span>{' '}
+                    <span className="text-orange-500">∞</span>
+                    <br />
+                    <span className="text-foreground">{'};'}</span>
+                  </code>
+                </pre>
+              </ClayCard>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Stats Section - Clay Cards */}
         <motion.div
           variants={itemVariants}
           initial="hidden"
           animate="visible"
           transition={{ delay: 0.8 }}
-          className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 px-4"
+          className="mt-16 sm:mt-20 md:mt-24 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8"
         >
-          <div className="text-center space-y-2 py-4 sm:py-0">
-            <div className="text-2xl sm:text-3xl font-bold text-foreground">
-              {PROFESSIONAL_INFO.experience}
+          <ClayCard variant="sage" className="text-center py-10 hover:scale-105 transition-transform">
+            <div className="text-4xl sm:text-5xl font-bold earth-text font-display mb-2">
+              {PROFESSIONAL_INFO.experience}+
             </div>
             <div className="text-sm sm:text-base text-muted-foreground font-medium">
-              Months at {PROFESSIONAL_INFO.company.split(',')[0]}
+              Months Experience
             </div>
-          </div>
-          <div className="text-center space-y-2 py-4 sm:py-0 border-t sm:border-t-0 sm:border-l sm:border-r border-border">
-            <div className="text-2xl sm:text-3xl font-bold text-foreground">
+          </ClayCard>
+
+          <ClayCard variant="beige" className="text-center py-10 hover:scale-105 transition-transform">
+            <div className="text-4xl sm:text-5xl font-bold earth-text font-display mb-2">
               Fullstack
             </div>
             <div className="text-sm sm:text-base text-muted-foreground font-medium">
               Architect
             </div>
-          </div>
-          <div className="text-center space-y-2 py-4 sm:py-0 border-t sm:border-t-0 border-border">
-            <div className="text-2xl sm:text-3xl font-bold text-foreground">
-              {PROFESSIONAL_INFO.technologies}
+          </ClayCard>
+
+          <ClayCard variant="terracotta" className="text-center py-10 hover:scale-105 transition-transform">
+            <div className="text-4xl sm:text-5xl font-bold earth-text font-display mb-2">
+              {PROFESSIONAL_INFO.technologies}+
             </div>
             <div className="text-sm sm:text-base text-muted-foreground font-medium">
               Technologies
             </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 1.0 }}
-          className="mt-16 sm:mt-20 md:mt-24 text-center px-4"
-        >
-          <div className="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full bg-secondary text-foreground text-xs sm:text-sm font-medium border border-border">
-            <span className="w-2 h-2 bg-foreground rounded-full mr-2 animate-pulse"></span>
-            Available for new opportunities
-          </div>
+          </ClayCard>
         </motion.div>
       </div>
     </section>

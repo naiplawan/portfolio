@@ -11,6 +11,25 @@ import { RoutePrefetch } from '@/components/performance/route-prefetch'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
+import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google'
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const ibmPlex = IBM_Plex_Sans({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata = {
   metadataBase: new URL('https://rachaphol-portfolio.vercel.app'),
@@ -105,7 +124,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlex.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -138,7 +157,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           }}
         />
       </head>
-      <body className="antialiased bg-background text-foreground min-h-screen">
+      <body className="antialiased bg-background text-foreground min-h-screen font-body">
         <SkipLink />
         <ThemeProvider
           attribute="class"

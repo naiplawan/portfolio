@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import { ClayCard } from '@/components/ui/clay-card';
 import { Code, Database, Cloud, Brain, Smartphone, Zap, Monitor } from 'lucide-react';
 
 interface Skill {
@@ -14,6 +15,7 @@ interface SkillCategory {
   icon: any;
   skills: Skill[];
   description: string;
+  variant: 'sage' | 'beige' | 'terracotta';
 }
 
 const skillCategories: SkillCategory[] = [
@@ -21,6 +23,7 @@ const skillCategories: SkillCategory[] = [
     title: 'Frontend',
     icon: Code,
     description: 'Building modern, responsive user interfaces',
+    variant: 'sage',
     skills: [
       { name: 'HTML5 & CSS3' },
       { name: 'JavaScript' },
@@ -35,6 +38,7 @@ const skillCategories: SkillCategory[] = [
     title: 'Backend',
     icon: Database,
     description: 'Server-side development and API design',
+    variant: 'beige',
     skills: [
       { name: 'Python' },
       { name: 'Django' },
@@ -49,6 +53,7 @@ const skillCategories: SkillCategory[] = [
     title: 'Database',
     icon: Database,
     description: 'Data storage and management solutions',
+    variant: 'terracotta',
     skills: [
       { name: 'PostgreSQL' },
       { name: 'MongoDB' },
@@ -61,6 +66,7 @@ const skillCategories: SkillCategory[] = [
     title: 'AI & ML',
     icon: Brain,
     description: 'Artificial intelligence and machine learning integration',
+    variant: 'sage',
     skills: [
       { name: 'Large Language Models (LLM)' },
       { name: 'Retrieval-Augmented Generation (RAG)' },
@@ -71,6 +77,7 @@ const skillCategories: SkillCategory[] = [
     title: 'Cloud & DevOps',
     icon: Cloud,
     description: 'Cloud infrastructure and deployment',
+    variant: 'beige',
     skills: [
       { name: 'DigitalOcean' },
       { name: 'Cloudflare' },
@@ -83,12 +90,14 @@ const skillCategories: SkillCategory[] = [
     title: 'Mobile & Apps',
     icon: Smartphone,
     description: 'Cross-platform mobile development',
+    variant: 'terracotta',
     skills: [{ name: 'Flutter' }, { name: 'Dart' }, { name: 'Cross-platform Development' }],
   },
   {
     title: 'Tools & Others',
     icon: Monitor,
     description: 'Development tools and additional technologies',
+    variant: 'sage',
     skills: [
       { name: 'Git' },
       { name: 'Postman' },
@@ -118,10 +127,21 @@ export default function SkillsSection() {
       y: 0,
       transition: {
         type: 'spring' as const,
-        stiffness: 300,
-        damping: 24,
+        stiffness: 200,
+        damping: 20,
       },
     },
+  };
+
+  const getAccentColor = (variant: 'sage' | 'beige' | 'terracotta') => {
+    switch (variant) {
+      case 'sage':
+        return '#A8BBA3';
+      case 'beige':
+        return '#C4A484';
+      case 'terracotta':
+        return '#B87C4C';
+    }
   };
 
   return (
@@ -133,25 +153,25 @@ export default function SkillsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 space-y-4"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight font-display earth-text">
             Technology Stack
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto font-light px-2">
             Production-ready expertise across modern web technologies, cloud platforms, and AI integration
           </p>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-6 px-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
-              <span className="text-xs sm:text-sm text-foreground font-medium">Currently at Unixdev</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
-              <span className="text-xs sm:text-sm text-foreground font-medium">Frontend Specialist</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-secondary rounded-full border border-border">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-foreground rounded-full"></div>
-              <span className="text-xs sm:text-sm text-foreground font-medium">Full Stack Capable</span>
-            </div>
+          <div className="flex flex-wrap justify-center gap-3 mt-6 px-4">
+            <ClayCard variant="sage" className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+              <div className="w-3 h-3 rounded-full bg-terracotta"></div>
+              <span className="text-sm font-medium">Currently at Unixdev</span>
+            </ClayCard>
+            <ClayCard variant="beige" className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+              <div className="w-3 h-3 rounded-full bg-sage"></div>
+              <span className="text-sm font-medium">Frontend Specialist</span>
+            </ClayCard>
+            <ClayCard variant="terracotta" className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+              <div className="w-3 h-3 rounded-full bg-beige"></div>
+              <span className="text-sm font-medium">Full Stack Capable</span>
+            </ClayCard>
           </div>
         </motion.div>
 
@@ -159,46 +179,60 @@ export default function SkillsSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {skillCategories.map((category) => (
             <motion.div
               key={category.title}
               variants={itemVariants}
-              whileHover={{ y: -8 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-border hover:border-foreground/20 transition-all duration-300"
+              className="h-full"
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
-              <div className="space-y-4 sm:space-y-6">
-                <div className="flex items-center space-x-3 sm:space-x-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-secondary rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                    <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-lg sm:text-xl font-semibold text-foreground truncate">{category.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{category.description}</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {category.skills.map((skill, skillIndex) => (
-                    <motion.div
-                      key={skill.name}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: skillIndex * 0.1 }}
-                      className="flex items-center gap-1.5 sm:gap-2 bg-secondary px-2 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg border border-border"
+              <ClayCard variant={category.variant} className="h-full">
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-4">
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
+                      style={{
+                        backgroundColor: getAccentColor(category.variant),
+                      }}
                     >
-                      <span className="text-xs sm:text-sm font-medium text-foreground">{skill.name}</span>
-                      {skill.years && (
-                        <Badge variant="outline" className="text-xs text-foreground border-border px-1 py-0">
-                          {skill.years}y
-                        </Badge>
-                      )}
-                    </motion.div>
-                  ))}
+                      <category.icon className="w-7 h-7 text-white" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xl font-semibold text-foreground font-display">
+                        {category.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {category.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {category.skills.map((skill) => (
+                      <motion.span
+                        key={skill.name}
+                        whileHover={{ scale: 1.05 }}
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-cream border-2 border-beige/20 hover:border-terracotta/30 transition-all cursor-default shadow-sm"
+                      >
+                        <span className="text-sm font-medium text-foreground">
+                          {skill.name}
+                        </span>
+                        {skill.years && (
+                          <Badge
+                            variant="outline"
+                            className="text-xs text-foreground border-beige/30 px-2 py-0 rounded-lg bg-beige/10"
+                          >
+                            {skill.years}y
+                          </Badge>
+                        )}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </ClayCard>
             </motion.div>
           ))}
         </motion.div>
@@ -209,18 +243,24 @@ export default function SkillsSection() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="mt-20 text-center"
         >
-          <div className="bg-card rounded-2xl p-8 max-w-4xl mx-auto border border-border">
+          <ClayCard variant="beige" className="p-8 max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
-                <Zap className="w-6 h-6 text-foreground" />
-              </div>
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg bg-terracotta"
+              >
+                <Zap className="w-8 h-8 text-white" />
+              </motion.div>
             </div>
-            <h3 className="text-2xl font-semibold text-foreground mb-4">Continuous Learning</h3>
+            <h3 className="text-2xl font-semibold text-foreground mb-4 font-display earth-text">
+              Continuous Learning
+            </h3>
             <p className="text-lg text-muted-foreground font-light leading-relaxed">
-              Technology evolves rapidly, and so do I. I'm constantly exploring new frameworks, tools, and methodologies
-              to stay at the forefront of modern development.
+              Technology evolves rapidly, and so do I. I'm constantly exploring new frameworks, tools, and
+              methodologies to stay at the forefront of modern development.
             </p>
-          </div>
+          </ClayCard>
         </motion.div>
       </div>
     </section>
