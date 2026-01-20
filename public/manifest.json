@@ -1,0 +1,50 @@
+{
+  "name": "Rachaphol's Portfolio",
+  "short_name": "Rachaphol Dev",
+  "description": "Professional portfolio showcasing projects, skills, and experience",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F1DE",
+  "theme_color": "#B87C4C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/byte-track.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/contributions.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/homeservice.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/moviecrud.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/marvelapp.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/mobileapp.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["developer", "portfolio", "react", "nextjs"],
+  "lang": "en-US"
+}

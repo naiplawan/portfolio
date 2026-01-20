@@ -158,7 +158,12 @@ export default function ContactPage() {
           transition={{ duration: 0.5 }}
           className="flex justify-center mb-8"
         >
-          <Image src="/assets/8690678_3969584.svg" alt="Contact" width={500} height={400} />
+          <Image
+              src="/assets/8690678_3969584.svg"
+              alt="Abstract contact illustration showing communication network and connectivity"
+              width={500}
+              height={400}
+            />
         </motion.div>
 
         <motion.div

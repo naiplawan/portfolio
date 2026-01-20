@@ -76,7 +76,7 @@ import Image from 'next/image';
 
 <Image
   src="/blog-cover.jpg"
-  alt="Blog post cover"
+  alt={Blog Cover Image}
   width={800}
   height={400}
   priority // Load above-the-fold images immediately

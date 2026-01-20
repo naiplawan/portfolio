@@ -2,33 +2,39 @@ import './globals.css'
 import PageTransition from '@/components/layout/page-transition'
 import { ThemeProvider } from '@/components/layout/theme-provider'
 import { Analytics } from '@/components/analytics'
-import { PerformanceMonitor } from '@/components/performance-monitor'
 import { SkipLink } from '@/components/accessibility/skip-link'
 import { AuthProvider } from '@/components/auth/AuthContext'
-import ScrollProgress from '@/components/ui/ScrollProgress'
-import FloatingActions from '@/components/ui/FloatingActions'
-import { RoutePrefetch } from '@/components/performance/route-prefetch'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google'
+import ScrollProgress from '@/components/ui/ScrollProgress'
+import FloatingActions from '@/components/ui/FloatingActions'
+import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
+import { CustomCursor } from '@/components/ui/custom-cursor'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-display',
-  display: 'swap',
+  display: 'optional',
+  preload: true,
+  adjustFontFallback: true,
 })
 
 const ibmPlex = IBM_Plex_Sans({
   subsets: ['latin'],
   variable: '--font-body',
   display: 'swap',
+  preload: true,
+  adjustFontFallback: true,
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  preload: false, // Mono font is less critical, don't preload
+  adjustFontFallback: true,
 })
 
 export const metadata = {
@@ -96,12 +102,6 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Rachaphol Portfolio',
-  },
   verification: {
     google: 'your-google-verification-code',
   },
@@ -167,8 +167,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <AuthProvider>
             <Analytics />
-            <PerformanceMonitor />
-            <RoutePrefetch />
+            <CustomCursor />
             <ScrollProgress />
             <NavBar />
             <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
@@ -180,6 +179,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </main>
             <Footer />
             <FloatingActions />
+            <ScrollProgressComponents />
           </AuthProvider>
         </ThemeProvider>
       </body>

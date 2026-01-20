@@ -196,7 +196,7 @@ function MyComponent() {
   return (
     <Image
       src="/hero.jpg"
-      alt="Hero image"
+      alt="Blog hero section featuring abstract technology background"
       width={800}
       height={600}
       priority

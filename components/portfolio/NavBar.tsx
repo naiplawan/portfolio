@@ -17,6 +17,7 @@ function NavBar() {
 
   const navItems = [
     { label: 'About', href: '/about' },
+    { label: 'Projects', href: '/projects' },
     { label: 'Services', href: '/services' },
     { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },

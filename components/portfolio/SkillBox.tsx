@@ -23,7 +23,7 @@ const SkillBox = ({ title, description, imageSrc }: SkillBoxProps) => {
           <div className="relative w-16 h-16 mb-4">
             <Image
               src={imageSrc}
-              alt={`${title} skill icon`}
+              alt={`${title} technology logo representing ${description}`}
               fill
               className="object-contain"
               sizes="64px"

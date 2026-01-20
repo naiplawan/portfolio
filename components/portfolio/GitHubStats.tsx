@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { GitBranch, Star, Users, AlertCircle, Loader2 } from 'lucide-react'
+import { GitBranch, Star, Users, AlertCircle } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa'
 import { useGitHubStats } from '@/lib/hooks/use-github-stats'
+import { GitHubStatsSkeleton } from '@/components/portfolio/GitHubStatsSkeleton'
 
 export default function GitHubStats() {
   const stats = useGitHubStats()
@@ -73,13 +74,8 @@ export default function GitHubStats() {
               Loading real-time GitHub statistics...
             </p>
           </motion.div>
-          
-          <div className="flex items-center justify-center py-16">
-            <div className="flex items-center gap-3">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-              <span className="text-lg text-muted-foreground">Fetching GitHub data...</span>
-            </div>
-          </div>
+
+          <GitHubStatsSkeleton />
         </div>
       </section>
     )
