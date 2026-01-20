@@ -1,107 +1,102 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Plane } from '@react-three/drei'
+import { Sphere, Plane, Environment, ContactShadows, Float } from '@react-three/drei'
 import * as THREE from 'three'
 
-interface FloatingElementProps {
-  position: [number, number, number]
-  rotation?: [number, number, number]
-  scale?: number
-  speed?: number
-  type?: 'cube' | 'sphere' | 'torus'
-  color?: string
-  opacity?: number
-  wireframe?: boolean
-}
-
-const FloatingElement = ({
+// Soft floating bubble with natural movement
+const SoftBubble = ({
   position,
   scale = 1,
   speed = 1,
-  type = 'sphere',
-  color = '#B87C4C',
-  opacity = 0.7,
-  wireframe = false,
-}: FloatingElementProps) => {
+  color = '#C4A484'
+}: {
+  position: [number, number, number]
+  scale?: number
+  speed?: number
+  color?: string
+}) => {
   const meshRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
 
   useFrame((state) => {
     if (meshRef.current) {
-      // Floating animation
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.3
-      meshRef.current.rotation.x += 0.01 * speed
-      meshRef.current.rotation.y += 0.01 * speed
+      const time = state.clock.elapsedTime * speed
+      // Gentle, organic floating
+      meshRef.current.position.y = position[1] + Math.sin(time * 0.4) * 0.4
+      meshRef.current.position.x = position[0] + Math.cos(time * 0.3) * 0.15
+      meshRef.current.rotation.y = time * 0.15
+      meshRef.current.rotation.z = Math.sin(time * 0.2) * 0.1
 
-      // Mouse interaction scale
-      meshRef.current.scale.setScalar(scale * (hovered ? 1.2 : 1))
+      // Smooth scale on hover
+      const targetScale = scale * (hovered ? 1.1 : 1)
+      meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1)
     }
   })
 
-  const commonProps = {
-    ref: meshRef,
-    position,
-    onPointerOver: () => setHovered(true),
-    onPointerOut: () => setHovered(false),
-    scale,
-  }
-
-  const materialProps = {
-    color: hovered ? '#C4885C' : color,
-    transparent: true,
-    opacity,
-    wireframe,
-  }
-
-  let geometry
-  switch (type) {
-    case 'cube':
-      geometry = <boxGeometry args={[0.5, 0.5, 0.5]} />
-      break
-    case 'torus':
-      geometry = <torusGeometry args={[0.3, 0.1, 16, 100]} />
-      break
-    default:
-      geometry = <sphereGeometry args={[0.3, 32, 32]} />
-  }
-
   return (
-    <mesh {...commonProps}>
-      {geometry}
-      <meshStandardMaterial {...materialProps} />
-    </mesh>
+    <Float speed={speed * 0.5} rotationIntensity={0.15} floatIntensity={0.2}>
+      <Sphere
+        ref={meshRef}
+        args={[scale * 0.35, 32, 32]}
+        position={position}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+      >
+        <meshStandardMaterial
+          color={hovered ? '#D4B89C' : color}
+          transparent
+          opacity={0.5}
+          roughness={0.9}
+          metalness={0}
+        />
+      </Sphere>
+      {/* Soft glow layer */}
+      <Sphere args={[scale * 0.4, 32, 32]} position={position}>
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.1}
+        />
+      </Sphere>
+    </Float>
   )
 }
 
-// Background particle system
-const ParticleBackground = ({ count = 100 }: { count?: number }) => {
+// Soft particle system with natural drift
+const SoftParticleBackground = ({ count = 40 }: { count?: number }) => {
   const meshRef = useRef<THREE.Points>(null)
-  const pointsRef = useRef<Float32Array>(new Float32Array())
-  const colorsRef = useRef<Float32Array>(new Float32Array())
 
-  useEffect(() => {
+  const particles = useMemo(() => {
     const positions = new Float32Array(count * 3)
     const colors = new Float32Array(count * 3)
+    const sizes = new Float32Array(count)
 
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 20
+      positions[i * 3] = (Math.random() - 0.5) * 15
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 15
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2
 
-      colors[i * 3] = 0.72 // R
-      colors[i * 3 + 1] = 0.49 // G
-      colors[i * 3 + 2] = 0.3 // B
+      // Soft pastel colors
+      const colorVariants = [
+        [0.77, 0.64, 0.52], // #C4A484 - Sand
+        [0.66, 0.73, 0.65], // #A8BBA3 - Sage
+        [0.83, 0.77, 0.71], // #D4C4B4 - Blush
+      ]
+      const variant = colorVariants[i % 3]
+      colors[i * 3] = variant[0]
+      colors[i * 3 + 1] = variant[1]
+      colors[i * 3 + 2] = variant[2]
+
+      sizes[i] = Math.random() * 0.08 + 0.04
     }
 
-    pointsRef.current = positions
-    colorsRef.current = colors
+    return { positions, colors, sizes }
   }, [count])
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.01
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.02
     }
   })
@@ -111,57 +106,35 @@ const ParticleBackground = ({ count = 100 }: { count?: number }) => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          args={[pointsRef.current, 3]}
+          args={[particles.positions, 3]}
         />
         <bufferAttribute
           attach="attributes-color"
-          args={[colorsRef.current, 3]}
+          args={[particles.colors, 3]}
+        />
+        <bufferAttribute
+          attach="attributes-size"
+          args={[particles.sizes, 1]}
         />
       </bufferGeometry>
-      <pointsMaterial size={0.05} vertexColors sizeAttenuation />
+      <pointsMaterial
+        size={0.05}
+        vertexColors
+        transparent
+        opacity={0.4}
+        sizeAttenuation
+      />
     </points>
   )
 }
 
-// Mouse-reactive container
-const MouseReactiveContainer = ({ children }: { children: React.ReactNode }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1,
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  return (
-    <div
-      style={{
-        transform: `
-          perspective(1000px)
-          rotateX(${mousePosition.y * 2}deg)
-          rotateY(${mousePosition.x * 2}deg)
-        `,
-        transition: 'transform 0.1s ease-out',
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-// Scene for floating elements
+// Scene for soft floating elements
 const FloatingScene = ({ show }: { show: boolean }) => {
   if (!show) return null
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 10], fov: 50 }}
+      camera={{ position: [0, 0, 8], fov: 60 }}
       style={{
         position: 'absolute',
         top: 0,
@@ -171,21 +144,47 @@ const FloatingScene = ({ show }: { show: boolean }) => {
         pointerEvents: 'none',
         zIndex: 1,
       }}
+      gl={{
+        antialias: true,
+        alpha: true,
+      }}
     >
-      <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={0.5} color="#B87C4C" />
+      {/* Soft ambient lighting */}
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={0.3} color="#FFF8F0" />
+      <directionalLight position={[-5, -5, -5]} intensity={0.2} color="#E8DED2" />
 
-      <ParticleBackground count={50} />
+      {/* Soft environment */}
+      <Environment preset="sunset" />
 
-      {/* Floating elements */}
-      <FloatingElement position={[3, 2, -2]} type="cube" speed={0.8} />
-      <FloatingElement position={[-3, 1, 1]} type="sphere" speed={1.2} color="#A8BBA3" />
-      <FloatingElement position={[0, -2, -3]} type="torus" speed={0.6} />
-      <FloatingElement position={[4, -1, 2]} type="cube" speed={1} color="#C4885C" />
-      <FloatingElement position={[-4, 3, -1]} type="sphere" speed={0.9} />
+      {/* Soft shadows */}
+      <ContactShadows
+        position={[0, -3, 0]}
+        opacity={0.2}
+        scale={15}
+        blur={2.5}
+        far={3}
+      />
 
-      <Plane args={[30, 30]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, 0]}>
-        <meshStandardMaterial color="#F7F1DE" transparent opacity={0.05} />
+      {/* Soft particles */}
+      <SoftParticleBackground count={35} />
+
+      {/* Floating soft bubbles */}
+      <SoftBubble position={[3, 1.5, -1]} scale={1.2} color="#C4A484" speed={0.6} />
+      <SoftBubble position={[-2.5, 0.5, 1]} scale={0.9} color="#A8BBA3" speed={0.8} />
+      <SoftBubble position={[0, -1.5, -2]} scale={1} color="#D4C4B4" speed={0.7} />
+      <SoftBubble position={[4, -0.5, 2]} scale={0.7} color="#B8C4B8" speed={0.9} />
+      <SoftBubble position={[-3.5, 2, 0]} scale={1.1} color="#C8B8A8" speed={0.5} />
+
+      {/* Soft ground plane */}
+      <Plane args={[25, 25]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]}>
+        <meshStandardMaterial
+          color="#F7F1DE"
+          transparent
+          opacity={0.2}
+          roughness={1}
+          metalness={0}
+        />
       </Plane>
     </Canvas>
   )
@@ -211,10 +210,8 @@ export default function FloatingElements() {
   }, [])
 
   return (
-    <MouseReactiveContainer>
-      <div id="floating-elements-container" className="relative">
-        <FloatingScene show={isVisible} />
-      </div>
-    </MouseReactiveContainer>
+    <div id="floating-elements-container" className="relative">
+      <FloatingScene show={isVisible} />
+    </div>
   )
 }

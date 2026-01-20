@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Plane } from '@react-three/drei'
+import { Sphere, Plane, Environment, ContactShadows, Float, Icosahedron, Torus } from '@react-three/drei'
 import { motion } from 'framer-motion'
 import * as THREE from 'three'
 
@@ -23,163 +23,225 @@ const useIsMobile = () => {
   return isMobile
 }
 
-// Floating particles with mobile optimization
-const FloatingParticles = ({ count = 50 }: { count?: number }) => {
-  const meshRef = useRef<THREE.Points>(null)
-  const isMobile = useIsMobile()
-  const particleCount = isMobile ? Math.min(count, 15) : count // Reduce particles on mobile
+// Nature-inspired floating elements (like leaves, petals, bubbles)
+const NatureElement = ({
+  position,
+  scale = 1,
+  color = '#7A8B7A',
+  speed = 1,
+  shape = 'sphere'
+}: {
+  position: [number, number, number]
+  scale?: number
+  color?: string
+  speed?: number
+  shape?: 'sphere' | 'icosahedron' | 'torus'
+}) => {
+  const meshRef = useRef<THREE.Mesh>(null)
 
-  const pointsData = useMemo(() => {
-    const positions = new Float32Array(particleCount * 3)
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10
+  useFrame((state) => {
+    if (meshRef.current) {
+      const time = state.clock.elapsedTime * speed
+      // Very slow, natural floating - like leaves on air
+      meshRef.current.position.y = position[1] + Math.sin(time * 0.2) * 0.5
+      meshRef.current.position.x = position[0] + Math.cos(time * 0.15) * 0.2
+      meshRef.current.rotation.x = Math.sin(time * 0.1) * 0.2
+      meshRef.current.rotation.y = time * 0.08
+      meshRef.current.rotation.z = Math.cos(time * 0.12) * 0.15
     }
-    return positions
+  })
+
+  const commonMaterial = (
+    <meshStandardMaterial
+      color={color}
+      transparent
+      opacity={0.4}
+      roughness={1}
+      metalness={0}
+    />
+  )
+
+  const geometry = shape === 'icosahedron' ? (
+    <Icosahedron args={[scale * 0.25, 0]} ref={meshRef} position={position} />
+  ) : shape === 'torus' ? (
+    <Torus args={[scale * 0.2, scale * 0.08, 8, 24]} ref={meshRef} position={position} />
+  ) : (
+    <Sphere args={[scale * 0.3, 24, 24]} ref={meshRef} position={position} />
+  )
+
+  return (
+    <Float speed={speed * 0.3} rotationIntensity={0.1} floatIntensity={0.15}>
+      {geometry}
+      {commonMaterial}
+    </Float>
+  )
+}
+
+// Floating leaf-like particles (pollen, spores, tiny leaves)
+const NatureParticles = ({ count = 40 }: { count?: number }) => {
+  const isMobile = useIsMobile()
+  const particleCount = isMobile ? 15 : count
+
+  const particles = useMemo(() => {
+    return Array.from({ length: particleCount }, () => {
+      // Nature-inspired colors: greens, browns, earth tones
+      const natureColors = [
+        [0.48, 0.55, 0.45], // Soft green #7A8B72
+        [0.62, 0.55, 0.42], // Earth tone #9E8B6A
+        [0.71, 0.68, 0.58], // Sage #B5AD94
+        [0.85, 0.78, 0.65], // Beige #D9C7A6
+        [0.55, 0.48, 0.42], // Brown #8C7A6A
+      ]
+      const color = natureColors[Math.floor(Math.random() * natureColors.length)]
+
+      return {
+        position: [
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 5
+        ] as [number, number, number],
+        scale: Math.random() * 0.08 + 0.02,
+        speed: Math.random() * 0.3 + 0.1,
+        color: color
+      }
+    })
   }, [particleCount])
 
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.05
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.05
-    }
-  })
-
   return (
-    <points ref={meshRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[pointsData, 3]}
+    <>
+      {particles.map((p, i) => (
+        <NatureElement
+          key={i}
+          position={p.position}
+          scale={p.scale}
+          color={`rgb(${p.color[0] * 255}, ${p.color[1] * 255}, ${p.color[2] * 255})`}
+          speed={p.speed}
+          shape={i % 3 === 0 ? 'sphere' : i % 3 === 1 ? 'icosahedron' : 'torus'}
         />
-      </bufferGeometry>
-      <pointsMaterial size={0.05} color="#B87C4C" transparent opacity={0.6} sizeAttenuation={false} />
-    </points>
+      ))}
+    </>
   )
 }
 
-// Interactive floating cube
-const FloatingCube = ({ position }: { position: [number, number, number] }) => {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const [hovered, setHovered] = useState(false)
-  const [clicked, setClicked] = useState(false)
+// Large organic nature form (like a floating seed pod or large leaf)
+const OrganicNatureForm = ({ position, scale = 1 }: { position: [number, number, number]; scale?: number }) => {
+  const groupRef = useRef<THREE.Group>(null)
 
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * (clicked ? 0.5 : 0.2)
-      meshRef.current.rotation.y = state.clock.elapsedTime * (clicked ? 0.5 : 0.2)
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.2
+    if (groupRef.current) {
+      const time = state.clock.elapsedTime
+      // Very slow breathing/pulsing
+      const pulse = Math.sin(time * 0.3) * 0.05 + 1
+      groupRef.current.scale.setScalar(scale * pulse)
+      groupRef.current.rotation.y = time * 0.05
     }
   })
 
   return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      scale={clicked ? 1.5 : 1}
-      onClick={() => setClicked(!clicked)}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <boxGeometry args={[0.5, 0.5, 0.5]} />
-      <meshStandardMaterial
-        color={hovered ? '#C4885C' : '#A8BBA3'}
-        emissive={hovered ? '#C4885C' : '#000000'}
-        emissiveIntensity={0.2}
-        transparent
-        opacity={0.8}
-      />
-    </mesh>
+    <Float speed={0.2} rotationIntensity={0.05} floatIntensity={0.1}>
+      <group ref={groupRef} position={position}>
+        {/* Main form */}
+        <Icosahedron args={[0.4, 1]} scale={scale}>
+          <meshStandardMaterial
+            color="#8B9A83"
+            transparent
+            opacity={0.35}
+            roughness={1}
+            metalness={0}
+            flatShading
+          />
+        </Icosahedron>
+        {/* Outer glow layer */}
+        <Sphere args={[0.5, 16, 16]} scale={scale}>
+          <meshBasicMaterial
+            color="#9AAA90"
+            transparent
+            opacity={0.08}
+          />
+        </Sphere>
+      </group>
+    </Float>
   )
 }
 
-// Floating sphere with mobile optimization
-const FloatingSphere = ({ position }: { position: [number, number, number] }) => {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const [hovered, setHovered] = useState(false)
-  const isMobile = useIsMobile()
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.3
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3
-    }
-  })
-
-  return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <sphereGeometry args={[0.3, isMobile ? 16 : 32, isMobile ? 16 : 32]} />
-      <meshStandardMaterial
-        color={hovered ? '#C4885C' : '#B87C4C'}
-        transparent
-        opacity={0.7}
-        wireframe={hovered}
-      />
-    </mesh>
-  )
-}
-
-// 3D Scene with mobile optimization
-const HeroScene = () => {
+// Natural scene with earthy, organic feel
+const NaturalScene = () => {
   const isMobile = useIsMobile()
 
   return (
     <>
-      <ambientLight intensity={isMobile ? 0.3 : 0.4} />
-      <pointLight position={[10, 10, 10]} intensity={isMobile ? 0.5 : 0.8} color="#B87C4C" />
-      <pointLight position={[-10, -10, -10]} intensity={isMobile ? 0.2 : 0.3} color="#A8BBA3" />
+      {/* Natural sunlight-like ambient lighting */}
+      <ambientLight intensity={0.7} color="#FFF8E8" />
 
-      <FloatingParticles count={isMobile ? 20 : 30} />
+      {/* Directional sunlight */}
+      <directionalLight
+        position={[5, 8, 5]}
+        intensity={0.4}
+        color="#FFF4E0"
+        castShadow
+      />
 
+      {/* Soft fill light from opposite side */}
+      <directionalLight
+        position={[-3, 2, -3]}
+        intensity={0.15}
+        color="#E8DED0"
+      />
+
+      {/* Natural environment (warm daylight) */}
+      <Environment preset="dawn" />
+
+      {/* Soft, natural ground shadows */}
+      <ContactShadows
+        position={[0, -2.5, 0]}
+        opacity={0.25}
+        scale={12}
+        blur={3}
+        far={4}
+        color="#8B7355"
+      />
+
+      {/* Nature-inspired floating elements */}
+      <NatureParticles count={isMobile ? 20 : 35} />
+
+      {/* Large organic forms - like floating seeds or natural formations */}
+      <OrganicNatureForm position={[2, 0.5, 1]} scale={1.3} />
+      <OrganicNatureForm position={[-1.5, -0.5, -1]} scale={0.9} />
       {!isMobile && (
         <>
-          <FloatingCube position={[2, 0, 0]} />
-          <FloatingCube position={[-2, 1, -2]} />
-          <FloatingCube position={[0, -1, 2]} />
-
-          <FloatingSphere position={[3, 2, 1]} />
-          <FloatingSphere position={[-3, -2, -1]} />
-          <FloatingSphere position={[1, 3, -3]} />
+          <NatureElement
+            position={[3, 1.5, -2]}
+            scale={1.5}
+            color="#8B9A83"
+            speed={0.4}
+            shape="icosahedron"
+          />
+          <NatureElement
+            position={[-3, -1, 2]}
+            scale={1.2}
+            color="#A8B090"
+            speed={0.3}
+            shape="sphere"
+          />
         </>
       )}
 
-      {isMobile && (
-        <>
-          <FloatingCube position={[2, 0, 0]} />
-          <FloatingSphere position={[-2, 1, -2]} />
-        </>
-      )}
-
-      <Plane args={[20, 20]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]}>
-        <meshStandardMaterial color="#F7F1DE" transparent opacity={0.1} />
+      {/* Natural ground with earthy feel */}
+      <Plane args={[25, 25]} rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.5, 0]}>
+        <meshStandardMaterial
+          color="#E8DDD0"
+          transparent
+          opacity={0.15}
+          roughness={1}
+          metalness={0}
+        />
       </Plane>
     </>
   )
 }
 
 export default function ParallaxHero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const isMobile = useIsMobile()
-
-  useEffect(() => {
-    if (isMobile) return // Disable mouse tracking on mobile for performance
-
-    const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [isMobile])
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-cream to-terracotta/5">
@@ -188,10 +250,14 @@ export default function ParallaxHero() {
         <Canvas
           camera={{ position: [0, 0, 5], fov: 75 }}
           style={{ background: 'transparent' }}
-          dpr={isMobile ? [1, 1.5] : [1, 2]} // Limit pixel ratio on mobile
-          performance={{ min: 0.5 }} // Allow performance degradation
+          dpr={isMobile ? [1, 1.5] : [1, 2]}
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance'
+          }}
         >
-          <HeroScene />
+          <NaturalScene />
         </Canvas>
       </div>
 
@@ -201,13 +267,6 @@ export default function ParallaxHero() {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 0.5 }}
-        style={{
-          transform: `
-            perspective(1000px)
-            rotateX(${mousePosition.y * 5}deg)
-            rotateY(${mousePosition.x * 5}deg)
-          `
-        }}
       >
         <motion.h1
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6"

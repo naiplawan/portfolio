@@ -163,7 +163,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           attribute="class"
           defaultTheme="light"
           enableSystem
-          disableTransitionOnChange={true}
+          disableTransitionOnChange={false}
         >
           <AuthProvider>
             <Analytics />
@@ -172,7 +172,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <NavBar />
             <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
               <ClientErrorBoundary>
-                <PageTransition>
+                <PageTransition variant="fade">
                   {children}
                 </PageTransition>
               </ClientErrorBoundary>
