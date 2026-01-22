@@ -7,26 +7,28 @@ import { AuthProvider } from '@/components/auth/AuthContext'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
-import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, Outfit, JetBrains_Mono } from 'next/font/google'
 import ScrollProgress from '@/components/ui/ScrollProgress'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 import { CustomCursor } from '@/components/ui/custom-cursor'
 
-const spaceGrotesk = Space_Grotesk({
+const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'optional',
   preload: true,
   adjustFontFallback: true,
+  weight: ['300', '400', '500', '600', '700', '800'],
 })
 
-const ibmPlex = IBM_Plex_Sans({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-body',
   display: 'swap',
   preload: true,
   adjustFontFallback: true,
+  weight: ['300', '400', '500', '600', '700', '800'],
 })
 
 const jetbrainsMono = JetBrains_Mono({
@@ -124,7 +126,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlex.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${outfit.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"

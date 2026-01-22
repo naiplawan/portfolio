@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-body)', 'IBM Plex Sans', 'sans-serif'],
-        display: ['var(--font-display)', 'Space Grotesk', 'sans-serif'],
+        sans: ['var(--font-body)', '"Plus Jakarta Sans"', 'sans-serif'],
+        display: ['var(--font-display)', 'Outfit', 'sans-serif'],
         mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -53,11 +53,11 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Earth tone colors
-        sage: '#A8BBA3',
-        terracotta: '#B87C4C',
-        beige: '#C4A484',
-        cream: '#F7F1DE',
+        // Premium Organic colors
+        sage: '#9DB89A',
+        terracotta: '#C97C4C',
+        beige: '#D4B896',
+        cream: '#FFFCF5',
       },
       borderRadius: {
         lg: 'var(--radius)',

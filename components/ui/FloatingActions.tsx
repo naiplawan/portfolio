@@ -2,12 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import Mail from '@/components/ui/icons/Mail';
-import Download from '@/components/ui/icons/Download';
-import { Plus, X } from 'lucide-react';
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
+import { Download, X, Plus } from 'lucide-react';
 
 export default function FloatingActions() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,87 +12,105 @@ export default function FloatingActions() {
     {
       icon: <FaGithub className="w-5 h-5" />,
       label: 'GitHub',
-      onClick: () => window.open('https://github.com/naiplawan', '_blank'),
-      variant: 'default' as const,
-      className: 'bg-gray-800 hover:bg-gray-900 text-white border-gray-800'
+      href: 'https://github.com/naiplawan',
+      color: 'hover:bg-gray-800 dark:hover:bg-gray-700',
+      textColor: 'text-gray-700 dark:text-gray-300',
     },
     {
       icon: <FaLinkedin className="w-5 h-5" />,
       label: 'LinkedIn',
-      onClick: () => window.open('https://www.linkedin.com/in/rachaphol-plookaom', '_blank'),
-      variant: 'default' as const,
-      className: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+      href: 'https://linkedin.com/in/rachaphol-plookaom',
+      color: 'hover:bg-blue-600',
+      textColor: 'text-blue-600 dark:text-blue-400',
     },
     {
-      icon: <Mail size={20} />,
+      icon: <FaEnvelope className="w-5 h-5" />,
       label: 'Email',
-      onClick: () => window.location.href = 'mailto:rachaphol.plo@gmail.com',
-      variant: 'default' as const,
-      className: 'bg-green-600 hover:bg-green-700 text-white border-green-600'
+      href: 'mailto:rachaphol.plo@gmail.com',
+      color: 'hover:bg-emerald-600',
+      textColor: 'text-emerald-600 dark:text-emerald-400',
     },
     {
-      icon: <Download size={20} />,
+      icon: <Download className="w-5 h-5" />,
       label: 'Resume',
-      onClick: () => window.open('/Rachaphol_Resume.pdf', '_blank'),
-      variant: 'default' as const,
-      className: 'bg-purple-600 hover:bg-purple-700 text-white border-purple-600'
-    }
+      href: '/Rachaphol_Resume.pdf',
+      color: 'hover:bg-purple-600',
+      textColor: 'text-purple-600 dark:text-purple-400',
+    },
   ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-8 right-8 z-50">
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute bottom-16 right-0 space-y-3"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-20 right-0 space-y-3"
           >
             {actions.map((action, index) => (
-              <motion.div
+              <motion.a
                 key={action.label}
-                initial={{ opacity: 0, x: 50, y: 20 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: 50, y: 20 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-3"
+                href={action.href}
+                target={action.label !== 'Email' ? '_blank' : undefined}
+                rel={action.label !== 'Email' ? 'noopener noreferrer' : undefined}
+                initial={{ opacity: 0, x: 60, scale: 0.8 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 60, scale: 0.8 }}
+                transition={{
+                  delay: index * 0.06,
+                  type: 'spring' as const,
+                  stiffness: 300,
+                  damping: 20,
+                }}
+                className="flex items-center justify-end gap-3"
               >
-                <Badge
-                  variant="secondary"
-                  className="bg-popover text-popover-foreground px-3 py-1 shadow-lg border"
-                >
+                <span className="bio-glass-card px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap">
                   {action.label}
-                </Badge>
-                <Button
-                  size="icon"
-                  variant={action.variant}
-                  className={`w-12 h-12 rounded-full shadow-lg ${action.className}`}
-                  onClick={action.onClick}
-                  aria-label={action.label}
+                </span>
+                <div
+                  className={`bio-glass-card w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${action.color} ${action.textColor} cursor-pointer`}
                 >
                   {action.icon}
-                </Button>
-              </motion.div>
+                </div>
+              </motion.a>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Button
-        size="icon"
-        variant="default"
+      {/* Main Toggle Button */}
+      <motion.button
+        className="bio-button w-16 h-16 rounded-full flex items-center justify-center shadow-2xl"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground"
         aria-label="Toggle floating menu"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         <motion.div
-          animate={{ rotate: isOpen ? 45 : 0 }}
-          transition={{ duration: 0.2 }}
+          animate={{ rotate: isOpen ? 135 : 0 }}
+          transition={{ duration: 0.3, type: 'spring' as const, stiffness: 200 }}
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+          {isOpen ? (
+            <X className="w-7 h-7" />
+          ) : (
+            <Plus className="w-7 h-7" />
+          )}
         </motion.div>
-      </Button>
+
+        {/* Ripple Effect */}
+        <motion.span
+          className="absolute inset-0 rounded-full bg-primary/30 pointer-events-none"
+          initial={{ scale: 1, opacity: 0.5 }}
+          animate={{
+            scale: isOpen ? 1.5 : 1,
+            opacity: isOpen ? 0 : 0.5,
+          }}
+          transition={{ duration: 0.5 }}
+        />
+      </motion.button>
     </div>
   );
 }

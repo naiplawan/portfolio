@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 interface TypewriterProps {
@@ -11,28 +11,46 @@ interface TypewriterProps {
   delayBetweenWords?: number;
 }
 
-export default function TypewriterEffect({ 
-  words, 
-  className = '', 
-  speed = 100, 
+export default function TypewriterEffect({
+  words,
+  className = '',
+  speed = 100,
   deleteSpeed = 50,
-  delayBetweenWords = 2000 
+  delayBetweenWords = 2000
 }: TypewriterProps) {
   const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const currentWord = words[currentWordIndex];
-    
-    const timer = setTimeout(() => {
+
+    const clearExistingTimeout = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+
+    const typeNext = () => {
+      if (isPaused) {
+        // In pause mode, wait then start deleting
+        timeoutRef.current = setTimeout(() => {
+          setIsPaused(false);
+          setIsDeleting(true);
+        }, delayBetweenWords);
+        return;
+      }
+
       if (!isDeleting) {
         // Typing
         if (displayText.length < currentWord.length) {
           setDisplayText(currentWord.slice(0, displayText.length + 1));
         } else {
-          // Word complete, wait then start deleting
-          setTimeout(() => setIsDeleting(true), delayBetweenWords);
+          // Word complete, pause before deleting
+          setIsPaused(true);
         }
       } else {
         // Deleting
@@ -44,10 +62,13 @@ export default function TypewriterEffect({
           setCurrentWordIndex((prev) => (prev + 1) % words.length);
         }
       }
-    }, isDeleting ? deleteSpeed : speed);
+    };
 
-    return () => clearTimeout(timer);
-  }, [displayText, isDeleting, currentWordIndex, words, speed, deleteSpeed, delayBetweenWords]);
+    clearExistingTimeout();
+    timeoutRef.current = setTimeout(typeNext, isDeleting ? deleteSpeed : speed);
+
+    return () => clearExistingTimeout();
+  }, [displayText, isDeleting, isPaused, currentWordIndex, words, speed, deleteSpeed, delayBetweenWords]);
 
   return (
     <span className={className}>
