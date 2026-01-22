@@ -26,7 +26,7 @@ const experiences: Experience[] = [
     title: 'Software Developer',
     company: 'Unixdev Co., Ltd.',
     location: 'Bangkok, Thailand',
-    period: 'July 2022 - Present',
+    period: 'Feb 2025 - Present',
     description: [
       'Developing web applications using React and TypeScript',
       'Implementing responsive designs and UI/UX best practices',
