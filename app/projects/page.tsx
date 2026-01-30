@@ -1,35 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ExternalLink, Github, Play, X } from 'lucide-react'
+import { ExternalLink, Github, Loader2 } from 'lucide-react'
 import ProjectFilter from '@/components/portfolio/ProjectFilterSimple'
-import { ContentLoader } from '@/components/ui/loading-states'
-import { FALLBACK_PROJECTS } from '@/lib/data/projects-data'
+import { Project } from '@/lib/types/types'
 
 // Project demo components
-const ProjectDemo = ({ project }: { project: typeof FALLBACK_PROJECTS[0] }) => {
-  const [showDemo, setShowDemo] = useState(false)
-  const [demoLoaded, setDemoLoaded] = useState(false)
-
-  const handleDemoClick = () => {
-    setShowDemo(true)
-    // Simulate demo loading
-    setTimeout(() => setDemoLoaded(true), 800)
-  }
-
-  const handleCloseDemo = () => {
-    setShowDemo(false)
-    setDemoLoaded(false)
-  }
+const ProjectDemo = ({ project }: { project: Project }) => {
+  // Use GitHub Open Graph image if available, otherwise use the image from project data
+  const projectImage = project.image
 
   return (
-    <>
-      <Card className="h-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group">
+    <Card className="h-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between mb-3">
             <div className="flex gap-2 flex-wrap">
@@ -52,12 +39,12 @@ const ProjectDemo = ({ project }: { project: typeof FALLBACK_PROJECTS[0] }) => {
             )}
           </div>
 
-          <div className="relative overflow-hidden rounded-lg mb-4">
+          <div className="relative overflow-hidden rounded-lg mb-4 aspect-video">
             <Image
-              src={project.image}
+              src={projectImage}
               alt={`${project.title} project screenshot`}
               fill
-              className="transition-transform duration-300 group-hover:scale-105"
+              className="transition-transform duration-300 group-hover:scale-105 object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               priority={false}
             />
@@ -74,25 +61,27 @@ const ProjectDemo = ({ project }: { project: typeof FALLBACK_PROJECTS[0] }) => {
             {project.description}
           </p>
 
-          <div className="space-y-2">
+          {project.problemStatement && (
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-1">Problem:</p>
               <p className="text-xs text-muted-foreground line-clamp-2">
                 {project.problemStatement}
               </p>
             </div>
+          )}
 
+          {project.solution && (
             <div>
               <p className="text-xs font-medium text-muted-foreground mb-1">Solution:</p>
               <p className="text-xs text-muted-foreground line-clamp-2">
                 {project.solution}
               </p>
             </div>
-          </div>
+          )}
 
           <div className="space-y-3">
             <div className="flex flex-wrap gap-1">
-              {project.technologies.slice(0, 4).map((tech: string) => (
+              {project.technologies.slice(0, 4).map((tech) => (
                 <Badge key={tech} variant="outline" className="text-xs">
                   {tech}
                 </Badge>
@@ -104,38 +93,30 @@ const ProjectDemo = ({ project }: { project: typeof FALLBACK_PROJECTS[0] }) => {
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {project.highlights?.slice(0, 3).map((highlight: string, index: number) => (
-                <span
-                  key={index}
-                  className="text-xs bg-terracotta/10 text-terracotta px-2 py-1 rounded-full"
-                >
-                  {highlight}
-                </span>
-              ))}
-            </div>
+            {project.highlights && project.highlights.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {project.highlights.slice(0, 3).map((highlight, index) => (
+                  <span
+                    key={index}
+                    className="text-xs bg-terracotta/10 text-terracotta px-2 py-1 rounded-full"
+                  >
+                    {highlight}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button
-              onClick={handleDemoClick}
-              variant="outline"
-              size="sm"
-              className="flex-1"
-            >
-              <Play className="w-3 h-3 mr-1" />
-              Live Demo
-            </Button>
-
             {project.liveUrl && (
               <Button
                 asChild
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex-1"
               >
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4" />
+                  Live Demo
                 </a>
               </Button>
             )}
@@ -152,124 +133,69 @@ const ProjectDemo = ({ project }: { project: typeof FALLBACK_PROJECTS[0] }) => {
                 </a>
               </Button>
             )}
+
+            {project.liveUrl && project.liveUrl !== project.githubUrl && (
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </Button>
+            )}
           </div>
+
+          {project.metrics?.performance && (
+            <div className="text-xs text-muted-foreground text-center pt-2 border-t">
+              ⭐ {project.metrics.performance}
+            </div>
+          )}
         </CardContent>
       </Card>
-
-      {/* Interactive Demo Modal */}
-      {showDemo && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
-          onClick={handleCloseDemo}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">{project.title} - Interactive Demo</h3>
-              <Button variant="ghost" size="sm" onClick={handleCloseDemo}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="p-4">
-              <ContentLoader isLoading={!demoLoaded} count={1}>
-                <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden" style={{ height: '500px' }}>
-                  {demoLoaded ? (
-                    <div className="p-6">
-                      <div className="text-center mb-6">
-                        <h4 className="text-xl font-bold mb-2">{project.title} Demo</h4>
-                        <p className="text-muted-foreground">Interactive demonstration of {project.title}</p>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow">
-                            <h5 className="font-semibold mb-2">Tech Stack</h5>
-                            <div className="flex flex-wrap gap-2">
-                              {project.technologies.map((tech: string) => (
-                                <Badge key={tech} variant="secondary">
-                                  {tech}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow">
-                            <h5 className="font-semibold mb-2">Key Features</h5>
-                            <ul className="space-y-1">
-                              {project.highlights?.map((highlight: string, index: number) => (
-                                <li key={index} className="text-sm flex items-center">
-                                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2" />
-                                  {highlight}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow">
-                            <h5 className="font-semibold mb-2">Problem Statement</h5>
-                            <p className="text-sm text-muted-foreground">{project.problemStatement}</p>
-                          </div>
-
-                          <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow">
-                            <h5 className="font-semibold mb-2">Solution</h5>
-                            <p className="text-sm text-muted-foreground">{project.solution}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-6 text-center">
-                        <Button asChild className="bg-terracotta hover:bg-terracotta/90">
-                          <a href={project.liveUrl || '#'} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            View Live Project
-                          </a>
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <div className="animate-spin w-8 h-8 border-4 border-terracotta border-t-transparent rounded-full mx-auto mb-2" />
-                        <p className="text-muted-foreground">Loading demo...</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </ContentLoader>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </>
-  )
+    )
 }
 
 export default function ProjectsPage() {
-  const [filteredProjects, setFilteredProjects] = useState(FALLBACK_PROJECTS)
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const categories = ['all', ...Array.from(new Set(FALLBACK_PROJECTS.map(p => p.category)))]
+  useEffect(() => {
+    async function loadProjects() {
+      try {
+        const response = await fetch('/api/github/projects')
+        const data = await response.json()
+        setFilteredProjects(data.projects || [])
+      } catch (error) {
+        console.error('Failed to load projects:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadProjects()
+  }, [])
+
+  const categories = ['all', ...Array.from(new Set(filteredProjects.map(p => p.category)))]
 
   const handleFilter = (category: string) => {
     setIsLoading(true)
     setSelectedCategory(category)
 
-    // Simulate filtering delay
-    setTimeout(() => {
+    setTimeout(async () => {
       if (category === 'all') {
-        setFilteredProjects(FALLBACK_PROJECTS)
+        // Re-fetch from GitHub when showing all
+        try {
+          const response = await fetch('/api/github/projects')
+          const data = await response.json()
+          setFilteredProjects(data.projects || [])
+        } catch (error) {
+          console.error('Failed to reload projects:', error)
+        }
       } else {
-        setFilteredProjects(FALLBACK_PROJECTS.filter(p => p.category === category))
+        setFilteredProjects(filteredProjects.filter(p => p.category === category))
       }
       setIsLoading(false)
     }, 300)
@@ -324,41 +250,51 @@ export default function ProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Explore my latest projects and interactive demonstrations. Click on any project to see a detailed demo.
+              Explore my latest projects from GitHub. These repositories showcase my work in web development, tools, and more.
             </motion.p>
           </div>
 
-          {/* Project Filter */}
-          <motion.div
-            className="flex flex-wrap justify-center gap-2 mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <ProjectFilter
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onFilter={handleFilter}
-            />
-          </motion.div>
+          {/* Initial loading state */}
+          {isLoading && filteredProjects.length === 0 ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-terracotta mx-auto mb-4" />
+                <p className="text-muted-foreground">Loading projects from GitHub...</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Project Filter */}
+              <motion.div
+                className="flex flex-wrap justify-center gap-2 mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <ProjectFilter
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onFilter={handleFilter}
+                />
+              </motion.div>
 
-          {/* Projects Grid */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            <ContentLoader isLoading={isLoading} count={filteredProjects.length}>
-              {filteredProjects.map((project) => (
-                <motion.div key={project.id} variants={itemVariants}>
-                  <ProjectDemo project={project} />
-                </motion.div>
-              ))}
-            </ContentLoader>
-          </motion.div>
+              {/* Projects Grid */}
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {filteredProjects.map((project) => (
+                  <motion.div key={project.id} variants={itemVariants}>
+                    <ProjectDemo project={project} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            </>
+          )}
 
-          {filteredProjects.length === 0 && (
+          {!isLoading && filteredProjects.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No projects found in this category.</p>
             </div>
