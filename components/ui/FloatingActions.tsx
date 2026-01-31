@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import { Download, X, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function FloatingActions() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +40,9 @@ export default function FloatingActions() {
     },
   ];
 
+  // Don't render on very short viewports where it would overlap navbar
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-6 right-6 z-40 hidden md:block">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -82,12 +84,11 @@ export default function FloatingActions() {
       </AnimatePresence>
 
       {/* Main Toggle Button */}
-      <motion.button
-        className="bio-button w-16 h-16 rounded-full flex items-center justify-center shadow-2xl"
+      <Button
+        size="icon"
+        className="relative w-16 h-16 rounded-full shadow-2xl"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle floating menu"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
       >
         <motion.div
           animate={{ rotate: isOpen ? 135 : 0 }}
@@ -99,18 +100,7 @@ export default function FloatingActions() {
             <Plus className="w-7 h-7" />
           )}
         </motion.div>
-
-        {/* Ripple Effect */}
-        <motion.span
-          className="absolute inset-0 rounded-full bg-primary/30 pointer-events-none"
-          initial={{ scale: 1, opacity: 0.5 }}
-          animate={{
-            scale: isOpen ? 1.5 : 1,
-            opacity: isOpen ? 0 : 0.5,
-          }}
-          transition={{ duration: 0.5 }}
-        />
-      </motion.button>
+      </Button>
     </div>
   );
 }

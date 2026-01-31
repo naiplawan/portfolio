@@ -10,7 +10,7 @@ export interface MagneticButtonProps extends ButtonProps {
   className?: string;
 }
 
-export function MagneticButton({ children, className, ...props }: MagneticButtonProps) {
+export function MagneticButton({ children, className, variant, size, ...props }: MagneticButtonProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -32,6 +32,8 @@ export function MagneticButton({ children, className, ...props }: MagneticButton
       onMouseLeave={handleMouseLeave}
     >
       <Button
+        variant={variant}
+        size={size}
         className={cn(
           'relative overflow-hidden',
           className
@@ -39,7 +41,6 @@ export function MagneticButton({ children, className, ...props }: MagneticButton
         {...props}
       >
         <span className="relative z-10">{children}</span>
-        <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--accent-primary))] via-[hsl(var(--accent-secondary))] to-[hsl(var(--accent-tertiary))] opacity-0 hover:opacity-100 transition-opacity duration-300" />
       </Button>
     </motion.div>
   );

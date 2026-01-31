@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
 // Page loading skeleton
@@ -112,16 +113,15 @@ export function SkillsSkeleton() {
 }
 
 // Button loading state
-export function LoadingButton({ children, loading, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean; children: React.ReactNode }) {
+export function LoadingButton({ children, loading, ...props }: ButtonProps & { loading?: boolean; children: React.ReactNode }) {
   return (
-    <button
+    <Button
       {...props}
       disabled={loading || props.disabled}
-      className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${props.className || ''}`}
     >
       {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
       {children}
-    </button>
+    </Button>
   );
 }
 

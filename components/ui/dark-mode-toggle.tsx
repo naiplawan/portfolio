@@ -4,6 +4,7 @@ import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
 
 export function DarkModeToggle() {
   const { theme, setTheme } = useTheme()
@@ -16,13 +17,15 @@ export function DarkModeToggle() {
 
   if (!mounted) {
     return (
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="relative h-12 w-12 rounded-full overflow-hidden"
         aria-hidden="true"
         tabIndex={-1}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-terracotta/20 to-sage/20 animate-pulse" />
-      </button>
+        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/50 animate-pulse" />
+      </Button>
     )
   }
 

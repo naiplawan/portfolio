@@ -7,6 +7,7 @@ import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
 import Menu from '@/components/ui/icons/Menu';
 import { X, Download } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { Button } from '@/components/ui/button';
 
 function NavBar() {
   const router = useRouter();
@@ -69,15 +70,14 @@ function NavBar() {
         <div className="container-premium">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <motion.button
-              className="text-2xl font-bold font-display tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl px-3 py-2"
+            <Button
+              variant="ghost"
+              className="text-2xl font-bold font-display tracking-tight px-3 py-2"
               onClick={() => router.push('/')}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               aria-label="Go to homepage"
             >
-              <span className="bio-gradient-text">Rachaphol.</span>
-            </motion.button>
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Rachaphol.</span>
+            </Button>
 
             {/* Desktop Nav Items */}
             <div className="hidden lg:flex items-center gap-1" role="menubar">
@@ -90,9 +90,10 @@ function NavBar() {
                   onHoverStart={() => setHoveredItem(item.href)}
                   onHoverEnd={() => setHoveredItem(null)}
                 >
-                  <button
+                  <Button
+                    variant="ghost"
                     className={cn(
-                      'relative px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300',
+                      'relative px-5 py-2.5 font-medium text-sm',
                       isActiveRoute(item.href)
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground'
@@ -111,20 +112,7 @@ function NavBar() {
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
-
-                    {/* Hover Background */}
-                    <AnimatePresence>
-                      {hoveredItem === item.href && !isActiveRoute(item.href) && (
-                        <motion.div
-                          className="absolute inset-0 bg-muted/50 rounded-xl"
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
-                        />
-                      )}
-                    </AnimatePresence>
-                  </button>
+                  </Button>
                 </motion.div>
               ))}
             </div>
@@ -132,25 +120,25 @@ function NavBar() {
             {/* Right Actions */}
             <div className="flex items-center gap-3">
               {/* Download Resume Button */}
-              <motion.a
-                href="/Rachaphol_Resume.pdf"
-                download="Rachaphol_Plookaom_Resume.pdf"
-                className="hidden md:flex bio-button px-5 py-2.5 text-sm font-semibold items-center gap-2"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <Button
+                asChild
+                variant="default"
+                size="sm"
+                className="hidden md:flex"
               >
-                <Download className="w-4 h-4" />
-                <span>Resume</span>
-              </motion.a>
+                <a href="/Rachaphol_Resume.pdf" download="Rachaphol_Plookaom_Resume.pdf">
+                  <Download className="w-4 h-4 mr-2" />
+                  Resume
+                </a>
+              </Button>
 
               <DarkModeToggle />
 
               {/* Mobile Menu Toggle */}
-              <button
-                className="lg:hidden bio-glass-card p-3 rounded-xl"
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label={
                   isOpen ? 'Close navigation menu' : 'Open navigation menu'
@@ -163,7 +151,7 @@ function NavBar() {
                 ) : (
                   <Menu size={22} />
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -195,16 +183,17 @@ function NavBar() {
               <div className="flex flex-col h-full p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
-                  <div className="text-2xl font-bold font-display bio-gradient-text">
+                  <div className="text-2xl font-bold font-display bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     Menu
                   </div>
-                  <button
-                    className="p-2 rounded-xl hover:bg-muted/50 transition-colors"
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setIsOpen(false)}
                     aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Navigation Items */}
@@ -217,12 +206,13 @@ function NavBar() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.08 }}
                       >
-                        <button
+                        <Button
+                          variant={isActiveRoute(item.href) ? 'secondary' : 'ghost'}
                           className={cn(
-                            'w-full text-left px-5 py-4 rounded-xl font-medium text-base transition-all duration-300 relative overflow-hidden',
+                            'w-full justify-start px-5 py-6 font-medium text-base',
                             isActiveRoute(item.href)
-                              ? 'text-primary bg-primary/10'
-                              : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                              ? 'text-primary'
+                              : 'text-muted-foreground'
                           )}
                           onClick={() => handleNavigation(item.href)}
                           role="menuitem"
@@ -230,15 +220,8 @@ function NavBar() {
                             isActiveRoute(item.href) ? 'page' : undefined
                           }
                         >
-                          <span className="relative z-10">{item.label}</span>
-                          {isActiveRoute(item.href) && (
-                            <motion.div
-                              className="absolute inset-0 bg-primary/10"
-                              layoutId="mobileActiveIndicator"
-                              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                            />
-                          )}
-                        </button>
+                          {item.label}
+                        </Button>
                       </motion.div>
                     ))}
                   </div>
@@ -250,22 +233,19 @@ function NavBar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: navItems.length * 0.08 }}
                   >
-                    <a
-                      href="/Rachaphol_Resume.pdf"
-                      download="Rachaphol_Plookaom_Resume.pdf"
-                    >
-                      <button className="w-full bio-button px-6 py-4 text-base font-semibold flex items-center justify-center gap-3">
-                        <Download className="w-5 h-5" />
-                        <span>Download Resume</span>
-                      </button>
-                    </a>
+                    <Button asChild size="lg" className="w-full">
+                      <a href="/Rachaphol_Resume.pdf" download="Rachaphol_Plookaom_Resume.pdf">
+                        <Download className="w-5 h-5 mr-2" />
+                        Download Resume
+                      </a>
+                    </Button>
                   </motion.div>
                 </nav>
 
                 {/* Footer in Mobile Menu */}
                 <div className="pt-6 mt-auto border-t border-border/50">
                   <p className="text-sm text-muted-foreground text-center">
-                    © 2024 Rachaphol Plookaom
+                    © 2025 Rachaphol Plookaom
                   </p>
                 </div>
               </div>

@@ -3,10 +3,9 @@ import PageTransition from '@/components/layout/page-transition'
 
 // Force dynamic rendering to avoid Supabase serialization issues
 export const dynamic = 'force-dynamic'
-import { ThemeProvider } from '@/components/layout/theme-provider'
+import { Providers } from '@/components/layout/providers'
 import { Analytics } from '@/components/analytics'
 import { SkipLink } from '@/components/accessibility/skip-link'
-import { SupabaseAuthProvider } from '@/components/auth/SupabaseAuthProvider'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
@@ -15,8 +14,6 @@ import ScrollProgress from '@/components/ui/ScrollProgress'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 import { CustomCursor } from '@/components/ui/custom-cursor'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -44,32 +41,6 @@ const jetbrainsMono = JetBrains_Mono({
   adjustFontFallback: true,
 })
 
-/**
- * React Query client for server components
- */
-function makeQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-        refetchOnWindowFocus: false,
-      },
-    },
-  })
-}
-
-let browserQueryClient: QueryClient | undefined = undefined
-
-function getQueryClient() {
-  if (typeof window === 'undefined') {
-    // Server: always create a new query client
-    return makeQueryClient()
-  } else {
-    // Browser: create a new query client once
-    if (!browserQueryClient) browserQueryClient = makeQueryClient()
-    return browserQueryClient
-  }
-}
 
 export const metadata = {
   metadataBase: new URL('https://rachaphol-portfolio.vercel.app'),
@@ -193,32 +164,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen font-body">
         <SkipLink />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange={false}
-        >
-          <QueryClientProvider client={getQueryClient()}>
-            <SupabaseAuthProvider>
-              <Analytics />
-              <CustomCursor />
-              <ScrollProgress />
-              <NavBar />
-              <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
-                <ClientErrorBoundary>
-                  <PageTransition variant="fade">
-                    {children}
-                  </PageTransition>
-                </ClientErrorBoundary>
-              </main>
-              <Footer />
-              <FloatingActions />
-              <ScrollProgressComponents />
-            </SupabaseAuthProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        </ThemeProvider>
+        <Providers>
+          <Analytics />
+          <CustomCursor />
+          <ScrollProgress />
+          <NavBar />
+          <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
+            <ClientErrorBoundary>
+              <PageTransition variant="fade">
+                {children}
+              </PageTransition>
+            </ClientErrorBoundary>
+          </main>
+          <Footer />
+          <FloatingActions />
+          <ScrollProgressComponents />
+        </Providers>
       </body>
     </html>
   )

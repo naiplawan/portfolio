@@ -4,7 +4,15 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, ArrowLeft, Tag, Eye, Loader2, Star } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  ArrowLeft,
+  Tag,
+  Eye,
+  Loader2,
+  Star,
+} from 'lucide-react';
 import Link from 'next/link';
 import TipTapEditor from '@/components/blog/editor/TipTapEditor';
 import { useBlogPost, useBlogPosts } from '@/lib/hooks';
@@ -22,18 +30,14 @@ export default function BlogPostPage() {
     limit: 3,
   });
 
-  const postsWithSameTags = relatedPosts?.filter(
-    (p) => p.id !== post?.id && p.tags.some((t) => post?.tags.some((pt) => pt.id === t.id))
-  ).slice(0, 3) || [];
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-gray-600">Loading article...</p>
-      </div>
-    );
-  }
+  const postsWithSameTags =
+    relatedPosts
+      ?.filter(
+        (p) =>
+          p.id !== post?.id &&
+          p.tags.some((t) => post?.tags.some((pt) => pt.id === t.id)),
+      )
+      .slice(0, 3) || [];
 
   if (error || !post) {
     return (
@@ -43,7 +47,8 @@ export default function BlogPostPage() {
             Article Not Found
           </h1>
           <p className="text-gray-600 mb-8">
-            The blog post you're looking for doesn't exist, has been removed, or is still a draft.
+            The blog post you're looking for doesn't exist, has been removed, or
+            is still a draft.
           </p>
           <Link href="/blog">
             <Button size="lg">
@@ -67,7 +72,10 @@ export default function BlogPostPage() {
           >
             <nav aria-label="Back to blog">
               <Link href="/blog">
-                <Button variant="outline" className="mb-8 bg-white hover:bg-gray-50">
+                <Button
+                  variant="outline"
+                  className="mb-8 bg-white hover:bg-gray-50"
+                >
                   <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
                   Back to Blog
                 </Button>
@@ -75,32 +83,54 @@ export default function BlogPostPage() {
             </nav>
 
             <header className="mb-12">
-              <div className="flex flex-wrap items-center gap-2 mb-4" role="list" aria-label="Article metadata">
+              <div
+                className="flex flex-wrap items-center gap-2 mb-4"
+                role="list"
+                aria-label="Article metadata"
+              >
                 {post.featured && (
-                  <Badge className="bg-yellow-100 text-yellow-800 border-0" role="listitem">
+                  <Badge
+                    className="bg-yellow-100 text-yellow-800 border-0"
+                    role="listitem"
+                  >
                     <Star className="w-3 h-3 mr-1" aria-hidden="true" />
                     Featured
                   </Badge>
                 )}
                 {post.status === 'published' && (
-                  <Badge variant="outline" className="text-green-600 border-green-600" role="listitem">
+                  <Badge
+                    variant="outline"
+                    className="text-green-600 border-green-600"
+                    role="listitem"
+                  >
                     Published
                   </Badge>
                 )}
                 {post.status !== 'published' && (
-                  <Badge variant="outline" className="text-gray-600 border-gray-600" role="listitem">
+                  <Badge
+                    variant="outline"
+                    className="text-gray-600 border-gray-600"
+                    role="listitem"
+                  >
                     {post.status === 'draft' ? 'Draft' : post.status}
                   </Badge>
                 )}
                 {post.viewCount !== undefined && post.viewCount > 0 && (
-                  <Badge variant="outline" className="text-blue-600 border-blue-600" role="listitem">
+                  <Badge
+                    variant="outline"
+                    className="text-blue-600 border-blue-600"
+                    role="listitem"
+                  >
                     <Eye className="w-3 h-3 mr-1" aria-hidden="true" />
                     {post.viewCount} views
                   </Badge>
                 )}
               </div>
 
-              <h1 id="article-title" className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1
+                id="article-title"
+                className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+              >
                 {post.title}
               </h1>
 
@@ -110,7 +140,11 @@ export default function BlogPostPage() {
 
               {/* Author Info */}
               {post.author && (
-                <div className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200" role="group" aria-label="Author information">
+                <div
+                  className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200"
+                  role="group"
+                  aria-label="Author information"
+                >
                   {post.author.avatar ? (
                     <img
                       src={post.author.avatar}
@@ -118,7 +152,10 @@ export default function BlogPostPage() {
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold" aria-hidden="true">
+                    <div
+                      className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold"
+                      aria-hidden="true"
+                    >
                       {post.author.name?.charAt(0).toUpperCase() || '?'}
                     </div>
                   )}
@@ -135,7 +172,12 @@ export default function BlogPostPage() {
                 {post.publishedAt && (
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    <span>Published {formatDistanceToNow(new Date(post.publishedAt), { addSuffix: true })}</span>
+                    <span>
+                      Published{' '}
+                      {formatDistanceToNow(new Date(post.publishedAt), {
+                        addSuffix: true,
+                      })}
+                    </span>
                   </div>
                 )}
                 {post.readTime && (
@@ -146,15 +188,28 @@ export default function BlogPostPage() {
                 )}
                 {post.updatedAt && post.updatedAt !== post.publishedAt && (
                   <div className="flex items-center gap-2">
-                    <span>Updated {formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}</span>
+                    <span>
+                      Updated{' '}
+                      {formatDistanceToNow(new Date(post.updatedAt), {
+                        addSuffix: true,
+                      })}
+                    </span>
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-2" role="list" aria-label="Article tags">
+              <div
+                className="flex flex-wrap gap-2"
+                role="list"
+                aria-label="Article tags"
+              >
                 {post.tags.map((tag) => (
                   <Link key={tag.id} href={`/blog?tag=${tag.slug}`}>
-                    <Badge variant="secondary" className="text-sm hover:bg-gray-200 cursor-pointer" role="listitem">
+                    <Badge
+                      variant="secondary"
+                      className="text-sm hover:bg-gray-200 cursor-pointer"
+                      role="listitem"
+                    >
                       <Tag className="w-3 h-3 mr-1" aria-hidden="true" />
                       {tag.name}
                     </Badge>
@@ -175,7 +230,11 @@ export default function BlogPostPage() {
             )}
 
             {/* Content */}
-            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm" role="article" aria-labelledby="article-title">
+            <div
+              className="bg-white rounded-2xl p-8 md:p-12 shadow-sm"
+              role="article"
+              aria-labelledby="article-title"
+            >
               <TipTapEditor
                 content={post.content}
                 onChange={() => {}}
@@ -185,16 +244,28 @@ export default function BlogPostPage() {
 
             {/* Footer */}
             <div className="mt-12 pt-8 border-t border-gray-200">
-              <nav className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" aria-label="Article footer navigation">
+              <nav
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                aria-label="Article footer navigation"
+              >
                 <Link href="/blog">
-                  <Button variant="outline" className="bg-white hover:bg-gray-50">
+                  <Button
+                    variant="outline"
+                    className="bg-white hover:bg-gray-50"
+                  >
                     <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
                     Back to Blog
                   </Button>
                 </Link>
                 {post.updatedAt && (
-                  <div className="text-gray-500 text-sm" aria-label={`Last updated ${formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}`}>
-                    Last updated: {formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}
+                  <div
+                    className="text-gray-500 text-sm"
+                    aria-label={`Last updated ${formatDistanceToNow(new Date(post.updatedAt), { addSuffix: true })}`}
+                  >
+                    Last updated:{' '}
+                    {formatDistanceToNow(new Date(post.updatedAt), {
+                      addSuffix: true,
+                    })}
                   </div>
                 )}
               </nav>
@@ -209,11 +280,23 @@ export default function BlogPostPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-16"
             >
-              <h2 id="related-posts-heading" className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6" role="list" aria-labelledby="related-posts-heading">
+              <h2
+                id="related-posts-heading"
+                className="text-2xl font-bold text-gray-900 mb-6"
+              >
+                Related Articles
+              </h2>
+              <div
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                role="list"
+                aria-labelledby="related-posts-heading"
+              >
                 {postsWithSameTags.map((relatedPost) => (
                   <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`}>
-                    <Card className="h-full hover:shadow-lg transition-shadow group cursor-pointer" role="listitem">
+                    <Card
+                      className="h-full hover:shadow-lg transition-shadow group cursor-pointer"
+                      role="listitem"
+                    >
                       <div className="relative h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-t-lg overflow-hidden">
                         {relatedPost.coverImage ? (
                           <img
@@ -222,7 +305,10 @@ export default function BlogPostPage() {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center" aria-hidden="true">
+                          <div
+                            className="w-full h-full flex items-center justify-center"
+                            aria-hidden="true"
+                          >
                             <span className="text-white text-3xl font-bold opacity-50">
                               {relatedPost.title.charAt(0)}
                             </span>
@@ -246,7 +332,10 @@ export default function BlogPostPage() {
                           {relatedPost.publishedAt && (
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
-                              {formatDistanceToNow(new Date(relatedPost.publishedAt), { addSuffix: true })}
+                              {formatDistanceToNow(
+                                new Date(relatedPost.publishedAt),
+                                { addSuffix: true },
+                              )}
                             </span>
                           )}
                         </div>

@@ -43,8 +43,8 @@ import {
   useUpdatePost,
   useDeletePost,
 } from '@/lib/hooks';
-import { useSupabaseAuth } from '@/lib/hooks/use-auth';
-import SupabaseProtectedRoute from '@/components/auth/SupabaseProtectedRoute';
+import { useSession, signOut } from 'next-auth/react';
+import NextAuthProtectedRoute from '@/components/auth/NextAuthProtectedRoute';
 import TipTapEditor from '@/components/blog/editor/TipTapEditor';
 import { formatDistanceToNow } from 'date-fns';
 import { UploadService } from '@/lib/services/upload.service';
@@ -379,7 +379,8 @@ function BlogManageContent() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<string | null>(null);
 
-  const { user, signOut } = useSupabaseAuth();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const { data: posts, isLoading: isLoadingPosts } = useAuthorPosts(user?.id || '', true);
   const { data: stats } = useAuthorStats(user?.id || '');
@@ -482,7 +483,7 @@ function BlogManageContent() {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <Button
                     variant="outline"
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: '/blog' })}
                     className="text-red-600 hover:text-red-700 hover:bg-red-50 w-full sm:w-auto"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
@@ -697,8 +698,8 @@ function BlogManageContent() {
 
 export default function BlogManagePage() {
   return (
-    <SupabaseProtectedRoute>
+    <NextAuthProtectedRoute>
       <BlogManageContent />
-    </SupabaseProtectedRoute>
+    </NextAuthProtectedRoute>
   );
 }

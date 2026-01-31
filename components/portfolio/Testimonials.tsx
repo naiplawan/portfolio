@@ -130,13 +130,15 @@ export default function Testimonials() {
               {/* Dots Indicator */}
               <div className="flex gap-2">
                 {testimonials.map((_, index) => (
-                  <button
+                  <Button
                     key={index}
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`h-2 rounded-full transition-all duration-300 p-0 ${
                       index === currentIndex
-                        ? 'bg-blue-600 w-8'
-                        : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+                        ? 'bg-primary w-8'
+                        : 'bg-muted w-2 hover:bg-muted-foreground/50'
                     }`}
                     aria-label={`Go to testimonial ${index + 1}`}
                   />

@@ -164,8 +164,10 @@ export default function ProjectFilter({
         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Filter by Tags</h4>
         <div className="flex flex-wrap gap-2">
           {allTags.slice(0, 12).map((tag) => (
-            <button
+            <Button
               key={tag}
+              variant={selectedTags.includes(tag) ? 'default' : 'outline'}
+              size="sm"
               onClick={() => {
                 if (selectedTags.includes(tag)) {
                   onTagsChange(selectedTags.filter(t => t !== tag));
@@ -173,14 +175,10 @@ export default function ProjectFilter({
                   onTagsChange([...selectedTags, tag]);
                 }
               }}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedTags.includes(tag)
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-              }`}
+              className="rounded-full"
             >
               {tag}
-            </button>
+            </Button>
           ))}
           {allTags.length > 12 && (
             <span className="px-3 py-1.5 rounded-full text-sm text-gray-500 bg-gray-50 dark:bg-gray-800">

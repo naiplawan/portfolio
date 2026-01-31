@@ -147,7 +147,7 @@ function Footer() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              © 2024 Rachaphol Plookaom. Made with{' '}
+              © 2025 Rachaphol Plookaom. Made with{' '}
               <Heart className="w-4 h-4 text-red-500 fill-red-500" /> in Bangkok
             </p>
             <p className="text-sm text-muted-foreground">

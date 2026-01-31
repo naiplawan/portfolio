@@ -231,33 +231,29 @@ export default function DeveloperHero() {
 
             {/* CTA Buttons */}
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-              <MagneticButton>
-                <button className="bio-button px-8 py-4 text-base">
-                  <span className="flex items-center gap-2">
-                    <FaEnvelope className="w-5 h-5" />
-                    Get in Touch
-                  </span>
-                </button>
+              <MagneticButton variant="default" size="lg">
+                <span className="flex items-center gap-2">
+                  <FaEnvelope className="w-5 h-5" />
+                  Get in Touch
+                </span>
               </MagneticButton>
 
-              <MagneticButton>
-                <button
-                  className="bio-button-ghost px-8 py-4 text-base flex items-center gap-2"
-                  onClick={() => window.open('https://github.com/naiplawan', '_blank')}
-                >
-                  <FaGithub className="w-5 h-5" />
-                  <span>GitHub</span>
-                </button>
+              <MagneticButton
+                variant="outline"
+                size="lg"
+                onClick={() => window.open('https://github.com/naiplawan', '_blank')}
+              >
+                <FaGithub className="w-5 h-5" />
+                <span>GitHub</span>
               </MagneticButton>
 
-              <MagneticButton>
-                <button
-                  className="bio-button-ghost px-8 py-4 text-base flex items-center gap-2"
-                  onClick={() => window.open('https://linkedin.com/in/rachaphol-plookaom', '_blank')}
-                >
-                  <FaLinkedin className="w-5 h-5" />
-                  <span>LinkedIn</span>
-                </button>
+              <MagneticButton
+                variant="outline"
+                size="lg"
+                onClick={() => window.open('https://linkedin.com/in/rachaphol-plookaom', '_blank')}
+              >
+                <FaLinkedin className="w-5 h-5" />
+                <span>LinkedIn</span>
               </MagneticButton>
             </motion.div>
           </motion.div>

@@ -107,6 +107,7 @@ export default function TipTapEditor({
     ],
     content,
     editable,
+    immediatelyRender: false, // Prevent SSR hydration mismatch
     onUpdate: ({ editor }) => {
       onChange(editor.getJSON());
     },
