@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   Tag,
   Eye,
-  Loader2,
   Star,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -23,7 +22,7 @@ export default function BlogPostPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data: post, isLoading, error } = useBlogPost(slug);
+  const { data: post, error } = useBlogPost(slug);
 
   // Fetch related posts (same tags, excluding current post)
   const { data: relatedPosts } = useBlogPosts({

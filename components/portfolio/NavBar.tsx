@@ -14,8 +14,7 @@ function NavBar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-
+  
   const navItems = [
     { label: 'About', href: '/about' },
     { label: 'Projects', href: '/projects' },
@@ -87,9 +86,7 @@ function NavBar() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 }}
-                  onHoverStart={() => setHoveredItem(item.href)}
-                  onHoverEnd={() => setHoveredItem(null)}
-                >
+                  >
                   <Button
                     variant="ghost"
                     className={cn(

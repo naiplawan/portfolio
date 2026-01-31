@@ -6,9 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import {
   Github,
   ExternalLink,
-  ChevronRight,
   Code2,
-  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';

@@ -11,7 +11,6 @@ import {
   Clock,
   Search,
   ArrowRight,
-  Loader2,
   FileText,
   Star,
 } from 'lucide-react';
@@ -23,8 +22,8 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
 
-  const { data: allTags, isLoading: isLoadingTags } = usePopularTags(30);
-  const { data: blogPosts, isLoading: isLoadingPosts } = useBlogPosts({
+  const { data: allTags } = usePopularTags(30);
+  const { data: blogPosts } = useBlogPosts({
     limit: 50,
   });
 
