@@ -116,12 +116,35 @@ function NavBar() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-3">
+              {/* Hire Me Button - Desktop Only */}
+              <Button
+                onClick={() => {
+                  // Check if we're on homepage and scroll to contact section
+                  if (typeof window !== 'undefined') {
+                    if (window.location.pathname === '/') {
+                      const contactSection = document.querySelector('#contact')
+                      if (contactSection) {
+                        contactSection.scrollIntoView({ behavior: 'smooth' })
+                      }
+                    } else {
+                      // Navigate to homepage with contact hash
+                      window.location.href = '/#contact'
+                    }
+                  }
+                }}
+                variant="default"
+                size="sm"
+                className="hidden md:flex bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                Hire Me
+              </Button>
+
               {/* Download Resume Button */}
               <Button
                 asChild
-                variant="default"
+                variant="outline"
                 size="sm"
-                className="hidden md:flex"
+                className="hidden lg:flex"
               >
                 <a href="/Rachaphol_Resume.pdf" download="Rachaphol_Plookaom_Resume.pdf">
                   <Download className="w-4 h-4 mr-2" />

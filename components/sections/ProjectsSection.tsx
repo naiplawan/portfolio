@@ -2,17 +2,20 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import {
   Github,
   ExternalLink,
   Code2,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useParallelData } from '@/lib/hooks/use-parallel-data';
 
 interface Project {
   id: number;
@@ -33,28 +36,25 @@ interface Project {
 }
 
 function useGitHubProjects() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0)
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('/api/github/projects');
-        if (!response.ok) throw new Error('Failed to fetch projects');
-        const data = await response.json();
-        setProjects(data.projects || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load projects');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // Extract fetch function for parallel data fetching pattern
+  const fetchProjects = async (): Promise<Project[]> => {
+    const response = await fetch('/api/github/projects');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects (${response.status})`);
+    }
+    const data = await response.json();
+    return data.projects || [];
+  };
 
-    fetchProjects();
-  }, []);
+  const { data: projects, isLoading, error } = useParallelData(fetchProjects, [retryCount], []);
 
-  return { projects, isLoading, error };
+  const retry = () => {
+    setRetryCount(prev => prev + 1)
+  }
+
+  return { projects: projects ?? [], isLoading, error, retry };
 }
 
 function ProjectCardSkeleton() {
@@ -246,7 +246,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 export default function ProjectsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
-  const { projects, isLoading, error } = useGitHubProjects();
+  const { projects, isLoading, error, retry } = useGitHubProjects();
 
   // Show only featured or top 6 projects
   const displayedProjects = projects
@@ -299,12 +299,21 @@ export default function ProjectsSection() {
 
         {/* Error State */}
         {error && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">{error}</p>
-            <Button variant="outline" onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16"
+          >
+            <div className="bio-glass-card max-w-md mx-auto p-8 rounded-2xl">
+              <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+              <h3 className="text-xl font-display font-bold mb-2">Unable to Load Projects</h3>
+              <p className="text-muted-foreground mb-6">{error}</p>
+              <Button onClick={retry} variant="default" className="gap-2">
+                <RefreshCw className="w-4 h-4" />
+                Try Again
+              </Button>
+            </div>
+          </motion.div>
         )}
 
         {/* Projects Grid */}
@@ -318,10 +327,29 @@ export default function ProjectsSection() {
 
         {/* Empty State */}
         {!isLoading && !error && displayedProjects.length === 0 && (
-          <div className="text-center py-12">
-            <Code2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">No projects found</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16"
+          >
+            <div className="bio-glass-card max-w-md mx-auto p-8 rounded-2xl">
+              <Code2 className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
+              <h3 className="text-xl font-display font-bold mb-2">No Projects Found</h3>
+              <p className="text-muted-foreground mb-6">
+                Check back later for new projects or visit my GitHub profile directly.
+              </p>
+              <Button asChild variant="outline">
+                <a
+                  href="https://github.com/naiplawan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Github className="w-4 h-4 mr-2" />
+                  View GitHub Profile
+                </a>
+              </Button>
+            </div>
+          </motion.div>
         )}
 
         {/* View More Button */}

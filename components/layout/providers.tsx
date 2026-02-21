@@ -39,9 +39,11 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="light"
+      defaultTheme="system"
       enableSystem
       disableTransitionOnChange={false}
+      storageKey="portfolio-theme"
+      themes={['light', 'dark']}
     >
       <NextAuthProvider>
         <QueryClientProvider client={queryClient}>

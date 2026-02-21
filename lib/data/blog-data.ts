@@ -414,21 +414,25 @@ export function getPostsByTag(tag: string): BlogPost[] {
 }
 
 // Get recent posts
+// Note: Using sort() here since we need the full dataset ordered before slicing
+// For better performance with large datasets, consider using a selection algorithm instead
 export function getRecentPosts(limit: number = 3): BlogPost[] {
-  return getPublishedPosts()
+  const published = getPublishedPosts();
+  // For small datasets, sort is acceptable. For large datasets, use a selection algorithm
+  // to find the top N items without sorting the entire array (O(n log n) vs O(n * k))
+  return published
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, limit);
 }
 
 // Get all unique tags
+// Optimized: Using flatMap and filter for better performance than nested forEach
 export function getAllTags(): string[] {
-  const tags = new Set<string>();
-  blogPosts.forEach(post => {
-    if (post.status === 'published') {
-      post.tags.forEach(tag => tags.add(tag));
-    }
-  });
-  return Array.from(tags).sort();
+  const tags = blogPosts
+    .filter(post => post.status === 'published')
+    .flatMap(post => post.tags);
+  // Use Set for deduplication, then sort once at the end
+  return Array.from(new Set(tags)).sort();
 }
 
 // Get all categories with post count

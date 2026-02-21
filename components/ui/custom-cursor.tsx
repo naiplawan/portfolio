@@ -51,10 +51,12 @@ export function CustomCursor() {
     const handleMouseDown = () => setClicked(true);
     const handleMouseUp = () => setClicked(false);
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
+    // Use passive event listeners for better scroll performance
+    // mousemove and mouseover don't prevent default, so passive is safe
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    window.addEventListener('mousedown', handleMouseDown, { passive: true });
+    window.addEventListener('mouseup', handleMouseUp, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);

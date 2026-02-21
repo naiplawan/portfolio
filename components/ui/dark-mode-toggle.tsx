@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
+// Constants for localStorage management
+const THEME_STORAGE_KEY = 'portfolio-theme'
+const THEME_VERSION = 'v1' // For future migrations
+
 export function DarkModeToggle() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -13,6 +17,25 @@ export function DarkModeToggle() {
 
   useEffect(() => {
     setMounted(true)
+
+    // Migrate old theme preferences if needed
+    const migrateTheme = () => {
+      try {
+        const stored = localStorage.getItem(THEME_STORAGE_KEY)
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          // If we have a versioned migration system in future, handle it here
+          if (parsed.version && parsed.version !== THEME_VERSION) {
+            // Perform migration if needed
+            console.log('Theme version mismatch, migrating...')
+          }
+        }
+      } catch (e) {
+        console.error('Error migrating theme:', e)
+      }
+    }
+
+    migrateTheme()
   }, [])
 
   if (!mounted) {

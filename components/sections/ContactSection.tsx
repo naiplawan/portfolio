@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, CheckCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, CheckCircle, AlertCircle, Check } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -71,15 +71,80 @@ const socialLinks: SocialLink[] = [
   },
 ]
 
+interface ValidationErrors {
+  name?: string
+  email?: string
+  message?: string
+}
+
 export default function ContactSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.1 })
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [touched, setTouched] = useState({ name: false, email: false, message: false })
+
+  const validateField = (name: string, value: string): string | undefined => {
+    switch (name) {
+      case 'name':
+        if (value.length < 2) {
+          return 'Name must be at least 2 characters'
+        }
+        return undefined
+      case 'email': {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(value)) {
+          return 'Please enter a valid email address'
+        }
+        return undefined
+      }
+      case 'message':
+        if (value.length < 10) {
+          return 'Message must be at least 10 characters'
+        }
+        return undefined
+      default:
+        return undefined
+    }
+  }
+
+  const handleBlur = (field: keyof typeof formData) => {
+    setTouched(prev => ({ ...prev, [field]: true }))
+    const error = validateField(field, formData[field])
+    setErrors(prev => ({ ...prev, [field]: error }))
+  }
+
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (touched[field]) {
+      const error = validateField(field, value)
+      setErrors(prev => ({ ...prev, [field]: error }))
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Validate all fields
+    const newErrors: ValidationErrors = {}
+    let hasError = false
+
+    Object.entries(formData).forEach(([key, value]) => {
+      const error = validateField(key, value)
+      if (error) {
+        newErrors[key as keyof ValidationErrors] = error
+        hasError = true
+      }
+    })
+
+    setErrors(newErrors)
+    setTouched({ name: true, email: true, message: true })
+
+    if (hasError) return
+
     setIsSubmitting(true)
 
     // Simulate form submission
@@ -92,7 +157,18 @@ export default function ContactSection() {
     setTimeout(() => {
       setIsSubmitted(false)
       setFormData({ name: '', email: '', message: '' })
+      setTouched({ name: false, email: false, message: false })
     }, 3000)
+  }
+
+  const getFieldState = (field: keyof typeof formData) => {
+    if (touched[field] && errors[field]) {
+      return 'error'
+    }
+    if (touched[field] && !errors[field] && formData[field]) {
+      return 'success'
+    }
+    return 'default'
   }
 
   return (
@@ -142,40 +218,120 @@ export default function ContactSection() {
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Your Name</Label>
-                    <Input
-                      type="text"
-                      id="name"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="John Doe"
-                    />
+                    <Label htmlFor="name" className={cn(
+                      getFieldState('name') === 'error' && 'text-destructive',
+                      getFieldState('name') === 'success' && 'text-emerald-600'
+                    )}>
+                      Your Name
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={(e) => handleChange('name', e.target.value)}
+                        onBlur={() => handleBlur('name')}
+                        placeholder="John Doe"
+                        className={cn(
+                          'pr-10 transition-colors',
+                          getFieldState('name') === 'error' && 'border-destructive focus:border-destructive',
+                          getFieldState('name') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                        )}
+                      />
+                      {getFieldState('name') === 'success' && (
+                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500" />
+                      )}
+                      {getFieldState('name') === 'error' && (
+                        <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive" />
+                      )}
+                    </div>
+                    {touched.name && errors.name && (
+                      <p className="text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.name}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      type="email"
-                      id="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="john@example.com"
-                    />
+                    <Label htmlFor="email" className={cn(
+                      getFieldState('email') === 'error' && 'text-destructive',
+                      getFieldState('email') === 'success' && 'text-emerald-600'
+                    )}>
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        type="email"
+                        id="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => handleChange('email', e.target.value)}
+                        onBlur={() => handleBlur('email')}
+                        placeholder="john@example.com"
+                        className={cn(
+                          'pr-10 transition-colors',
+                          getFieldState('email') === 'error' && 'border-destructive focus:border-destructive',
+                          getFieldState('email') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                        )}
+                      />
+                      {getFieldState('email') === 'success' && (
+                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500" />
+                      )}
+                      {getFieldState('email') === 'error' && (
+                        <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive" />
+                      )}
+                    </div>
+                    {touched.email && errors.email && (
+                      <p className="text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message">Your Message</Label>
-                    <Textarea
-                      id="message"
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={5}
-                      placeholder="Tell me about your project or opportunity..."
-                      className="resize-none"
-                    />
+                    <Label htmlFor="message" className={cn(
+                      getFieldState('message') === 'error' && 'text-destructive',
+                      getFieldState('message') === 'success' && 'text-emerald-600'
+                    )}>
+                      Your Message
+                    </Label>
+                    <div className="relative">
+                      <Textarea
+                        id="message"
+                        required
+                        value={formData.message}
+                        onChange={(e) => handleChange('message', e.target.value)}
+                        onBlur={() => handleBlur('message')}
+                        rows={5}
+                        placeholder="Tell me about your project or opportunity..."
+                        className={cn(
+                          'resize-none pr-10 transition-colors',
+                          getFieldState('message') === 'error' && 'border-destructive focus:border-destructive',
+                          getFieldState('message') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                        )}
+                      />
+                      {getFieldState('message') === 'success' && (
+                        <Check className="absolute right-3 top-3 w-4 h-4 text-emerald-500" />
+                      )}
+                      {getFieldState('message') === 'error' && (
+                        <AlertCircle className="absolute right-3 top-3 w-4 h-4 text-destructive" />
+                      )}
+                    </div>
+                    {touched.message && errors.message && (
+                      <p className="text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {errors.message}
+                      </p>
+                    )}
+                    <p className={cn(
+                      'text-xs transition-colors',
+                      getFieldState('message') === 'success' ? 'text-emerald-600' : 'text-muted-foreground'
+                    )}>
+                      {formData.message.length}/10 characters minimum
+                    </p>
                   </div>
 
                   <Button

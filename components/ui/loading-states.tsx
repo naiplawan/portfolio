@@ -6,6 +6,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
+// Hoist static dot element for PulseLoader to avoid recreation
+const PulseDot = ({ index }: { index: number }) => (
+  <div
+    className="w-2 h-2 bg-primary rounded-full animate-pulse"
+    style={{ animationDelay: `${index * 0.2}s` }}
+  />
+);
+
 // Page loading skeleton
 export function PageSkeleton() {
   return (
@@ -186,13 +194,9 @@ export function Spinner({ size = 'md', className = '' }: { size?: 'sm' | 'md' | 
 export function PulseLoader({ className = '' }: { className?: string }) {
   return (
     <div className={`flex space-x-1 ${className}`}>
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          className="w-2 h-2 bg-primary rounded-full animate-pulse"
-          style={{ animationDelay: `${i * 0.2}s` }}
-        />
-      ))}
+      <PulseDot index={0} />
+      <PulseDot index={1} />
+      <PulseDot index={2} />
     </div>
   );
 }

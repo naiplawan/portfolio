@@ -122,30 +122,29 @@ class GitHubAPIService {
 
   calculateLanguageStats(repos: GitHubRepo[]): { name: string; percentage: number; color: string }[] {
     const languageCounts: LanguageStats = {};
-    let totalRepos = 0;
+    let totalCount = 0;
 
-    repos.forEach(repo => {
+    // Single loop: count languages and total in one pass
+    for (const repo of repos) {
       if (repo.language) {
         languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
-        totalRepos++;
+        totalCount++;
       }
-    });
+    }
 
-    if (totalRepos === 0) {
+    if (totalCount === 0) {
       return [{ name: 'No languages detected', percentage: 100, color: getLanguageColor('Other') }];
     }
 
-    const sortedLanguages = Object.entries(languageCounts)
+    // Convert to array, sort, and take top 5 in one operation
+    return Object.entries(languageCounts)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 5); // Top 5 languages
-
-    const totalCount = Object.values(languageCounts).reduce((sum, count) => sum + count, 0);
-
-    return sortedLanguages.map(([language, count]) => ({
-      name: language,
-      percentage: Math.round((count / totalCount) * 100),
-      color: getLanguageColor(language)
-    }));
+      .slice(0, 5)
+      .map(([language, count]) => ({
+        name: language,
+        percentage: Math.round((count / totalCount) * 100),
+        color: getLanguageColor(language)
+      }));
   }
 
   async getGitHubStats(): Promise<GitHubStatsData> {
@@ -156,8 +155,14 @@ class GitHubAPIService {
         this.getContributionStats()
       ]);
 
-      const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-      const totalForks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
+      // Combine reduce operations into a single loop for better performance
+      let totalStars = 0;
+      let totalForks = 0;
+      for (const repo of repos) {
+        totalStars += repo.stargazers_count;
+        totalForks += repo.forks_count;
+      }
+
       const topLanguages = this.calculateLanguageStats(repos);
 
       return {

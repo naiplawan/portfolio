@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState, useMemo } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Sphere, Plane, Environment, ContactShadows, Float } from '@react-three/drei'
 import * as THREE from 'three'
@@ -68,32 +68,31 @@ const SoftBubble = ({
 const SoftParticleBackground = ({ count = 40 }: { count?: number }) => {
   const meshRef = useRef<THREE.Points>(null)
 
-  const particles = useMemo(() => {
-    const positions = new Float32Array(count * 3)
-    const colors = new Float32Array(count * 3)
-    const sizes = new Float32Array(count)
+  // Generate particle data once on component mount
+  // Note: useMemo was removed since count never changes after mount
+  // and the computation is only done once anyway
+  const positions = new Float32Array(count * 3)
+  const colors = new Float32Array(count * 3)
+  const sizes = new Float32Array(count)
 
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 15
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 15
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2
+  const colorVariants = [
+    [0.77, 0.64, 0.52], // #C4A484 - Sand
+    [0.66, 0.73, 0.65], // #A8BBA3 - Sage
+    [0.83, 0.77, 0.71], // #D4C4B4 - Blush
+  ]
 
-      // Soft pastel colors
-      const colorVariants = [
-        [0.77, 0.64, 0.52], // #C4A484 - Sand
-        [0.66, 0.73, 0.65], // #A8BBA3 - Sage
-        [0.83, 0.77, 0.71], // #D4C4B4 - Blush
-      ]
-      const variant = colorVariants[i % 3]
-      colors[i * 3] = variant[0]
-      colors[i * 3 + 1] = variant[1]
-      colors[i * 3 + 2] = variant[2]
+  for (let i = 0; i < count; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 15
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 15
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2
 
-      sizes[i] = Math.random() * 0.08 + 0.04
-    }
+    const variant = colorVariants[i % 3]
+    colors[i * 3] = variant[0]
+    colors[i * 3 + 1] = variant[1]
+    colors[i * 3 + 2] = variant[2]
 
-    return { positions, colors, sizes }
-  }, [count])
+    sizes[i] = Math.random() * 0.08 + 0.04
+  }
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -106,15 +105,15 @@ const SoftParticleBackground = ({ count = 40 }: { count?: number }) => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          args={[particles.positions, 3]}
+          args={[positions, 3]}
         />
         <bufferAttribute
           attach="attributes-color"
-          args={[particles.colors, 3]}
+          args={[colors, 3]}
         />
         <bufferAttribute
           attach="attributes-size"
-          args={[particles.sizes, 1]}
+          args={[sizes, 1]}
         />
       </bufferGeometry>
       <pointsMaterial

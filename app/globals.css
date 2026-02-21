@@ -92,6 +92,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed header */
     transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 

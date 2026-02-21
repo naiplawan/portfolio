@@ -12,9 +12,6 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true,
-        },
       },
       globals: {
         React: 'readonly',
@@ -38,9 +35,6 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      ecmaFeatures: {
-        jsx: true,
-      },
     },
     plugins: {
       'react-hooks': reactHooks,

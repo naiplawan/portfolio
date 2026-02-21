@@ -1,4 +1,6 @@
 // Simple client-side rate limiting using localStorage
+// Schema versioning ensures backward compatibility when data structure changes
+const RATE_LIMIT_SCHEMA_VERSION = 1;
 
 interface RateLimitConfig {
   maxAttempts: number;
@@ -11,6 +13,7 @@ const DEFAULT_CONFIG: RateLimitConfig = {
 };
 
 interface RateLimitData {
+  version: number; // Schema version for migration support
   attempts: number;
   resetTime: number;
 }
@@ -26,24 +29,48 @@ export class RateLimiter {
 
   private getData(): RateLimitData {
     if (typeof window === 'undefined') {
-      return { attempts: 0, resetTime: Date.now() + this.config.windowMs };
+      return { version: RATE_LIMIT_SCHEMA_VERSION, attempts: 0, resetTime: Date.now() + this.config.windowMs };
     }
 
     const stored = localStorage.getItem(this.key);
     if (!stored) {
-      return { attempts: 0, resetTime: Date.now() + this.config.windowMs };
+      return { version: RATE_LIMIT_SCHEMA_VERSION, attempts: 0, resetTime: Date.now() + this.config.windowMs };
     }
 
     try {
-      return JSON.parse(stored);
+      const data = JSON.parse(stored) as Partial<RateLimitData>;
+
+      // Handle schema migration - if old data format, migrate to new
+      if (data.version === undefined) {
+        // Old format without version - migrate it
+        return {
+          version: RATE_LIMIT_SCHEMA_VERSION,
+          attempts: data.attempts ?? 0,
+          resetTime: data.resetTime ?? Date.now() + this.config.windowMs,
+        };
+      }
+
+      // Version mismatch - reset to default (could implement proper migration if needed)
+      if (data.version !== RATE_LIMIT_SCHEMA_VERSION) {
+        this.reset(); // Clear old format data
+        return { version: RATE_LIMIT_SCHEMA_VERSION, attempts: 0, resetTime: Date.now() + this.config.windowMs };
+      }
+
+      return {
+        version: data.version,
+        attempts: data.attempts ?? 0,
+        resetTime: data.resetTime ?? Date.now() + this.config.windowMs,
+      };
     } catch {
-      return { attempts: 0, resetTime: Date.now() + this.config.windowMs };
+      return { version: RATE_LIMIT_SCHEMA_VERSION, attempts: 0, resetTime: Date.now() + this.config.windowMs };
     }
   }
 
   private setData(data: RateLimitData): void {
     if (typeof window === 'undefined') return;
-    localStorage.setItem(this.key, JSON.stringify(data));
+    // Always include schema version when storing
+    const dataWithVersion = { ...data, version: RATE_LIMIT_SCHEMA_VERSION };
+    localStorage.setItem(this.key, JSON.stringify(dataWithVersion));
   }
 
   check(): { allowed: boolean; remaining: number; resetIn: number } {
@@ -53,6 +80,7 @@ export class RateLimiter {
     // Reset if window has passed
     if (now >= data.resetTime) {
       const newData: RateLimitData = {
+        version: RATE_LIMIT_SCHEMA_VERSION,
         attempts: 0,
         resetTime: now + this.config.windowMs,
       };
@@ -87,6 +115,7 @@ export class RateLimiter {
     // Reset if window has passed
     if (now >= data.resetTime) {
       this.setData({
+        version: RATE_LIMIT_SCHEMA_VERSION,
         attempts: 1,
         resetTime: now + this.config.windowMs,
       });

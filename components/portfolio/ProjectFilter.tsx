@@ -180,11 +180,11 @@ export default function ProjectFilter({
               {tag}
             </Button>
           ))}
-          {allTags.length > 12 && (
+          {allTags.length > 12 ? (
             <span className="px-3 py-1.5 rounded-full text-sm text-gray-500 bg-gray-50 dark:bg-gray-800">
               +{allTags.length - 12} more
             </span>
-          )}
+          ) : null}
         </div>
       </div>
 

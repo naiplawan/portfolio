@@ -20,11 +20,13 @@ const stats: Stat[] = [
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
   const [count, setCount] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !hasAnimated) {
+      setHasAnimated(true)
       const duration = 2000
       const steps = 60
       const stepValue = value / steps
@@ -44,10 +46,19 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
       return () => clearInterval(timer)
     }
     return undefined
-  }, [isInView, value])
+  }, [isInView, value, hasAnimated])
+
+  // Show skeleton pulse before animation starts
+  if (!hasAnimated) {
+    return (
+      <span ref={ref} className="tabular-nums inline-flex items-center">
+        <span className="skeleton h-12 w-16 rounded" />
+      </span>
+    )
+  }
 
   return (
-    <span ref={ref} className="tabular-nums">
+    <span className="tabular-nums counter-animate">
       {count}
       {suffix}
     </span>

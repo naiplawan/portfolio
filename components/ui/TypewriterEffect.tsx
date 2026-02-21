@@ -3,6 +3,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
+// Hoist static cursor element outside component to avoid recreation on each render
+const StaticCursor = () => (
+  <motion.span
+    animate={{ opacity: [1, 0] }}
+    transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
+    className="inline-block ml-1"
+  >
+    |
+  </motion.span>
+);
+
 interface TypewriterProps {
   words: string[];
   className?: string;
@@ -73,13 +84,7 @@ export default function TypewriterEffect({
   return (
     <span className={className}>
       {displayText}
-      <motion.span
-        animate={{ opacity: [1, 0] }}
-        transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
-        className="inline-block ml-1"
-      >
-        |
-      </motion.span>
+      <StaticCursor />
     </span>
   );
 }

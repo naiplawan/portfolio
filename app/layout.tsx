@@ -1,10 +1,18 @@
 import './globals.css'
 import PageTransition from '@/components/layout/page-transition'
-
-// Force dynamic rendering to avoid Supabase serialization issues
-export const dynamic = 'force-dynamic'
 import { Providers } from '@/components/layout/providers'
-import { Analytics } from '@/components/analytics'
+import nextDynamic from 'next/dynamic'
+
+// Force dynamic rendering is needed for authentication features (NextAuth)
+// and CMS functionality with Supabase. While not ideal for a mostly-static portfolio,
+// it's necessary for the blog CMS and auth features. Consider splitting routes if possible.
+export const dynamic = 'force-dynamic'
+
+// Lazy load analytics to reduce initial bundle size and improve time to interactive
+// Note: Analytics component is already a client component, so we just use dynamic for code splitting
+const Analytics = nextDynamic(() => import('@/components/analytics').then(mod => ({ default: mod.Analytics })), {
+  loading: () => null, // Show nothing while loading to avoid layout shift
+})
 import { SkipLink } from '@/components/accessibility/skip-link'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
@@ -14,6 +22,7 @@ import ScrollProgress from '@/components/ui/ScrollProgress'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 import { CustomCursor } from '@/components/ui/custom-cursor'
+import { BackToTop } from '@/components/ui/back-to-top'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -132,6 +141,30 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" className={`${outfit.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Prevent flash of wrong theme
+              (function() {
+                const themeKey = 'portfolio-theme';
+                const stored = localStorage.getItem(themeKey);
+                if (stored) {
+                  try {
+                    const theme = JSON.parse(stored);
+                    if (theme === 'dark' || theme === 'light') {
+                      document.documentElement.classList.add(theme);
+                    } else if (theme === 'system') {
+                      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                      document.documentElement.classList.add(systemTheme);
+                    }
+                  } catch (e) {
+                    console.error('Error parsing theme:', e);
+                  }
+                }
+              })();
+            `,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -179,6 +212,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Footer />
           <FloatingActions />
           <ScrollProgressComponents />
+          <BackToTop />
         </Providers>
       </body>
     </html>
