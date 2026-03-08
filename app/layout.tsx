@@ -18,7 +18,6 @@ import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { Plus_Jakarta_Sans, Outfit, JetBrains_Mono } from 'next/font/google'
-import ScrollProgress from '@/components/ui/ScrollProgress'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 import { CustomCursor } from '@/components/ui/custom-cursor'
@@ -200,7 +199,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers>
           <Analytics />
           <CustomCursor />
-          <ScrollProgress />
           <NavBar />
           <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
             <ClientErrorBoundary>

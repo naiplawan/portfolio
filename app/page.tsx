@@ -1,6 +1,5 @@
 'use client'
 
-import { lazy, Suspense } from 'react'
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data'
 import DeveloperHero from '@/components/sections/DeveloperHero'
 import StatsSection from '@/components/sections/StatsSection'
@@ -9,8 +8,6 @@ import SkillsSection from '@/components/sections/SkillsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 
-// Dynamic imports for 3D components to reduce initial bundle size
-const FloatingElements = lazy(() => import('@/components/3d/FloatingElements'))
 
 export default function HomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app'
@@ -66,19 +63,6 @@ export default function HomePage() {
 
       {/* Contact Section - Form + Social Links */}
       <ContactSection />
-
-      {/* Floating 3D Elements (Background Enhancement) */}
-      <Suspense
-        fallback={
-          <div className="py-20 flex justify-center">
-            <div className="animate-pulse text-lg text-primary">
-              Loading experience...
-            </div>
-          </div>
-        }
-      >
-        <FloatingElements />
-      </Suspense>
     </>
   )
 }
