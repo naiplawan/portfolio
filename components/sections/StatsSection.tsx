@@ -12,10 +12,12 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 2, suffix: '+', label: 'Years', description: 'Professional Experience' },
-  { value: 10, suffix: '+', label: 'Projects', description: 'Completed' },
-  { value: 5, suffix: '+', label: 'Technologies', description: 'Mastered' },
-  { value: 100, suffix: '%', label: 'Commitment', description: 'To Quality Code' },
+  { value: 3, suffix: '+', label: 'Years', description: 'Professional Experience' },
+  { value: 50, suffix: '+', label: 'Projects', description: 'Successfully Delivered' },
+  { value: 15, suffix: '+', label: 'Technologies', description: 'Frameworks & Tools' },
+  { value: 100, suffix: '%', label: 'Client', description: 'Satisfaction Rate' },
+  { value: 500, suffix: 'K+', label: 'Lines', description: 'Code Contributed' },
+  { value: 24, suffix: '/7', label: 'Support', description: 'When It Matters' },
 ]
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -77,21 +79,21 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
       transition={{ delay: index * 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
       className="relative group"
     >
-      <div className="bio-glass-card p-8 rounded-2xl h-full">
+      <div className="bio-glass-card p-4 sm:p-6 lg:p-8 rounded-2xl h-full">
         {/* Glow Effect on Hover */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-primary/10 rounded-2xl transition-all duration-500" />
 
         {/* Content */}
         <div className="relative z-10">
-          <div className="flex items-baseline gap-1 mb-3">
-            <span className="text-5xl sm:text-6xl font-display font-bold bio-gradient-text">
+          <div className="flex items-baseline gap-1 mb-2 sm:mb-3">
+            <span className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold bio-gradient-text">
               <AnimatedCounter value={stat.value} suffix={stat.suffix} />
             </span>
           </div>
-          <div className="text-sm font-semibold text-primary uppercase tracking-wider mb-1">
+          <div className="text-xs sm:text-sm font-semibold text-primary uppercase tracking-wider mb-1">
             {stat.label}
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground">
             {stat.description}
           </div>
         </div>
@@ -111,7 +113,7 @@ export default function StatsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden">
+    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden max-w-full">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]" style={{
         backgroundImage: `
@@ -123,7 +125,7 @@ export default function StatsSection() {
 
       {/* Gradient Orbs */}
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[450px] lg:w-[600px] h-[300px] sm:h-[450px] lg:h-[600px] bg-primary/5 rounded-full blur-[120px]"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.3, 0.5, 0.3],
@@ -148,7 +150,7 @@ export default function StatsSection() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
           {stats.map((stat, index) => (
             <StatCard key={index} stat={stat} index={index} />
           ))}

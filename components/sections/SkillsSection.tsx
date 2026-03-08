@@ -134,7 +134,7 @@ export default function SkillsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden">
+    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden max-w-full">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]" style={{
         backgroundImage: `
@@ -145,8 +145,8 @@ export default function SkillsSection() {
       }} />
 
       {/* Gradient Orbs */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-violet-500/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/4 left-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-cyan-500/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-violet-500/5 rounded-full blur-[120px]" />
 
       <div className="container-premium relative z-10">
         {/* Header */}

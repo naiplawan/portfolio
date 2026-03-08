@@ -195,7 +195,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           }}
         />
       </head>
-      <body className="antialiased bg-background text-foreground min-h-screen font-body">
+      <body className="antialiased bg-background text-foreground min-h-screen font-body overflow-x-hidden max-w-full">
         <SkipLink />
         <Providers>
           <Analytics />

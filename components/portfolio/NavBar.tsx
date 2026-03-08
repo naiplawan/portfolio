@@ -194,7 +194,7 @@ function NavBar() {
             {/* Mobile Menu Sheet */}
             <motion.div
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bio-glass-card z-50 lg:hidden border-l border-border/50 rounded-l-3xl"
+              className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bio-glass-card z-50 lg:hidden border-l border-border/50 rounded-l-3xl"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -229,7 +229,7 @@ function NavBar() {
                         <Button
                           variant={isActiveRoute(item.href) ? 'secondary' : 'ghost'}
                           className={cn(
-                            'w-full justify-start px-5 py-6 font-medium text-base',
+                            'w-full justify-start px-5 py-4 font-medium text-base',
                             isActiveRoute(item.href)
                               ? 'text-primary'
                               : 'text-muted-foreground'

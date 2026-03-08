@@ -133,7 +133,7 @@ export default function DeveloperHero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background max-w-full"
     >
       {/* Animated Grid Background */}
       <motion.div
@@ -151,11 +151,11 @@ export default function DeveloperHero() {
 
       {/* Gradient Orbs */}
       <motion.div
-        className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"
+        className="absolute top-1/4 -left-20 sm:-left-32 w-72 sm:w-96 h-72 sm:h-96 bg-primary/10 rounded-full blur-[120px]"
         style={{ x: useTransform(springX, [-10, 10], [-30, 30]) }}
       />
       <motion.div
-        className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]"
+        className="absolute bottom-1/4 -right-20 sm:-right-32 w-72 sm:w-96 h-72 sm:h-96 bg-cyan-500/10 rounded-full blur-[120px]"
         style={{ x: useTransform(springX, [-10, 10], [30, -30]) }}
       />
 
@@ -207,10 +207,10 @@ export default function DeveloperHero() {
 
             {/* Main Heading with Typing Effect */}
             <motion.div variants={itemVariants}>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[1.1] tracking-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-display font-bold leading-[1.1] tracking-tight">
                 <span className="block text-foreground">Hi, I'm</span>
                 <span className="block bio-gradient-text">Rachaphol</span>
-                <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-muted-foreground mt-2">
+                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-6xl text-muted-foreground mt-2">
                   {displayText}
                   <span className="animate-pulse">|</span>
                 </span>
@@ -220,7 +220,7 @@ export default function DeveloperHero() {
             {/* Description */}
             <motion.p
               variants={itemVariants}
-              className="text-lg sm:text-xl text-muted-foreground max-w-xl font-light leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl font-light leading-relaxed"
             >
               Software Developer at Unixdev Co., Ltd. with expertise in{' '}
               <span className="text-foreground font-medium">React</span>,{' '}
@@ -230,30 +230,32 @@ export default function DeveloperHero() {
             </motion.p>
 
             {/* CTA Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-              <MagneticButton variant="default" size="lg">
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-3 sm:gap-4">
+              <MagneticButton variant="default" size="default" className="flex-1 sm:flex-none min-w-[140px]">
                 <span className="flex items-center gap-2">
-                  <FaEnvelope className="w-5 h-5" />
-                  Get in Touch
+                  <FaEnvelope className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">Get in Touch</span>
                 </span>
               </MagneticButton>
 
               <MagneticButton
                 variant="outline"
-                size="lg"
+                size="default"
+                className="flex-1 sm:flex-none min-w-[140px]"
                 onClick={() => window.open('https://github.com/naiplawan', '_blank')}
               >
-                <FaGithub className="w-5 h-5" />
-                <span>GitHub</span>
+                <FaGithub className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-sm sm:text-base">GitHub</span>
               </MagneticButton>
 
               <MagneticButton
                 variant="outline"
-                size="lg"
+                size="default"
+                className="flex-1 sm:flex-none min-w-[140px]"
                 onClick={() => window.open('https://linkedin.com/in/rachaphol-plookaom', '_blank')}
               >
-                <FaLinkedin className="w-5 h-5" />
-                <span>LinkedIn</span>
+                <FaLinkedin className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-sm sm:text-base">LinkedIn</span>
               </MagneticButton>
             </motion.div>
           </motion.div>
@@ -291,14 +293,14 @@ export default function DeveloperHero() {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-6 bg-gray-950/80">
+              <div className="p-4 sm:p-6 bg-gray-950/80">
                 <motion.pre
                   key={currentSnippet}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="text-sm font-mono leading-relaxed"
+                  className="text-xs sm:text-sm font-mono leading-relaxed overflow-x-auto"
                 >
                   <code className="text-gray-300">
                     <span className="text-purple-400">const</span>{' '}
@@ -348,18 +350,18 @@ export default function DeveloperHero() {
               </div>
             </motion.div>
 
-            {/* Floating Stats Cards */}
+            {/* Floating Stats Cards - Hidden on mobile */}
             <motion.div
-              className="absolute -top-6 -right-6 bio-glass-card p-4 rounded-xl"
+              className="absolute -top-6 -right-6 bio-glass-card p-4 rounded-xl hidden md:block"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
             >
-              <div className="text-3xl font-bold bio-gradient-text">2+</div>
+              <div className="text-3xl font-bold bio-gradient-text">3+</div>
               <div className="text-xs text-muted-foreground">Years Exp.</div>
             </motion.div>
 
             <motion.div
-              className="absolute -bottom-6 -left-6 bio-glass-card p-4 rounded-xl"
+              className="absolute -bottom-6 -left-6 bio-glass-card p-4 rounded-xl hidden md:block"
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 5, repeat: Infinity, delay: 1 }}
             >
