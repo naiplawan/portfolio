@@ -36,7 +36,7 @@ export function PersonStructuredData({
     ].filter(Boolean),
     worksFor: {
       '@type': 'Organization',
-      name: 'Freelance Developer',
+      name: 'Unixdev Co., Ltd.',
     },
   };
 

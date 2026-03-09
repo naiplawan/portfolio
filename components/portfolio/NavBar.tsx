@@ -75,7 +75,7 @@ function NavBar() {
               onClick={() => router.push('/')}
               aria-label="Go to homepage"
             >
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Rachaphol.</span>
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Rachaphol Plookaom.</span>
             </Button>
 
             {/* Desktop Nav Items */}
@@ -265,7 +265,7 @@ function NavBar() {
                 {/* Footer in Mobile Menu */}
                 <div className="pt-6 mt-auto border-t border-border/50">
                   <p className="text-sm text-muted-foreground text-center">
-                    © 2025 Rachaphol Plookaom
+                    © 2026 Rachaphol Plookaom
                   </p>
                 </div>
               </div>
