@@ -79,15 +79,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const isInView = useInView(ref, { once: true, amount: 0.3 });
   const [isHovered, setIsHovered] = useState(false);
 
-  // Generate gradient color based on category
+  // Generate gradient color based on category using design system tokens
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      web: 'from-blue-500 to-cyan-500',
-      mobile: 'from-purple-500 to-pink-500',
-      backend: 'from-green-500 to-emerald-500',
-      ai: 'from-orange-500 to-red-500',
-      tools: 'from-yellow-500 to-amber-500',
-      other: 'from-gray-500 to-slate-500',
+      web: 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]',
+      mobile: 'from-[hsl(var(--primary))] to-[hsl(var(--secondary))]',
+      backend: 'from-[hsl(var(--accent))] to-[hsl(105,25%,45%)]',
+      ai: 'from-[hsl(28,55%,45%)] to-[hsl(var(--primary))]',
+      tools: 'from-[hsl(var(--secondary))] to-[hsl(35,35%,60%)]',
+      other: 'from-[hsl(var(--muted))] to-[hsl(var(--muted-foreground))]',
     };
     return colors[category] || colors.other;
   };
@@ -142,9 +142,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               variant="outline"
               className={cn(
                 'backdrop-blur-md border-white/20 text-white',
-                project.status === 'live' && 'bg-green-500/20',
-                project.status === 'development' && 'bg-yellow-500/20',
-                project.status === 'archived' && 'bg-gray-500/20',
+                project.status === 'live' && 'bg-[hsl(105,60%,35%)]/30',
+                project.status === 'development' && 'bg-[hsl(35,70%,50%)]/30',
+                project.status === 'archived' && 'bg-[hsl(var(--muted))]/40',
               )}
             >
               {project.status}
@@ -254,7 +254,7 @@ export default function ProjectsSection() {
     .slice(0, 6);
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32">
+    <section ref={ref} className="relative section-padding">
       {/* Background Pattern */}
       <div
         className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]"
@@ -280,7 +280,7 @@ export default function ProjectsSection() {
             GitHub Projects
           </Badge>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold mb-4">
-            Selected <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Projects</span>
+            Selected <span className="bio-gradient-text">Projects</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             A showcase of my open source work, automatically synced from GitHub.

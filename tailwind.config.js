@@ -45,6 +45,14 @@ export default {
           DEFAULT: 'hsl(var(--accent))', // #A8BBA3 - Sage green
           foreground: 'hsl(var(--accent-foreground))',
         },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
@@ -58,6 +66,15 @@ export default {
         terracotta: '#C97C4C',
         beige: '#D4B896',
         cream: '#FFFCF5',
+      },
+      boxShadow: {
+        'bio-soft': 'var(--bio-shadow-soft)',
+        'bio-medium': 'var(--bio-shadow-medium)',
+        'bio-inner': 'var(--bio-shadow-inner)',
+        'glass': 'var(--glass-shadow)',
+        'glow-sm': '0 0 20px hsl(var(--primary) / 0.15)',
+        'glow-md': '0 0 40px hsl(var(--primary) / 0.2)',
+        'glow-lg': '0 0 60px hsl(var(--primary) / 0.25)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -82,6 +99,20 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'bounce-slow': 'bounce-slow 2s ease-in-out infinite',
+      },
+      transitionDuration: {
+        instant: 'var(--duration-instant)',
+        fast: 'var(--duration-fast)',
+        normal: 'var(--duration-normal)',
+        moderate: 'var(--duration-moderate)',
+        slow: 'var(--duration-slow)',
+        slower: 'var(--duration-slower)',
+      },
+      transitionTimingFunction: {
+        'out-expo': 'var(--ease-out-expo)',
+        'out-quart': 'var(--ease-out-quart)',
+        'in-out': 'var(--ease-in-out)',
+        spring: 'var(--ease-spring)',
       },
     },
   },

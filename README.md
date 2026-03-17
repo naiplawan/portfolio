@@ -32,18 +32,21 @@ A modern, production-ready portfolio website built with Next.js, TypeScript, and
 - **Interactive Skills Display** - Proficiency levels with animated progress bars
 - **Blog Section** - Search and filtering capabilities
 - **Loading States** - Skeleton loaders and smooth transitions
-- **Dark Mode Support** - Seamless theme switching
+- **Dark Mode Support** - Seamless theme switching with HSL color tokens
+- **Premium Design System** - Tokenized colors, shadows, and animations
+- **Glassmorphism Effects** - Modern frosted glass UI elements
 
 ## 🚀 Tech Stack
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
-- **React 19** - Latest React features with concurrent features
+- **Next.js 16** - React framework with App Router and Turbopack
+- **React 19** - Latest React features with concurrent rendering
 - **TypeScript** - Type-safe development with strict mode
 - **Tailwind CSS 4** - Modern utility-first CSS framework
 - **shadcn/ui** - High-quality accessible component library
 - **Framer Motion** - Advanced animations and micro-interactions
 - **Lucide React** - Consistent icon system
+- **CVA** - Class Variance Authority for component variants
 
 ### Performance & Monitoring
 - **web-vitals** - Core Web Vitals tracking
@@ -63,11 +66,20 @@ A modern, production-ready portfolio website built with Next.js, TypeScript, and
 
 ## 🎨 Design Features
 
-- **Ocean Blue Theme:** Primary color palette with complementary gradients
-- **Component-Based:** Modular shadcn/ui components for consistency
-- **Responsive Grid:** Flexible layouts using CSS Grid and Flexbox
-- **Smooth Animations:** Professional motion design with Framer Motion
-- **Modern Typography:** Carefully selected font hierarchy and spacing
+### Premium Organic Design System
+- **Color Palette:** Warm, earthy tones with terracotta primary, warm sand secondary, and sage green accents
+- **Design Tokens:** HSL-based color system for consistent theming
+- **Dark Mode:** Full support with automatic color adaptation
+- **Glassmorphism:** Frosted glass effects with backdrop blur
+- **Shadows:** Biomorphic shadow system with CSS variables
+- **Animations:** Standardized durations and easing curves
+- **Typography:** Plus Jakarta Sans (body), Outfit (display), JetBrains Mono (code)
+
+### Component Architecture
+- **Modular shadcn/ui:** Consistent, accessible components
+- **Premium Variants:** Glass, elevated, and premium styling options
+- **Responsive Grid:** CSS Grid and Flexbox layouts
+- **Smooth Transitions:** Professional motion design with Framer Motion
 
 ## 🛠️ Getting Started
 
@@ -113,6 +125,59 @@ A modern, production-ready portfolio website built with Next.js, TypeScript, and
 
 5. **Open your browser:**
    Navigate to `http://localhost:3000`
+
+## 🏗️ Design System Architecture
+
+### Component Variants System
+
+The project uses Class Variance Authority (CVA) for type-safe component variants:
+
+```tsx
+// Button example
+const buttonVariants = cva(
+  'base-classes',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground',
+        premium: 'bio-button',  // Glassmorphism style
+        outline: 'border border-input',
+      },
+      size: {
+        default: 'h-10 px-4',
+        sm: 'h-9 px-3',
+        lg: 'h-11 px-8',
+      }
+    }
+  }
+)
+```
+
+### Utility Classes
+
+Key utility classes defined in `app/globals.css`:
+
+- `.bio-glass-card` - Glassmorphism card with backdrop blur
+- `.bio-button` - Premium button with gradient and shadow
+- `.bio-input` - Enhanced input with focus ring
+- `.bio-gradient-text` - Primary-to-accent gradient text
+- `.section-padding` - Responsive section spacing
+
+### Custom Tailwind Configuration
+
+Extended with design system tokens in `tailwind.config.js`:
+
+```js
+boxShadow: {
+  'bio-soft': 'var(--bio-shadow-soft)',
+  'bio-medium': 'var(--bio-shadow-medium)',
+  'glow-md': '0 0 40px hsl(var(--primary) / 0.2)',
+},
+transitionDuration: {
+  normal: 'var(--duration-normal)',
+  slow: 'var(--duration-slow)',
+}
+```
 
 ## 📁 Project Structure
 
@@ -167,19 +232,46 @@ A modern, production-ready portfolio website built with Next.js, TypeScript, and
 - **Contact:** Full-featured contact form with validation
 
 ### UI Components (shadcn/ui)
-- Button, Card, Input, Textarea, Badge, Separator
-- Consistent styling with ocean blue theme
+- **Button**: default, premium, outline, secondary, ghost, link
+- **Card**: default, glass, elevated variants
+- **Input/Textarea**: default and premium variants with enhanced focus states
+- **Badge, Separator, Label, Select, Progress**
+- Consistent styling with Premium Organic theme
 - Accessible and keyboard navigable
 
-## 🌊 Ocean Blue Theme
+## 🎨 Premium Organic Theme
 
-The portfolio uses a carefully crafted ocean blue color palette:
+The portfolio uses a carefully crafted warm, earthy color palette with HSL tokens:
 
 ```css
---primary: 203 89% 53%;        /* Ocean Blue */
---ocean-blue-50: #eff6ff;     /* Light accent */
---ocean-blue-600: #2563eb;    /* Primary shade */
---ocean-blue-900: #1e3a8a;    /* Dark accent */
+/* Primary Colors */
+--primary: 28 50% 45%;        /* Rich terracotta #C97C4C */
+--secondary: 35 30% 72%;      /* Warm sand #D4B896 */
+--accent: 105 20% 65%;        /* Muted sage #9DB89A */
+--success: 145 55% 42%;       /* Sage green for success states */
+--destructive: 0 65% 45%;     /* Red for errors */
+
+/* Neutral Colors */
+--background: 45 30% 97%;     /* Ultra warm cream */
+--foreground: 25 15% 15%;     /* Near black */
+--muted: 45 20% 90%;          /* Subtle backgrounds */
+--card: 45 30% 96%;           /* Card backgrounds */
+```
+
+### Design Tokens
+
+```css
+/* Border Radius */
+--radius: 1.25rem;             /* Consistent rounded corners */
+
+/* Shadows */
+--bio-shadow-soft: 0 20px 50px -12px rgba(201, 124, 76, 0.15);
+--bio-shadow-medium: 0 25px 60px -15px rgba(201, 124, 76, 0.2);
+--glass-shadow: 0 12px 40px rgba(201, 124, 76, 0.08);
+
+/* Animation Durations */
+--duration-normal: 300ms;      /* Standard transition */
+--duration-slow: 600ms;        /* Slower animations */
 ```
 
 ## 📱 Responsive Design
@@ -253,7 +345,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 👨‍💻 Author
 
-**Mo'Mos** - [GitHub](https://github.com/naiplawan)
+**Rachaphol Plookaom** - [GitHub](https://github.com/naiplawan)
 
 ---
 

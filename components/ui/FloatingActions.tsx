@@ -14,8 +14,8 @@ export default function FloatingActions() {
       icon: <FaGithub className="w-5 h-5" />,
       label: 'GitHub',
       href: 'https://github.com/naiplawan',
-      color: 'hover:bg-gray-800 dark:hover:bg-gray-700',
-      textColor: 'text-gray-700 dark:text-gray-300',
+      color: 'hover:bg-foreground dark:hover:bg-foreground/90',
+      textColor: 'text-foreground',
     },
     {
       icon: <FaLinkedin className="w-5 h-5" />,
@@ -28,8 +28,8 @@ export default function FloatingActions() {
       icon: <FaEnvelope className="w-5 h-5" />,
       label: 'Email',
       href: 'mailto:rachaphol.plo@gmail.com',
-      color: 'hover:bg-emerald-600',
-      textColor: 'text-emerald-600 dark:text-emerald-400',
+      color: 'hover:bg-success',
+      textColor: 'text-success dark:text-success/80',
     },
     {
       icon: <Download className="w-5 h-5" />,
@@ -86,7 +86,7 @@ export default function FloatingActions() {
       {/* Main Toggle Button */}
       <Button
         size="icon"
-        className="relative w-16 h-16 rounded-full shadow-2xl"
+        className="relative w-16 h-16 rounded-full shadow-bio-medium hover:shadow-glow-md"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle floating menu"
       >

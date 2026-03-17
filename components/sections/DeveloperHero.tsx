@@ -133,7 +133,7 @@ export default function DeveloperHero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background max-w-full"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background max-w-full section-padding"
     >
       {/* Animated Grid Background */}
       <motion.div
@@ -198,8 +198,8 @@ export default function DeveloperHero() {
             <motion.div variants={itemVariants} className="inline-flex">
               <div className="bio-glass-card px-5 py-2.5 rounded-full flex items-center gap-3">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success/80 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
                 </span>
                 <span className="text-sm font-semibold">Available for opportunities</span>
               </div>
@@ -293,7 +293,7 @@ export default function DeveloperHero() {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-4 sm:p-6 bg-gray-950/80">
+              <div className="p-4 sm:p-6 bg-[hsl(var(--background))]/95">
                 <motion.pre
                   key={currentSnippet}
                   initial={{ opacity: 0, y: 10 }}

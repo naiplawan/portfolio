@@ -79,8 +79,8 @@ function TimelineItem({
   };
 
   const colors = {
-    work: 'from-cyan-500 to-blue-600',
-    education: 'from-violet-500 to-purple-600',
+    work: 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]',
+    education: 'from-[hsl(var(--secondary))] to-[hsl(105,25%,45%)]',
   };
 
   return (
@@ -152,7 +152,7 @@ export default function AboutSection() {
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32">
+    <section ref={ref} className="relative section-padding">
       {/* Background Pattern */}
       <div
         className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]"

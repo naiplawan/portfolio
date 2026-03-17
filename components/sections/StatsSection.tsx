@@ -113,7 +113,7 @@ export default function StatsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden max-w-full">
+    <section ref={ref} className="relative section-padding overflow-hidden max-w-full">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]" style={{
         backgroundImage: `

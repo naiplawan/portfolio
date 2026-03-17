@@ -25,21 +25,21 @@ const contactMethods: ContactMethod[] = [
     label: 'Email',
     value: 'rachaphol.plo@gmail.com',
     href: 'mailto:rachaphol.plo@gmail.com',
-    color: 'from-cyan-500 to-blue-600',
+    color: 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]',
   },
   {
     icon: <Phone className="w-5 h-5" />,
     label: 'Phone',
     value: '+66 95 554 6654',
     href: 'tel:+66955546654',
-    color: 'from-emerald-500 to-teal-600',
+    color: 'from-[hsl(105,25%,45%)] to-[hsl(105,20%,35%)]',
   },
   {
     icon: <MapPin className="w-5 h-5" />,
     label: 'Location',
     value: 'Bangkok, Thailand',
     href: 'https://maps.google.com/?q=Bangkok,Thailand',
-    color: 'from-violet-500 to-purple-600',
+    color: 'from-[hsl(var(--secondary))] to-[hsl(35,35%,55%)]',
   },
 ]
 
@@ -55,19 +55,19 @@ const socialLinks: SocialLink[] = [
     icon: <Github className="w-5 h-5" />,
     label: 'GitHub',
     href: 'https://github.com/naiplawan',
-    color: 'hover:bg-gray-800 dark:hover:bg-white/20',
+    color: 'hover:bg-foreground dark:hover:bg-foreground/20',
   },
   {
     icon: <Linkedin className="w-5 h-5" />,
     label: 'LinkedIn',
     href: 'https://linkedin.com/in/rachaphol-plookaom',
-    color: 'hover:bg-blue-600 dark:hover:bg-blue-500/20',
+    color: 'hover:bg-[hsl(var(--primary))] dark:hover:bg-[hsl(var(--primary))]/20',
   },
   {
     icon: <Twitter className="w-5 h-5" />,
     label: 'Twitter',
     href: 'https://twitter.com/rachaphol',
-    color: 'hover:bg-sky-500 dark:hover:bg-sky-500/20',
+    color: 'hover:bg-[hsl(195,70%,45%)] dark:hover:bg-[hsl(195,70%,45%)]/20',
   },
 ]
 
@@ -172,7 +172,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32">
+    <section ref={ref} className="relative section-padding">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]" style={{
         backgroundImage: `
@@ -183,8 +183,8 @@ export default function ContactSection() {
       }} />
 
       {/* Gradient Orbs */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-[hsl(var(--primary))]/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[hsl(var(--accent))]/5 rounded-full blur-[120px]" />
 
       <div className="container-premium relative z-10">
         {/* Header */}
@@ -220,7 +220,7 @@ export default function ContactSection() {
                   <div className="space-y-2">
                     <Label htmlFor="name" className={cn(
                       getFieldState('name') === 'error' && 'text-destructive',
-                      getFieldState('name') === 'success' && 'text-emerald-600'
+                      getFieldState('name') === 'success' && 'text-success'
                     )}>
                       Your Name
                     </Label>
@@ -236,11 +236,11 @@ export default function ContactSection() {
                         className={cn(
                           'pr-10 transition-colors',
                           getFieldState('name') === 'error' && 'border-destructive focus:border-destructive',
-                          getFieldState('name') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                          getFieldState('name') === 'success' && 'border-success focus:border-success'
                         )}
                       />
                       {getFieldState('name') === 'success' && (
-                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500" />
+                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-success" />
                       )}
                       {getFieldState('name') === 'error' && (
                         <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive" />
@@ -257,7 +257,7 @@ export default function ContactSection() {
                   <div className="space-y-2">
                     <Label htmlFor="email" className={cn(
                       getFieldState('email') === 'error' && 'text-destructive',
-                      getFieldState('email') === 'success' && 'text-emerald-600'
+                      getFieldState('email') === 'success' && 'text-success'
                     )}>
                       Email Address
                     </Label>
@@ -273,11 +273,11 @@ export default function ContactSection() {
                         className={cn(
                           'pr-10 transition-colors',
                           getFieldState('email') === 'error' && 'border-destructive focus:border-destructive',
-                          getFieldState('email') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                          getFieldState('email') === 'success' && 'border-success focus:border-success'
                         )}
                       />
                       {getFieldState('email') === 'success' && (
-                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500" />
+                        <Check className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-success" />
                       )}
                       {getFieldState('email') === 'error' && (
                         <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-destructive" />
@@ -294,7 +294,7 @@ export default function ContactSection() {
                   <div className="space-y-2">
                     <Label htmlFor="message" className={cn(
                       getFieldState('message') === 'error' && 'text-destructive',
-                      getFieldState('message') === 'success' && 'text-emerald-600'
+                      getFieldState('message') === 'success' && 'text-success'
                     )}>
                       Your Message
                     </Label>
@@ -310,11 +310,11 @@ export default function ContactSection() {
                         className={cn(
                           'resize-none pr-10 transition-colors',
                           getFieldState('message') === 'error' && 'border-destructive focus:border-destructive',
-                          getFieldState('message') === 'success' && 'border-emerald-500 focus:border-emerald-500'
+                          getFieldState('message') === 'success' && 'border-success focus:border-success'
                         )}
                       />
                       {getFieldState('message') === 'success' && (
-                        <Check className="absolute right-3 top-3 w-4 h-4 text-emerald-500" />
+                        <Check className="absolute right-3 top-3 w-4 h-4 text-success" />
                       )}
                       {getFieldState('message') === 'error' && (
                         <AlertCircle className="absolute right-3 top-3 w-4 h-4 text-destructive" />
@@ -328,7 +328,7 @@ export default function ContactSection() {
                     )}
                     <p className={cn(
                       'text-xs transition-colors',
-                      getFieldState('message') === 'success' ? 'text-emerald-600' : 'text-muted-foreground'
+                      getFieldState('message') === 'success' ? 'text-success' : 'text-muted-foreground'
                     )}>
                       {formData.message.length}/10 characters minimum
                     </p>
@@ -429,8 +429,8 @@ export default function ContactSection() {
             <div className="bio-glass-card p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent">
               <div className="flex items-start gap-4">
                 <div className="relative flex h-3 w-3 mt-1">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success/80 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
                 </div>
                 <div>
                   <div className="font-semibold mb-1">Available for Work</div>

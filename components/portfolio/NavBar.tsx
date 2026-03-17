@@ -75,7 +75,7 @@ function NavBar() {
               onClick={() => router.push('/')}
               aria-label="Go to homepage"
             >
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Rachaphol Plookaom.</span>
+              <span className="bio-gradient-text">Rachaphol Plookaom.</span>
             </Button>
 
             {/* Desktop Nav Items */}
@@ -203,7 +203,7 @@ function NavBar() {
               <div className="flex flex-col h-full p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
-                  <div className="text-2xl font-bold font-display bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  <div className="text-2xl font-bold font-display bio-gradient-text">
                     Menu
                   </div>
                   <Button

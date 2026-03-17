@@ -47,7 +47,7 @@ export function BackToTop() {
             'fixed bottom-6 left-6 z-40',
             'w-12 h-12 rounded-full',
             'bg-primary text-primary-foreground',
-            'shadow-lg hover:shadow-xl',
+            'shadow-bio-medium hover:shadow-glow-md',
             'transition-all duration-300',
             'hover:scale-110 active:scale-95',
             'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'

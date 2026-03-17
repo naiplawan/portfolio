@@ -29,6 +29,9 @@
     --destructive: 0 65% 45%;
     --destructive-foreground: 45 30% 98%;
 
+    --success: 145 55% 42%; /* Sage green for success states */
+    --success-foreground: 45 30% 98%;
+
     --border: 30 15% 88%;
     --input: 30 15% 88%;
     --ring: 28 50% 45%;
@@ -43,6 +46,20 @@
     --bio-shadow-soft: 0 20px 50px -12px rgba(201, 124, 76, 0.15);
     --bio-shadow-medium: 0 25px 60px -15px rgba(201, 124, 76, 0.2);
     --bio-shadow-inner: inset 0 2px 8px rgba(201, 124, 76, 0.06), inset 0 -1px 3px rgba(0, 0, 0, 0.04);
+
+    /* Animation Duration Tokens */
+    --duration-instant: 100ms;
+    --duration-fast: 200ms;
+    --duration-normal: 300ms;
+    --duration-moderate: 400ms;
+    --duration-slow: 600ms;
+    --duration-slower: 800ms;
+
+    /* Easing Curve Tokens */
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .dark {
@@ -71,6 +88,9 @@
     --destructive: 0 70% 55%;
     --destructive-foreground: 40 10% 95%;
 
+    --success: 145 45% 52%; /* Lighter sage green for dark mode */
+    --success-foreground: 22 15% 7%;
+
     --border: 22 15% 18%;
     --input: 22 15% 18%;
     --ring: 26 60% 58%;
@@ -84,6 +104,20 @@
     --bio-shadow-soft: 0 25px 60px -12px rgba(0, 0, 0, 0.5);
     --bio-shadow-medium: 0 30px 70px -15px rgba(0, 0, 0, 0.6);
     --bio-shadow-inner: inset 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 -1px 3px rgba(255, 255, 255, 0.03);
+
+    /* Animation Duration Tokens - Same as light mode */
+    --duration-instant: 100ms;
+    --duration-fast: 200ms;
+    --duration-normal: 300ms;
+    --duration-moderate: 400ms;
+    --duration-slow: 600ms;
+    --duration-slower: 800ms;
+
+    /* Easing Curve Tokens - Same as light mode */
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   * {

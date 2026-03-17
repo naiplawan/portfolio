@@ -22,7 +22,7 @@ const skillCategories: SkillCategory[] = [
   {
     title: 'Frontend',
     icon: '⚛️',
-    color: 'from-cyan-500 to-blue-600',
+    color: 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]',
     skills: [
       { name: 'React.js', level: 90, category: 'frontend' },
       { name: 'Next.js', level: 85, category: 'frontend' },
@@ -33,7 +33,7 @@ const skillCategories: SkillCategory[] = [
   {
     title: 'Backend',
     icon: '🔧',
-    color: 'from-emerald-500 to-teal-600',
+    color: 'from-[hsl(105,25%,55%)] to-[hsl(105,20%,40%)]',
     skills: [
       { name: 'Go / Fiber', level: 82, category: 'backend' },
       { name: 'Node.js', level: 85, category: 'backend' },
@@ -44,7 +44,7 @@ const skillCategories: SkillCategory[] = [
   {
     title: 'Mobile',
     icon: '📱',
-    color: 'from-violet-500 to-purple-600',
+    color: 'from-[hsl(var(--secondary))] to-[hsl(35,35%,55%)]',
     skills: [
       { name: 'Flutter', level: 88, category: 'mobile' },
       { name: 'Dart', level: 88, category: 'mobile' },
@@ -54,7 +54,7 @@ const skillCategories: SkillCategory[] = [
   {
     title: 'Database & Tools',
     icon: '🗄️',
-    color: 'from-orange-500 to-amber-600',
+    color: 'from-[hsl(28,55%,50%)] to-[hsl(var(--secondary))]',
     skills: [
       { name: 'PostgreSQL', level: 82, category: 'tools' },
       { name: 'MySQL', level: 80, category: 'tools' },
@@ -82,10 +82,10 @@ function SkillBar({ skill, index }: { skill: Skill; index: number }) {
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <motion.div
-          className={cn('h-full bg-gradient-to-r', skill.category === 'frontend' ? 'from-cyan-500 to-blue-600' :
-            skill.category === 'backend' ? 'from-emerald-500 to-teal-600' :
-              skill.category === 'mobile' ? 'from-violet-500 to-purple-600' :
-                'from-orange-500 to-amber-600')}
+          className={cn('h-full bg-gradient-to-r', skill.category === 'frontend' ? 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]' :
+            skill.category === 'backend' ? 'from-[hsl(105,25%,55%)] to-[hsl(105,20%,40%)]' :
+              skill.category === 'mobile' ? 'from-[hsl(var(--secondary))] to-[hsl(35,35%,55%)]' :
+                'from-[hsl(28,55%,50%)] to-[hsl(var(--secondary))]')}
           initial={{ width: 0 }}
           animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
           transition={{ delay: index * 0.05 + 0.2, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
@@ -134,7 +134,7 @@ export default function SkillsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.1 })
 
   return (
-    <section ref={ref} className="relative py-20 lg:py-32 overflow-hidden max-w-full">
+    <section ref={ref} className="relative section-padding overflow-hidden max-w-full">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]" style={{
         backgroundImage: `
@@ -145,8 +145,8 @@ export default function SkillsSection() {
       }} />
 
       {/* Gradient Orbs */}
-      <div className="absolute top-1/4 left-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-cyan-500/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-violet-500/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/4 left-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-[hsl(var(--primary))]/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-[hsl(var(--secondary))]/5 rounded-full blur-[120px]" />
 
       <div className="container-premium relative z-10">
         {/* Header */}
