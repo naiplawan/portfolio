@@ -93,9 +93,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const authData = localStorage.getItem(AUTH_KEY);
       if (authData) {
         try {
-          const { expiry } = JSON.parse(authData);
-          if (Date.now() < expiry) {
-            setIsAuthenticated(true);
+          const parsed = JSON.parse(authData);
+          // Validate structure before trusting
+          if (parsed && typeof parsed.expiry === 'number' && typeof parsed.token === 'string') {
+            if (Date.now() < parsed.expiry) {
+              setIsAuthenticated(true);
+            } else {
+              localStorage.removeItem(AUTH_KEY);
+            }
           } else {
             localStorage.removeItem(AUTH_KEY);
           }

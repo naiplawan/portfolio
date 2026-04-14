@@ -102,6 +102,7 @@ CREATE INDEX IF NOT EXISTS idx_blog_posts_author ON public.blog_posts(author_id)
 CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON public.blog_posts(published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON public.blog_posts(category);
 CREATE INDEX IF NOT EXISTS idx_blog_posts_search ON public.blog_posts USING gin(to_tsvector('english', title || ' ' || COALESCE(excerpt, '')));
+CREATE INDEX IF NOT EXISTS idx_blog_posts_status_featured_published ON public.blog_posts(status, featured, published_at DESC) WHERE status = 'published';
 
 -- Tags indexes
 CREATE INDEX IF NOT EXISTS idx_post_tags_post ON public.post_tags(post_id);

@@ -62,7 +62,15 @@ export const createBlogPostSchema = z.object({
     .optional(),
   content: z.object({
     type: z.literal('doc'),
-    content: z.array(z.any()).min(1, 'Content cannot be empty'),
+    content: z.array(
+      z.object({
+        type: z.string(),
+        content: z.array(z.any()).optional(),
+        attrs: z.record(z.string(), z.any()).optional(),
+        marks: z.array(z.any()).optional(),
+        text: z.string().optional(),
+      })
+    ).min(1, 'Content cannot be empty'),
   })
   .refine((data) => {
     // Check if content has actual text content (not just empty nodes)
@@ -100,7 +108,15 @@ export const updateBlogPostSchema = z.object({
     .optional(),
   content: z.object({
     type: z.literal('doc'),
-    content: z.array(z.any()),
+    content: z.array(
+      z.object({
+        type: z.string(),
+        content: z.array(z.any()).optional(),
+        attrs: z.record(z.string(), z.any()).optional(),
+        marks: z.array(z.any()).optional(),
+        text: z.string().optional(),
+      })
+    ),
   })
   .optional(),
   tags: z.array(z.string()).min(1, 'At least one tag is required').max(10, 'Maximum 10 tags allowed').optional(),

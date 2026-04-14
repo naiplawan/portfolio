@@ -122,7 +122,11 @@ export class BlogPostRepository extends BaseRepository<BlogPostRow> {
       query = query.eq('category', category);
     }
     if (search) {
-      query = query.textSearch('title', search);
+      // Sanitize search input to prevent injection
+      const sanitizedSearch = search.replace(/[^\w\s-]/g, '').trim();
+      if (sanitizedSearch) {
+        query = query.textSearch('title', sanitizedSearch);
+      }
     }
 
     query = query
@@ -237,9 +241,17 @@ export class BlogPostRepository extends BaseRepository<BlogPostRow> {
 
     if (postError) throw this.handleError(postError);
 
-    // Handle tags
-    if (tagNames.length > 0) {
-      await this.associateTags(postDataResult.id, tagNames);
+    // Handle tags with rollback on failure
+    try {
+      if (tagNames.length > 0) {
+        await this.associateTags(postDataResult.id, tagNames);
+      }
+    } catch (tagError) {
+      // Rollback: delete the created post if tag association fails
+      await this.client.from('blog_posts').delete().eq('id', postDataResult.id);
+      throw new Error(
+        `Failed to associate tags: ${tagError instanceof Error ? tagError.message : 'Unknown error'}. Post creation rolled back.`
+      );
     }
 
     // Fetch and return complete post
@@ -409,8 +421,9 @@ export class BlogPostRepository extends BaseRepository<BlogPostRow> {
     const baseSlug = generateSlug(title);
     let slug = baseSlug;
     let counter = 0;
+    const maxAttempts = 100;
 
-    while (true) {
+    while (counter < maxAttempts) {
       const { data } = await this.client
         .from('blog_posts')
         .select('id,slug')
@@ -424,6 +437,8 @@ export class BlogPostRepository extends BaseRepository<BlogPostRow> {
       counter++;
       slug = `${baseSlug}-${counter}`;
     }
+
+    throw new Error('Unable to generate a unique slug. Please try a different title.');
   }
 
   /**

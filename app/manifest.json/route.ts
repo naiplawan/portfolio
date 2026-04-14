@@ -6,7 +6,7 @@ export function GET() {
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
-    theme_color: '#3b82f6',
+    theme_color: '#C97C4C',
     orientation: 'portrait-primary',
     scope: '/',
     lang: 'en-US',

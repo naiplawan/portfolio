@@ -126,6 +126,7 @@ const ProjectDemo = ({ project }: { project: Project }) => {
                 asChild
                 variant="ghost"
                 size="sm"
+                aria-label="View on GitHub"
                 className="hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
@@ -139,6 +140,7 @@ const ProjectDemo = ({ project }: { project: Project }) => {
                 asChild
                 variant="ghost"
                 size="sm"
+                aria-label="Visit live demo"
                 className="hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
@@ -159,18 +161,25 @@ const ProjectDemo = ({ project }: { project: Project }) => {
 }
 
 export default function ProjectsPage() {
+  const [allProjects, setAllProjects] = useState<Project[]>([])
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadProjects() {
       try {
         const response = await fetch('/api/github/projects')
+        if (!response.ok) throw new Error('Failed to fetch projects')
         const data = await response.json()
-        setFilteredProjects(data.projects || [])
-      } catch (error) {
-        console.error('Failed to load projects:', error)
+        const projects = data.projects || []
+        setAllProjects(projects)
+        setFilteredProjects(projects)
+        setError(null)
+      } catch (err) {
+        console.error('Failed to load projects:', err)
+        setError('Failed to load projects. Please try again later.')
       } finally {
         setIsLoading(false)
       }
@@ -178,24 +187,17 @@ export default function ProjectsPage() {
     loadProjects()
   }, [])
 
-  const categories = ['all', ...Array.from(new Set(filteredProjects.map(p => p.category)))]
+  const categories = ['all', ...Array.from(new Set(allProjects.map(p => p.category)))]
 
   const handleFilter = (category: string) => {
-    setIsLoading(true)
     setSelectedCategory(category)
+    setIsLoading(true)
 
-    setTimeout(async () => {
+    setTimeout(() => {
       if (category === 'all') {
-        // Re-fetch from GitHub when showing all
-        try {
-          const response = await fetch('/api/github/projects')
-          const data = await response.json()
-          setFilteredProjects(data.projects || [])
-        } catch (error) {
-          console.error('Failed to reload projects:', error)
-        }
+        setFilteredProjects(allProjects)
       } else {
-        setFilteredProjects(filteredProjects.filter(p => p.category === category))
+        setFilteredProjects(allProjects.filter(p => p.category === category))
       }
       setIsLoading(false)
     }, 300)
@@ -254,15 +256,25 @@ export default function ProjectsPage() {
             </motion.p>
           </div>
 
+          {/* Error state */}
+          {error && !isLoading && (
+            <div className="text-center py-12">
+              <p className="text-destructive mb-4">{error}</p>
+              <Button variant="outline" onClick={() => window.location.reload()}>
+                Retry
+              </Button>
+            </div>
+          )}
+
           {/* Initial loading state */}
-          {isLoading && filteredProjects.length === 0 ? (
+          {!error && isLoading && filteredProjects.length === 0 ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
                 <Loader2 className="w-8 h-8 animate-spin text-terracotta mx-auto mb-4" />
                 <p className="text-muted-foreground">Loading projects from GitHub...</p>
               </div>
             </div>
-          ) : (
+          ) : !error && (
             <>
               {/* Project Filter */}
               <motion.div

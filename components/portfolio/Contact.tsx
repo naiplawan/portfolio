@@ -212,7 +212,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <section className="section-padding bg-background">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -220,17 +220,17 @@ export default function Contact() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 space-y-4"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
             Ready to Build Something Amazing?
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto font-light px-2">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto font-light px-2">
             I'm actively seeking new opportunities to apply my frontend expertise and full-stack skills. 
             Let's discuss how I can help drive innovation at your company.
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4 sm:mt-6 px-4">
-            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-green-100 text-green-800 rounded-full text-xs sm:text-sm font-medium">✓ Available for Full-Time Roles</span>
-            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium">✓ Frontend & Full-Stack Expert</span>
-            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-100 text-purple-800 rounded-full text-xs sm:text-sm font-medium">✓ Quick Response</span>
+            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-success/10 text-success rounded-full text-xs sm:text-sm font-medium">Available for Full-Time Roles</span>
+            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary/10 text-primary rounded-full text-xs sm:text-sm font-medium">Frontend & Full-Stack Expert</span>
+            <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-accent/20 text-accent rounded-full text-xs sm:text-sm font-medium">Quick Response</span>
           </div>
         </motion.div>
 
@@ -241,10 +241,10 @@ export default function Contact() {
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 max-w-5xl mx-auto"
         >
           <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8">
-            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Let's Connect</h3>
+            <div className="bg-card rounded-lg sm:rounded-lg p-4 sm:p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">Let's Connect</h3>
 
-              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
                 <strong>Looking for a developer who can:</strong><br/>
                 • Build innovative user interfaces from scratch<br/>
                 • Optimize performance and reduce costs<br/>
@@ -256,14 +256,14 @@ export default function Contact() {
               <div className="space-y-4 sm:space-y-6">
                 {contactInfo.map((info) => (
                   <div key={info.title} className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                      <info.icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg sm:rounded-lg flex items-center justify-center flex-shrink-0">
+                      <info.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm sm:text-base font-medium text-gray-900">{info.title}</p>
+                      <p className="text-sm sm:text-base font-medium text-foreground">{info.title}</p>
                       <a
                         href={info.href}
-                        className="text-sm sm:text-base text-gray-600 hover:text-blue-600 transition-colors break-all"
+                        className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors break-all"
                       >
                         {info.value}
                       </a>
@@ -272,8 +272,8 @@ export default function Contact() {
                 ))}
               </div>
 
-              <div className="pt-6 sm:pt-8 border-t border-gray-200 mt-6 sm:mt-8">
-                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Connect with me:</p>
+              <div className="pt-6 sm:pt-8 border-t border-border mt-6 sm:mt-8">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">Connect with me:</p>
                 <div className="flex gap-2 sm:gap-3">
                   {socialLinks.map((social) => (
                     <Button
@@ -281,7 +281,7 @@ export default function Contact() {
                       variant="outline"
                       size="icon"
                       asChild
-                      className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl border-gray-200 hover:bg-blue-50 hover:border-blue-200"
+                      className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-lg border-border hover:bg-primary/10 hover:border-blue-200"
                     >
                       <a href={social.href} target="_blank" rel="noopener noreferrer">
                         <social.icon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -294,8 +294,8 @@ export default function Contact() {
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Send Message</h3>
+            <div className="bg-card rounded-lg sm:rounded-lg p-4 sm:p-6 md:p-8 shadow-sm">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">Send Message</h3>
 
               {isSubmitted ? (
                 <motion.div
@@ -305,13 +305,13 @@ export default function Contact() {
                 >
                   <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 text-green-500 mx-auto mb-3 sm:mb-4" />
                   <h4 className="text-lg sm:text-xl font-semibold mb-2">Message Sent!</h4>
-                  <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                  <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                     Thank you for your message. I'll get back to you soon!
                   </p>
                   <Button
                     onClick={() => setIsSubmitted(false)}
                     variant="outline"
-                    className="rounded-lg sm:rounded-xl text-sm sm:text-base"
+                    className="rounded-lg sm:rounded-lg text-sm sm:text-base"
                   >
                     Send Another Message
                   </Button>
@@ -320,7 +320,7 @@ export default function Contact() {
                 <form ref={form} onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label htmlFor="name" className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">Name</label>
+                      <label htmlFor="name" className="text-xs sm:text-sm font-medium text-foreground mb-1 sm:mb-2 block">Name</label>
                       <Input
                         id="name"
                         name="name"
@@ -328,7 +328,7 @@ export default function Contact() {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Your full name"
-                        className={errors.name ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'}
+                        className={errors.name ? 'border-destructive/50 focus:border-destructive focus:ring-destructive' : 'border-border focus:border-primary focus:ring-primary'}
                         aria-invalid={!!errors.name}
                       />
                       {errors.name && (
@@ -336,7 +336,7 @@ export default function Contact() {
                       )}
                     </div>
                     <div>
-                      <label htmlFor="email" className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">Email</label>
+                      <label htmlFor="email" className="text-xs sm:text-sm font-medium text-foreground mb-1 sm:mb-2 block">Email</label>
                       <Input
                         id="email"
                         name="email"
@@ -344,7 +344,7 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="your.email@example.com"
-                        className={errors.email ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'}
+                        className={errors.email ? 'border-destructive/50 focus:border-destructive focus:ring-destructive' : 'border-border focus:border-primary focus:ring-primary'}
                         aria-invalid={!!errors.email}
                       />
                       {errors.email && (
@@ -354,7 +354,7 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label htmlFor="subject" className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">Subject</label>
+                    <label htmlFor="subject" className="text-xs sm:text-sm font-medium text-foreground mb-1 sm:mb-2 block">Subject</label>
                     <Input
                       id="subject"
                       name="subject"
@@ -362,7 +362,7 @@ export default function Contact() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       placeholder="What's this about?"
-                      className={errors.subject ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'}
+                      className={errors.subject ? 'border-destructive/50 focus:border-destructive focus:ring-destructive' : 'border-border focus:border-primary focus:ring-primary'}
                       aria-invalid={!!errors.subject}
                     />
                     {errors.subject && (
@@ -371,7 +371,7 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">Message</label>
+                    <label htmlFor="message" className="text-xs sm:text-sm font-medium text-foreground mb-1 sm:mb-2 block">Message</label>
                     <Textarea
                       id="message"
                       name="message"
@@ -379,7 +379,7 @@ export default function Contact() {
                       onChange={handleInputChange}
                       placeholder="Tell me about your project or inquiry..."
                       rows={5}
-                      className={errors.message ? 'border-red-300 focus:border-red-500 focus:ring-red-500 resize-none' : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500 resize-none'}
+                      className={errors.message ? 'border-destructive/50 focus:border-destructive focus:ring-destructive resize-none' : 'border-border focus:border-primary focus:ring-primary resize-none'}
                       aria-invalid={!!errors.message}
                     />
                     {errors.message && (
@@ -397,7 +397,7 @@ export default function Contact() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg sm:rounded-xl py-2.5 sm:py-3 font-medium transition-all duration-200 text-sm sm:text-base"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg py-2.5 sm:py-3 font-medium transition-all duration-200 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
                       <>

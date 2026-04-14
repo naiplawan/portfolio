@@ -1,9 +1,10 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { UploadService, UploadOptions, MultipleUploadResult } from '@/lib/services/upload.service';
+import { createUploadService, UploadOptions, MultipleUploadResult } from '@/lib/services/upload.service';
 import { MediaDto } from '@/lib/types/blog-types';
 import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
 
 /**
  * Query keys for upload-related queries
@@ -14,6 +15,11 @@ export const uploadKeys = {
   userMedia: (userId: string) => [...uploadKeys.all, 'user', userId] as const,
 } as const;
 
+function getUploadService() {
+  const supabase = createClient();
+  return createUploadService(supabase);
+}
+
 /**
  * Hook for uploading a single image
  */
@@ -22,7 +28,7 @@ export function useUploadImage() {
 
   return useMutation({
     mutationFn: async ({ file, uploaderId, options }: { file: File; uploaderId: string; options?: UploadOptions }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.uploadImage(file, uploaderId, options);
     },
     onSuccess: (_data, variables) => {
@@ -48,7 +54,7 @@ export function useUploadImages() {
 
   return useMutation({
     mutationFn: async ({ files, uploaderId, options }: { files: File[]; uploaderId: string; options?: UploadOptions }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.uploadImages(files, uploaderId, options);
     },
     onSuccess: (result: MultipleUploadResult, variables) => {
@@ -77,7 +83,7 @@ export function useUploadImages() {
 export function useUploadCoverImage() {
   return useMutation({
     mutationFn: async ({ file, uploaderId, postId }: { file: File; uploaderId: string; postId?: string }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.uploadCoverImage(file, uploaderId, postId);
     },
     onSuccess: () => {
@@ -97,7 +103,7 @@ export function useDeleteMedia() {
 
   return useMutation({
     mutationFn: async ({ mediaId, folder }: { mediaId: string; folder?: string }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.deleteMedia(mediaId, folder);
     },
     onSuccess: () => {
@@ -118,7 +124,7 @@ export function useDeleteMediaMultiple() {
 
   return useMutation({
     mutationFn: async ({ mediaIds, folder }: { mediaIds: string[]; folder?: string }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.deleteMediaMultiple(mediaIds, folder);
     },
     onSuccess: (result) => {
@@ -144,7 +150,7 @@ export function usePostMedia(postId: string) {
   return useQuery({
     queryKey: uploadKeys.postMedia(postId),
     queryFn: async (): Promise<MediaDto[]> => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.getPostMedia(postId);
     },
     enabled: !!postId,
@@ -159,7 +165,7 @@ export function useUserMedia(userId: string) {
   return useQuery({
     queryKey: uploadKeys.userMedia(userId),
     queryFn: async (): Promise<MediaDto[]> => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.getUserMedia(userId);
     },
     enabled: !!userId,
@@ -175,7 +181,7 @@ export function useUpdateMedia() {
 
   return useMutation({
     mutationFn: async ({ mediaId, updates }: { mediaId: string; updates: { altText?: string; postId?: string } }) => {
-      const service = new UploadService(null as any);
+      const service = getUploadService();
       return await service.updateMedia(mediaId, updates);
     },
     onSuccess: () => {

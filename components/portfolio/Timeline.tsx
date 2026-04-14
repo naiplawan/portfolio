@@ -16,10 +16,10 @@ const iconMap = {
 };
 
 const colorMap = {
-  work: 'bg-blue-500',
-  education: 'bg-purple-500',
-  achievement: 'bg-yellow-500',
-  project: 'bg-green-500',
+  work: 'bg-primary',
+  education: 'bg-accent',
+  achievement: 'bg-secondary',
+  project: 'bg-success',
 };
 
 const typeLabels = {

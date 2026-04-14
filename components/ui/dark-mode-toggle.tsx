@@ -121,33 +121,8 @@ export function DarkModeToggle() {
             >
               {isDark ? (
                 <>
-                  {/* Sun icon */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                    className="relative"
-                  >
-                    <Sun className="h-5 w-5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                  </motion.div>
-                  {/* Sun rays glow */}
-                  <motion.div
-                    className="absolute inset-0 blur-xl bg-amber-400/30 rounded-full"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      opacity: [0.5, 0.8, 0.5],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                </>
-              ) : (
-                <>
-                  {/* Moon icon */}
+                  {/* Moon icon (shows in dark mode to switch to light) */}
                   <Moon className="h-5 w-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.6)]" />
-                  {/* Moon glow */}
                   <motion.div
                     className="absolute inset-0 blur-xl bg-indigo-400/20 rounded-full"
                     animate={{
@@ -156,6 +131,29 @@ export function DarkModeToggle() {
                     }}
                     transition={{
                       duration: 3,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                </>
+              ) : (
+                <>
+                  {/* Sun icon (shows in light mode to switch to dark) */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                    className="relative"
+                  >
+                    <Sun className="h-5 w-5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                  </motion.div>
+                  <motion.div
+                    className="absolute inset-0 blur-xl bg-amber-400/30 rounded-full"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.5, 0.8, 0.5],
+                    }}
+                    transition={{
+                      duration: 2,
                       repeat: Infinity,
                       ease: 'easeInOut',
                     }}

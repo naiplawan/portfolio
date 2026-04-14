@@ -95,7 +95,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
           <Button 
             onClick={reset}
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
@@ -105,7 +105,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
             asChild
             variant="outline" 
             size="lg"
-            className="border-border text-muted-foreground px-8 py-3 rounded-full font-medium hover:bg-accent transition-all duration-200"
+            className="border-border text-muted-foreground px-8 py-3 rounded-lg font-medium hover:bg-accent transition-all duration-200"
           >
             <Link href="/">
               <Home className="w-4 h-4 mr-2" />
@@ -115,9 +115,9 @@ export default function Error({ error, reset }: ErrorPageProps) {
         </motion.div>
 
         <motion.div variants={itemVariants} className="mt-12">
-          <div className="bg-card rounded-2xl p-8 shadow-sm border border-border">
+          <div className="bg-card rounded-lg p-8 shadow-sm border border-border">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                 <Mail className="w-6 h-6 text-primary" />
               </div>
             </div>

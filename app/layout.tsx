@@ -116,7 +116,7 @@ export const metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: process.env.GOOGLE_VERIFICATION_CODE || undefined,
   },
   icons: {
     icon: [

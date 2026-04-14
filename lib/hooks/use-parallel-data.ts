@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Generic hook for parallel data fetching at component level
 // This pattern allows components to fetch data independently and in parallel
@@ -13,6 +13,14 @@ function useParallelData<T>(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Use ref to avoid stale closure while preventing unnecessary re-fetches
+  const fetchFnRef = useRef(fetchFn);
+  fetchFnRef.current = fetchFn;
+
+  const stableFetch = useCallback(async () => {
+    return fetchFnRef.current();
+  }, []);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -20,7 +28,7 @@ function useParallelData<T>(
       try {
         setIsLoading(true);
         setError(null);
-        const result = await fetchFn();
+        const result = await stableFetch();
         if (isMounted) {
           setData(result);
         }
@@ -40,8 +48,7 @@ function useParallelData<T>(
     return () => {
       isMounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [stableFetch, ...deps]);
 
   return { data, isLoading, error };
 }

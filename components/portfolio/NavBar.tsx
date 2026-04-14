@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
@@ -8,12 +8,57 @@ import Menu from '@/components/ui/icons/Menu';
 import { X, Download } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
+import { PROFESSIONAL_INFO, RESUME_PATH } from '@/lib/constants';
 
 function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Focus trap for mobile menu
+  const handleMenuTab = useCallback((e: KeyboardEvent) => {
+    if (e.key !== 'Tab' || !menuRef.current) return;
+
+    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
+
+  // Manage focus when mobile menu opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('keydown', handleMenuTab);
+      // Focus the first interactive element after animation
+      const timer = setTimeout(() => {
+        const firstFocusable = menuRef.current?.querySelector<HTMLElement>('button, [href]');
+        firstFocusable?.focus();
+      }, 100);
+      return () => {
+        document.removeEventListener('keydown', handleMenuTab);
+        clearTimeout(timer);
+      };
+    } else {
+      document.removeEventListener('keydown', handleMenuTab);
+      // Return focus to the menu toggle button
+      menuButtonRef.current?.focus();
+      return undefined;
+    }
+  }, [isOpen, handleMenuTab]);
   
   const navItems = [
     { label: 'About', href: '/about' },
@@ -75,7 +120,7 @@ function NavBar() {
               onClick={() => router.push('/')}
               aria-label="Go to homepage"
             >
-              <span className="bio-gradient-text">Rachaphol Plookaom.</span>
+              <span className="bio-gradient-text">{PROFESSIONAL_INFO.name}.</span>
             </Button>
 
             {/* Desktop Nav Items */}
@@ -146,7 +191,7 @@ function NavBar() {
                 size="sm"
                 className="hidden lg:flex"
               >
-                <a href="/Rachaphol_Resume.pdf" download="Rachaphol_Plookaom_Resume.pdf">
+                <a href={RESUME_PATH} download={`${PROFESSIONAL_INFO.name.replace(/\s+/g, '_')}_Resume.pdf`}>
                   <Download className="w-4 h-4 mr-2" />
                   Resume
                 </a>
@@ -156,6 +201,7 @@ function NavBar() {
 
               {/* Mobile Menu Toggle */}
               <Button
+                ref={menuButtonRef}
                 variant="outline"
                 size="icon"
                 className="lg:hidden"
@@ -193,6 +239,7 @@ function NavBar() {
 
             {/* Mobile Menu Sheet */}
             <motion.div
+              ref={menuRef}
               id="mobile-menu"
               className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bio-glass-card z-50 lg:hidden border-l border-border/50 rounded-l-3xl"
               initial={{ x: '100%' }}
@@ -254,7 +301,7 @@ function NavBar() {
                     transition={{ delay: navItems.length * 0.08 }}
                   >
                     <Button asChild size="lg" className="w-full">
-                      <a href="/Rachaphol_Resume.pdf" download="Rachaphol_Plookaom_Resume.pdf">
+                      <a href={RESUME_PATH} download={`${PROFESSIONAL_INFO.name.replace(/\s+/g, '_')}_Resume.pdf`}>
                         <Download className="w-5 h-5 mr-2" />
                         Download Resume
                       </a>
@@ -265,7 +312,7 @@ function NavBar() {
                 {/* Footer in Mobile Menu */}
                 <div className="pt-6 mt-auto border-t border-border/50">
                   <p className="text-sm text-muted-foreground text-center">
-                    © 2026 Rachaphol Plookaom
+                    &copy; {new Date().getFullYear()} {PROFESSIONAL_INFO.name}
                   </p>
                 </div>
               </div>

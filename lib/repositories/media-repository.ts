@@ -93,15 +93,20 @@ export class MediaRepository extends BaseRepository<MediaRow> {
     folder = 'blog-images'
   ): Promise<UploadResult[]> {
     const results: UploadResult[] = [];
+    const failures: string[] = [];
 
     for (const file of files) {
       try {
         const result = await this.uploadFile(file, uploaderId, folder);
         results.push(result);
       } catch (error) {
-        console.error(`Failed to upload ${file.name}:`, error);
-        // Continue with other files
+        const msg = error instanceof Error ? error.message : 'Unknown error';
+        failures.push(`${file.name}: ${msg}`);
       }
+    }
+
+    if (failures.length > 0 && results.length === 0) {
+      throw new Error(`All uploads failed: ${failures.join('; ')}`);
     }
 
     return results;

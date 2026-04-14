@@ -17,7 +17,7 @@ export function githubRepoToProject(
   repo: GitHubRepo,
   _username: string,
   options: GitHubToProjectOptions = {}
-): Project {
+): Project | null {
   const {
     includeForks = false,
     minStars = 0,
@@ -27,25 +27,25 @@ export function githubRepoToProject(
 
   // Skip forks if not included
   if (!includeForks && repo.fork) {
-    return null as any;
+    return null;
   }
 
   // Skip if below minimum stars
   if (repo.stargazers_count < minStars) {
-    return null as any;
+    return null;
   }
 
   // Filter by topics if specified
   const repoTopics = repo.topics || [];
   if (onlyTopics.length > 0) {
     if (!onlyTopics.some(topic => repoTopics.includes(topic))) {
-      return null as any;
+      return null;
     }
   }
 
   if (excludeTopics.length > 0) {
     if (excludeTopics.some(topic => repoTopics.includes(topic))) {
-      return null as any;
+      return null;
     }
   }
 
@@ -206,7 +206,7 @@ export async function fetchProjectsFromGitHub(
     // Transform repos to projects
     const projects = repos
       .map(repo => githubRepoToProject(repo, username, options))
-      .filter(project => project !== null)
+      .filter((project): project is Project => project !== null)
       .sort((a, b) => {
         // Sort by stars descending
         const aStars = a.metrics?.performance ? parseInt(a.metrics.performance) || 0 : 0;
@@ -214,7 +214,7 @@ export async function fetchProjectsFromGitHub(
         return bStars - aStars;
       });
 
-    return projects as Project[];
+    return projects;
   } catch (error) {
     console.error('Error fetching projects from GitHub:', error);
     return [];

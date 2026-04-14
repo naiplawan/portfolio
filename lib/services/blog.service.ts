@@ -55,7 +55,9 @@ export class BlogService {
 
     if (post) {
       // Increment view count asynchronously (don't await)
-      this.blogPostRepo.incrementViewCount(post.id).catch(console.error);
+      this.blogPostRepo.incrementViewCount(post.id).catch((err) => {
+        console.error('Failed to increment view count for post %s:', post.id, err);
+      });
     }
 
     return post;
@@ -89,14 +91,19 @@ export class BlogService {
    * Create new blog post
    *
    * @param input - Post data
-   * @param authorId - Author's user ID
+   * @param authorId - Author's user ID (must come from authenticated session)
    * @returns Created blog post
-   * @throws Error if validation fails
+   * @throws Error if validation fails or authorId is invalid
    */
   async createPost(
     input: CreateBlogPostInput,
     authorId: string
   ): Promise<BlogPostDto> {
+    // Validate authorId is provided (callers must extract from session)
+    if (!authorId || typeof authorId !== 'string') {
+      throw new Error('Valid author ID is required');
+    }
+
     // Validate input
     this.validatePostInput(input);
 

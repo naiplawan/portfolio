@@ -1,4 +1,7 @@
-// Simple client-side rate limiting using localStorage
+// Client-side rate limiting using localStorage
+// NOTE: Client-side rate limiting is a UX convenience only and can be bypassed.
+// For true protection, pair this with server-side rate limiting (e.g., Vercel Edge Middleware,
+// Upstash Redis, or database-backed counters) on your API routes.
 // Schema versioning ensures backward compatibility when data structure changes
 const RATE_LIMIT_SCHEMA_VERSION = 1;
 

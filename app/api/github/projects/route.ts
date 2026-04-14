@@ -4,7 +4,6 @@ import { FALLBACK_PROJECTS } from '@/lib/data/projects-data';
 
 // Enable caching for 5 minutes
 export const revalidate = 300;
-export const dynamic = 'force-dynamic';
 
 // GitHub username from environment variable
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
