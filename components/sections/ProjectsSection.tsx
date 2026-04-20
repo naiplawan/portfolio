@@ -1,7 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import {
   Github,
@@ -9,11 +8,9 @@ import {
   Code2,
   AlertCircle,
   RefreshCw,
+  ArrowUpRight,
 } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParallelData } from '@/lib/hooks/use-parallel-data';
 
@@ -38,7 +35,6 @@ interface Project {
 function useGitHubProjects() {
   const [retryCount, setRetryCount] = useState(0)
 
-  // Extract fetch function for parallel data fetching pattern
   const fetchProjects = async (): Promise<Project[]> => {
     const response = await fetch('/api/github/projects');
     if (!response.ok) {
@@ -59,186 +55,111 @@ function useGitHubProjects() {
 
 function ProjectCardSkeleton() {
   return (
-    <Card className="overflow-hidden">
+    <div className="overflow-hidden rounded-[var(--radius)] border border-[hsl(var(--border))]">
       <Skeleton className="aspect-[16/10] w-full" />
-      <CardContent className="p-6 space-y-4">
-        <Skeleton className="h-6 w-3/4" />
+      <div className="p-5 space-y-3">
+        <Skeleton className="h-5 w-3/4" />
         <Skeleton className="h-4 w-full" />
-        <div className="flex gap-2">
-          <Skeleton className="h-6 w-16 rounded-full" />
-          <Skeleton className="h-6 w-16 rounded-full" />
-          <Skeleton className="h-6 w-16 rounded-full" />
+        <div className="flex gap-2 pt-1">
+          <Skeleton className="h-5 w-14 rounded-full" />
+          <Skeleton className="h-5 w-14 rounded-full" />
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Generate gradient color based on category using design system tokens
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      web: 'from-[hsl(var(--primary))] to-[hsl(var(--accent))]',
-      mobile: 'from-[hsl(var(--primary))] to-[hsl(var(--secondary))]',
-      backend: 'from-[hsl(var(--accent))] to-[hsl(105,25%,45%)]',
-      ai: 'from-[hsl(28,55%,45%)] to-[hsl(var(--primary))]',
-      tools: 'from-[hsl(var(--secondary))] to-[hsl(35,35%,60%)]',
-      other: 'from-[hsl(var(--muted))] to-[hsl(var(--muted-foreground))]',
-    };
-    return colors[category] || colors.other;
-  };
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{
-        delay: index * 0.1,
-        duration: 0.6,
-        ease: [0.25, 0.1, 0.25, 1],
+        delay: index * 0.08,
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1],
       }}
-      className="group relative"
+      className="project-card group border border-[hsl(var(--border))] bg-card overflow-hidden"
     >
-      <Card
-        className="overflow-hidden h-full transition-all duration-500 hover:shadow-xl"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Image Container */}
-        <div className="relative overflow-hidden aspect-[16/10]">
-          <motion.img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover"
-            animate={{ scale: isHovered ? 1.1 : 1 }}
-            transition={{ duration: 0.7 }}
-            onError={(e) => {
-              // Fallback to gradient if image fails
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.parentElement!.classList.add('bg-gradient-to-br', getCategoryColor(project.category));
-            }}
-          />
+      {/* Image */}
+      <div className="relative overflow-hidden aspect-[16/10] bg-muted">
+        <img
+          src={project.image}
+          alt={project.title}
+          className="project-image w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60" />
-
-          {/* Featured Badge */}
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex gap-2">
           {project.featured && (
-            <div className="absolute top-4 left-4">
-              <Badge variant="secondary" className="backdrop-blur-md bg-white/20 text-white border-white/20">
-                Featured
-              </Badge>
-            </div>
+            <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-[10px] font-medium text-background backdrop-blur-sm uppercase tracking-wider">
+              Featured
+            </span>
           )}
-
-          {/* Status Badge */}
-          <div className="absolute top-4 right-4">
-            <Badge
-              variant="outline"
-              className={cn(
-                'backdrop-blur-md border-white/20 text-white',
-                project.status === 'live' && 'bg-[hsl(105,60%,35%)]/30',
-                project.status === 'development' && 'bg-[hsl(35,70%,50%)]/30',
-                project.status === 'archived' && 'bg-[hsl(var(--muted))]/40',
-              )}
-            >
-              {project.status}
-            </Badge>
-          </div>
-
-          {/* Hover Actions */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {project.githubUrl && (
-              <Button
-                variant="secondary"
-                size="icon"
-                className="backdrop-blur-md bg-white/20 hover:bg-white/30 border-white/20"
-                asChild
-              >
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`View ${project.title} on GitHub`}
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-              </Button>
-            )}
-            {project.liveUrl && (
-              <Button
-                variant="secondary"
-                size="icon"
-                className="backdrop-blur-md bg-white/20 hover:bg-white/30 border-white/20"
-                asChild
-              >
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`View ${project.title} live demo`}
-                >
-                  <ExternalLink className="w-5 h-5" />
-                </a>
-              </Button>
-            )}
-          </motion.div>
-
-          {/* Color Accent */}
-          <div
-            className={cn(
-              'absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r',
-              getCategoryColor(project.category),
-            )}
-          />
         </div>
 
-        {/* Content */}
-        <CardContent className="p-6">
-          <h3 className="text-xl font-display font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
+        {/* Hover links */}
+        <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
+              aria-label={`View ${project.title} on GitHub`}
+            >
+              <Github className="h-4 w-4" />
+            </a>
+          )}
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
+              aria-label={`View ${project.title} live demo`}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 className="font-display text-lg leading-tight group-hover:text-[hsl(var(--accent))] transition-colors">
             {project.title}
           </h3>
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-            {project.description}
-          </p>
-
-          {/* Technologies */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.technologies.slice(0, 4).map((tech) => (
-              <Badge key={tech} variant="outline" className="text-xs">
-                {tech}
-              </Badge>
-            ))}
-            {project.technologies.length > 4 && (
-              <Badge variant="secondary" className="text-xs">
-                +{project.technologies.length - 4}
-              </Badge>
-            )}
-          </div>
-
-          {/* Metrics */}
-          {project.metrics && (
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              {project.metrics.performance && (
-                <span>⭐ {project.metrics.performance}</span>
-              )}
-              {project.metrics.users && (
-                <span>🍴 {project.metrics.users}</span>
-              )}
-            </div>
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+          {project.description}
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {project.technologies.slice(0, 3).map((tech) => (
+            <span
+              key={tech}
+              className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground"
+            >
+              {tech}
+            </span>
+          ))}
+          {project.technologies.length > 3 && (
+            <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground">
+              +{project.technologies.length - 3}
+            </span>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -248,128 +169,96 @@ export default function ProjectsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.1 });
   const { projects, isLoading, error, retry } = useGitHubProjects();
 
-  // Show only featured or top 6 projects
   const displayedProjects = projects
     .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
     .slice(0, 6);
 
   return (
-    <section ref={ref} className="relative section-padding">
-      {/* Background Pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.01]"
-        style={{
-          backgroundImage: `
-          linear-gradient(to right, currentColor 1px, transparent 1px),
-          linear-gradient(to bottom, currentColor 1px, transparent 1px)
-        `,
-          backgroundSize: '40px 40px',
-        }}
-      />
-
-      <div className="container-premium relative z-10">
+    <section ref={ref} className="section-padding">
+      <div className="container-premium">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
         >
-          <Badge variant="secondary" className="mb-4">
-            <Code2 className="w-3 h-3 mr-1" />
-            GitHub Projects
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold mb-4">
-            Selected <span className="bio-gradient-text">Projects</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A showcase of my open source work, automatically synced from GitHub.
-            Each project represents real-world solutions built with modern technologies.
-          </p>
+          <p className="section-label mb-3">Selected Work</p>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
+              Projects
+            </h2>
+            <a
+              href="https://github.com/naiplawan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-animated text-sm text-muted-foreground"
+            >
+              View all on GitHub
+            </a>
+          </div>
         </motion.div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(4)].map((_, i) => (
               <ProjectCardSkeleton key={i} />
             ))}
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
+            className="flex flex-col items-center py-20 text-center"
           >
-            <div className="bio-glass-card max-w-md mx-auto p-8 rounded-2xl">
-              <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
-              <h3 className="text-xl font-display font-bold mb-2">Unable to Load Projects</h3>
-              <p className="text-muted-foreground mb-6">{error}</p>
-              <Button onClick={retry} variant="default" className="gap-2">
-                <RefreshCw className="w-4 h-4" />
-                Try Again
-              </Button>
-            </div>
+            <AlertCircle className="h-10 w-10 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-display mb-2">Unable to load projects</h3>
+            <p className="text-sm text-muted-foreground mb-6">{error}</p>
+            <Button onClick={retry} variant="outline" size="sm" className="gap-2">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Try Again
+            </Button>
           </motion.div>
         )}
 
-        {/* Projects Grid */}
+        {/* Grid */}
         {!isLoading && !error && displayedProjects.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {displayedProjects.map((project, index) => (
               <ProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
         )}
 
-        {/* Empty State */}
+        {/* Empty */}
         {!isLoading && !error && displayedProjects.length === 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
+            className="flex flex-col items-center py-20 text-center"
           >
-            <div className="bio-glass-card max-w-md mx-auto p-8 rounded-2xl">
-              <Code2 className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-display font-bold mb-2">No Projects Found</h3>
-              <p className="text-muted-foreground mb-6">
-                Check back later for new projects or visit my GitHub profile directly.
-              </p>
-              <Button asChild variant="outline">
-                <a
-                  href="https://github.com/naiplawan"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="w-4 h-4 mr-2" />
-                  View GitHub Profile
-                </a>
-              </Button>
-            </div>
+            <Code2 className="h-10 w-10 text-muted-foreground opacity-50 mb-4" />
+            <h3 className="text-lg font-display mb-2">No projects found</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Check back later or visit GitHub directly.
+            </p>
+            <Button asChild variant="outline" size="sm">
+              <a
+                href="https://github.com/naiplawan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gap-2"
+              >
+                <Github className="h-3.5 w-3.5" />
+                View GitHub Profile
+              </a>
+            </Button>
           </motion.div>
         )}
-
-        {/* View More Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-center mt-12"
-        >
-          <Button asChild size="lg">
-            <a
-              href="https://github.com/naiplawan"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View All Projects on GitHub
-              <Github className="w-4 h-4 ml-2" />
-            </a>
-          </Button>
-        </motion.div>
       </div>
     </section>
   );

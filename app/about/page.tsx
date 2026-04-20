@@ -11,59 +11,58 @@ export default function AboutPage() {
     {
       icon: FaFacebook,
       href: 'https://www.facebook.com/mos.jrpt',
-      label: 'Facebook', 
-      color: 'hover:text-blue-600',
+      label: 'Facebook',
     },
     {
       icon: FaLinkedin,
       href: 'https://www.linkedin.com/in/rachaphol-plookaom',
       label: 'LinkedIn',
-      color: 'hover:text-blue-700',
     },
     {
       icon: FaGithub,
       href: 'https://github.com/naiplawan',
       label: 'GitHub',
-      color: 'hover:text-gray-900 dark:hover:text-gray-100',
     },
   ];
 
   return (
-    <div className="min-h-screen pt-14">
-        <AboutMe />
-        <Timeline />
-        <GitHubStats />
+    <div className="min-h-screen pt-20">
+      <AboutMe />
+      <Timeline />
+      <GitHubStats />
 
-        <section className="py-16 px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-8"
-            >
-              <h2 className="text-3xl font-bold text-foreground">Let&apos;s Connect</h2>
+      <section className="section-padding border-t border-[hsl(var(--rule))]">
+        <div className="container-premium">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center space-y-6"
+          >
+            <p className="section-label">Connect</p>
+            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">Let&apos;s Connect</h2>
 
-              <div className="flex justify-center space-x-6">
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -4 }}
-                    className={`w-16 h-16 bg-card rounded-2xl flex items-center justify-center border border-border transition-all duration-200 ${social.color}`}
-                  >
-                    <social.icon className="w-7 h-7" />
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
+            <div className="flex justify-center gap-4 pt-2">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.08 }}
+                  aria-label={social.label}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-[hsl(var(--border))] text-muted-foreground transition-colors hover:bg-foreground hover:text-background hover:border-foreground"
+                >
+                  <social.icon className="h-5 w-5" />
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }

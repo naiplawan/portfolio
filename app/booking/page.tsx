@@ -2,8 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   Calendar,
   Clock,
@@ -32,126 +30,100 @@ const topics = [
 
 export default function BookingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
+    <div className="min-h-screen pt-20">
+      {/* Hero */}
+      <section className="pb-16">
+        <div className="container-premium">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
+            transition={{ duration: 0.5 }}
+            className="max-w-3xl"
           >
-            <Badge variant="secondary" className="px-4 py-1.5 text-sm">
-              Available for Calls
-            </Badge>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white tracking-tight">
-              Let&apos;s Schedule a Call
+            <p className="section-label mb-3">Booking</p>
+            <h1 className="font-display text-4xl sm:text-5xl tracking-tight">
+              Schedule a Call
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Book a time to discuss your project. I offer flexible scheduling options to fit your
-              needs and timezone.
+            <p className="mt-4 max-w-2xl text-muted-foreground">
+              Book a time to discuss your project. I offer flexible scheduling options to fit your needs and timezone.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Time Slots Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+      {/* Time Slots */}
+      <section className="border-t border-[hsl(var(--rule))] py-16">
+        <div className="container-premium">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.5 }}
+            className="mb-10"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Choose Your Duration
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Select the meeting length that works best for you
-            </p>
+            <h2 className="font-display text-3xl tracking-tight">Choose Your Duration</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {timeSlots.map((slot, index) => (
               <motion.div
                 key={slot.time}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ delay: index * 0.08, duration: 0.4 }}
+                className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-5 text-center transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
               >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-2 hover:border-blue-300 dark:hover:border-blue-700">
-                  <CardHeader className="text-center pb-3">
-                    <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                    <CardTitle className="text-xl">{slot.time}</CardTitle>
-                    <CardDescription className="text-base">{slot.type}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 text-center mb-4">
-                      {slot.description}
-                    </p>
-                    <Button
-                      className="w-full"
-                      variant="outline"
-                      asChild
-                    >
-                      <Link href="/contact?subject=Meeting Request: {slot.time}">
-                        Select
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                <Clock className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
+                <h3 className="font-display text-lg">{slot.time}</h3>
+                <p className="text-sm text-muted-foreground">{slot.type}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{slot.description}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4 w-full"
+                  asChild
+                >
+                  <Link href={`/contact?subject=Meeting Request: ${slot.time}`}>
+                    Select
+                  </Link>
+                </Button>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Topics Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800/50">
-        <div className="max-w-6xl mx-auto">
+      {/* Topics */}
+      <section className="border-t border-[hsl(var(--rule))] py-16 bg-muted/30">
+        <div className="container-premium">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.5 }}
+            className="mb-10"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              What to Discuss
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              Come prepared with topics you&apos;d like to cover
-            </p>
+            <h2 className="font-display text-3xl tracking-tight">What to Discuss</h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {topics.map((topic, index) => {
               const Icon = topic.icon;
               return (
                 <motion.div
                   key={topic.title}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ delay: index * 0.08, duration: 0.4 }}
+                  className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-5"
                 >
-                  <Card className="h-full hover:shadow-md transition-shadow duration-300">
-                    <CardContent className="pt-6">
-                      <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg sm:rounded-xl flex items-center justify-center mb-4">
-                        <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                        {topic.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {topic.description}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted mb-3">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-medium mb-1">{topic.title}</h3>
+                  <p className="text-sm text-muted-foreground">{topic.description}</p>
                 </motion.div>
               );
             })}
@@ -159,96 +131,64 @@ export default function BookingPage() {
         </div>
       </section>
 
-      {/* Info Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      {/* Before We Meet */}
+      <section className="border-t border-[hsl(var(--rule))] py-16">
+        <div className="container-premium max-w-3xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <Card className="border-blue-200 dark:border-blue-800">
-              <CardHeader>
-                <CardTitle className="text-2xl">Before We Meet</CardTitle>
-                <CardDescription className="text-base">
-                  To make the most of our time together
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+            <h2 className="font-display text-3xl tracking-tight mb-6">Before We Meet</h2>
+            <div className="space-y-4">
+              {[
+                { title: 'Come prepared with questions', desc: 'Share your project details, challenges, and goals beforehand' },
+                { title: 'Be on time', desc: 'I respect your time and ask the same in return' },
+                { title: 'Bring your team', desc: 'Feel free to invite stakeholders or decision makers' },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Come prepared with questions
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Share your project details, challenges, and goals beforehand
-                    </p>
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Be on time
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      I respect your time and ask the same in return
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Bring your team
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Feel free to invite stakeholders or decision makers
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      {/* CTA */}
+      <section className="border-t border-[hsl(var(--rule))] py-16 bg-foreground text-background">
+        <div className="container-premium text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center text-white"
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
           >
-            <Calendar className="w-12 h-12 mx-auto mb-4 opacity-90" />
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            <Calendar className="mx-auto h-10 w-10 opacity-60" />
+            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
               Ready to Book?
             </h2>
-            <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-lg text-muted">
               Send me a message with your preferred time and topic, and I&apos;ll confirm our meeting.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50"
-                asChild
-              >
-                <Link href="/contact?subject=Meeting Request">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Send Meeting Request
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
-            <p className="text-sm text-blue-100 mt-6">
-              Usually respond within 24 hours
-            </p>
+            <Button
+              size="lg"
+              className="bg-background text-foreground hover:bg-background/90"
+              asChild
+            >
+              <Link href="/contact?subject=Meeting Request">
+                <Mail className="mr-2 h-4 w-4" />
+                Send Meeting Request
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <p className="text-xs text-muted">Usually respond within 24 hours</p>
           </motion.div>
         </div>
       </section>

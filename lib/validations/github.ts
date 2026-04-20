@@ -58,7 +58,7 @@ export const GitHubRepoSchema = z.object({
   created_at: z.string(),
   pushed_at: z.string().nullable(),
   html_url: z.string().url(),
-  homepage: z.string().url().nullable(),
+  homepage: z.string().url().nullable().or(z.literal('')),
   topics: z.array(z.string()),
   fork: z.boolean(),
   archived: z.boolean(),

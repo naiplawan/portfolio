@@ -3,20 +3,17 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { contactFormLimiter, formatTimeRemaining } from '@/lib/utils/rate-limit';
 import { trackContactFormSubmit } from '@/components/analytics';
+import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 
-// EmailJS configuration from environment variables
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 
-// Input sanitization helper
 const sanitizeInput = (input: string): string => {
   return input
     .replace(/</g, '&lt;')
@@ -31,13 +28,12 @@ export default function ContactPage() {
   const [senderEmail, setSenderEmail] = useState('');
   const [senderName, setSenderName] = useState('');
   const [message, setMessage] = useState('');
-  const [honeypot, setHoneypot] = useState(''); // Spam prevention
+  const [honeypot, setHoneypot] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errors, setErrors] = useState<{ email?: string; message?: string; name?: string }>({});
   const [configReady, setConfigReady] = useState(true);
 
-  // Check EmailJS configuration on mount
   useEffect(() => {
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
       setConfigReady(false);
@@ -47,14 +43,12 @@ export default function ContactPage() {
   const validateForm = () => {
     const newErrors: { email?: string; message?: string; name?: string } = {};
 
-    // Name validation
     if (!senderName.trim()) {
       newErrors.name = 'Please enter your name';
     } else if (senderName.trim().length < 2) {
       newErrors.name = 'Name must be at least 2 characters';
     }
 
-    // Email validation (RFC 5322 compliant)
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     if (!senderEmail.trim()) {
       newErrors.email = 'Please enter your email';
@@ -62,7 +56,6 @@ export default function ContactPage() {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    // Message validation
     if (!message.trim()) {
       newErrors.message = 'Please enter a message';
     } else if (message.trim().length < 10) {
@@ -76,13 +69,8 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Honeypot check - if filled, it's likely a bot
-    if (honeypot) {
-      console.log('Spam detected');
-      return;
-    }
+    if (honeypot) return;
 
-    // Rate limiting check
     const rateLimitCheck = contactFormLimiter.check();
     if (!rateLimitCheck.allowed) {
       setStatus('error');
@@ -92,14 +80,11 @@ export default function ContactPage() {
       return;
     }
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
     setStatus('idle');
 
-    // Validate EmailJS configuration (should have been caught on mount, but double-check)
     if (!configReady) {
       setStatus('error');
       setErrors({ email: 'Email service not configured. Please contact directly.' });
@@ -119,21 +104,18 @@ export default function ContactPage() {
         EMAILJS_PUBLIC_KEY
       )
       .then(
-        (result) => {
-          console.log('Email sent successfully:', result.text);
+        () => {
           setStatus('success');
-          contactFormLimiter.increment(); // Increment rate limit counter
-          trackContactFormSubmit(true); // Track success
-          // Clear form after successful submission
+          contactFormLimiter.increment();
+          trackContactFormSubmit(true);
           setSenderEmail('');
           setSenderName('');
           setMessage('');
           setErrors({});
         },
-        (error) => {
-          console.error('Email send failed:', error.text);
+        () => {
           setStatus('error');
-          trackContactFormSubmit(false); // Track error
+          trackContactFormSubmit(false);
         }
       )
       .finally(() => {
@@ -142,147 +124,190 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pt-14 px-6 lg:px-8">
-      <div className="py-16">
+    <div className="min-h-screen pt-20">
+      <div className="container-premium section-padding">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-center mb-8"
+          className="mb-12"
         >
-          <Image
-              src="/assets/8690678_3969584.svg"
-              alt="Abstract contact illustration showing communication network and connectivity"
-              width={500}
-              height={400}
-            />
+          <p className="section-label mb-3">Contact</p>
+          <h1 className="font-display text-4xl sm:text-5xl tracking-tight">Get in Touch</h1>
+          <p className="mt-4 max-w-lg text-muted-foreground">
+            Have a project in mind? Send me a message or reach out directly.
+          </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-2xl mx-auto w-full"
-        >
-          <Card className="shadow-2xl">
-            <div className="text-center p-6 pb-0">
-              <CardTitle className="text-2xl mb-4">Get In Touch</CardTitle>
-              <p className="text-muted-foreground">
-                Please contact me directly at{' '}
-                <a className="underline hover:text-primary transition-colors" href="mailto:rachaphol.plo@gmail.com">
+        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+            className="lg:col-span-3"
+          >
+            {!configReady && (
+              <div className="mb-6 rounded-[var(--radius)] border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+                Contact form is not configured. Please reach out directly at{' '}
+                <a className="underline" href="mailto:rachaphol.plo@gmail.com">
                   rachaphol.plo@gmail.com
-                </a>{' '}
-                or through this form.
-              </p>
-            </div>
-            <CardContent>
-              {!configReady && (
-                <div className="mb-6 p-4 bg-destructive/10 border border-destructive/30 text-destructive rounded-lg">
-                  Contact form is not configured. Please reach out directly at{' '}
-                  <a className="underline" href="mailto:rachaphol.plo@gmail.com">
-                    rachaphol.plo@gmail.com
-                  </a>.
-                </div>
-              )}
-              {status === 'success' && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-success/10 border border-success/30 text-success rounded-lg"
-                >
-                  Message sent successfully! Thank you for reaching out.
-                </motion.div>
-              )}
-              {status === 'error' && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-destructive/10 border border-destructive/30 text-destructive rounded-lg"
-                >
-                  Failed to send message. Please try again or contact me directly.
-                </motion.div>
-              )}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Honeypot field (hidden from users) */}
-                <input
-                  type="text"
-                  name="bot-field"
-                  value={honeypot}
-                  onChange={(e) => setHoneypot(e.target.value)}
-                  style={{ display: 'none' }}
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
-                />
+                </a>.
+              </div>
+            )}
 
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+            {status === 'success' && (
+              <div className="mb-6 flex items-center gap-2 rounded-[var(--radius)] border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-600 dark:text-green-400">
+                <CheckCircle className="h-4 w-4" />
+                Message sent successfully! Thank you for reaching out.
+              </div>
+            )}
+
+            {status === 'error' && (
+              <div className="mb-6 rounded-[var(--radius)] border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+                Failed to send message. Please try again or contact me directly.
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <input
+                type="text"
+                name="bot-field"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-sm">Name</label>
                   <Input
+                    id="name"
                     name="senderName"
                     type="text"
                     value={senderName}
                     onChange={(e) => setSenderName(e.target.value)}
                     maxLength={100}
                     placeholder="Your name"
-                    className={`h-12 ${errors.name ? 'border-destructive' : ''}`}
+                    className={errors.name ? 'border-destructive' : ''}
                     disabled={isLoading}
-                    aria-label="Your name"
-                    aria-invalid={!!errors.name}
                   />
-                  {errors.name && (
-                    <p className="text-destructive text-sm mt-1">{errors.name}</p>
-                  )}
-                </motion.div>
+                  {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
+                </div>
 
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm">Email</label>
                   <Input
+                    id="email"
                     name="senderEmail"
                     type="email"
                     value={senderEmail}
                     onChange={(e) => setSenderEmail(e.target.value)}
                     maxLength={500}
-                    placeholder="Your email"
-                    className={`h-12 ${errors.email ? 'border-destructive' : ''}`}
+                    placeholder="you@example.com"
+                    className={errors.email ? 'border-destructive' : ''}
                     disabled={isLoading}
-                    aria-label="Your email address"
-                    aria-invalid={!!errors.email}
                   />
-                  {errors.email && (
-                    <p className="text-destructive text-sm mt-1">{errors.email}</p>
-                  )}
-                </motion.div>
+                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                </div>
+              </div>
 
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-                  <Textarea
-                    name="message"
-                    placeholder="Your message"
-                    maxLength={5000}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className={`min-h-[150px] resize-none ${errors.message ? 'border-destructive' : ''}`}
-                    disabled={isLoading}
-                    aria-label="Your message"
-                    aria-invalid={!!errors.message}
-                  />
-                  {errors.message && (
-                    <p className="text-destructive text-sm mt-1">{errors.message}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground mt-1">{message.length}/5000 characters</p>
-                </motion.div>
+              <div className="space-y-2">
+                <label htmlFor="message" className="text-sm">Message</label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  placeholder="Tell me about your project..."
+                  maxLength={5000}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className={`min-h-[150px] resize-none ${errors.message ? 'border-destructive' : ''}`}
+                  disabled={isLoading}
+                />
+                {errors.message && <p className="text-xs text-destructive">{errors.message}</p>}
+                <p className="text-xs text-muted-foreground">{message.length}/5000 characters</p>
+              </div>
 
-                <motion.div className="flex justify-center" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    type="submit"
-                    disabled={isLoading || !configReady}
-                    className="w-full sm:w-1/2 h-12 text-lg rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 disabled:opacity-50"
-                    aria-label="Send message"
-                  >
-                    {isLoading ? 'Sending...' : 'Send Message'}
-                  </Button>
-                </motion.div>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
+              <Button
+                type="submit"
+                disabled={isLoading || !configReady}
+                className="w-full sm:w-auto min-w-[160px]"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-4 w-4" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+            </form>
+          </motion.div>
+
+          {/* Contact Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="lg:col-span-2 space-y-4"
+          >
+            <a
+              href="mailto:rachaphol.plo@gmail.com"
+              className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                <Mail className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Email</p>
+                <p className="text-sm font-medium">rachaphol.plo@gmail.com</p>
+              </div>
+            </a>
+
+            <a
+              href="tel:+66955546654"
+              className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                <Phone className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Phone</p>
+                <p className="text-sm font-medium">+66 95 554 6654</p>
+              </div>
+            </a>
+
+            <div className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                <MapPin className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Location</p>
+                <p className="text-sm font-medium">Bangkok, Thailand</p>
+              </div>
+            </div>
+
+            <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-muted/50 p-4">
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+                </span>
+                <span className="text-sm font-medium">Available for work</span>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Open to freelance projects and full-time opportunities.
+              </p>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );

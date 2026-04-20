@@ -17,36 +17,34 @@ import { SkipLink } from '@/components/accessibility/skip-link'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
-import { Plus_Jakarta_Sans, Outfit, JetBrains_Mono } from 'next/font/google'
+import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
-import { CustomCursor } from '@/components/ui/custom-cursor'
 import { BackToTop } from '@/components/ui/back-to-top'
 
-const outfit = Outfit({
+const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   variable: '--font-display',
-  display: 'optional',
+  display: 'swap',
   preload: true,
-  adjustFontFallback: true,
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
 })
 
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-body',
   display: 'swap',
   preload: true,
-  adjustFontFallback: true,
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600'],
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
-  preload: false, // Mono font is less critical, don't preload
-  adjustFontFallback: true,
+  preload: false,
+  weight: ['400', '500'],
 })
 
 
@@ -137,7 +135,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${outfit.variable} ${plusJakarta.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -198,7 +196,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <SkipLink />
         <Providers>
           <Analytics />
-          <CustomCursor />
           <NavBar />
           <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
             <ClientErrorBoundary>

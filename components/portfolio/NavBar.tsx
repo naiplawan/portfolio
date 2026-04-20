@@ -5,10 +5,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
 import Menu from '@/components/ui/icons/Menu';
-import { X, Download } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { Button } from '@/components/ui/button';
-import { PROFESSIONAL_INFO, RESUME_PATH } from '@/lib/constants';
+import { PROFESSIONAL_INFO } from '@/lib/constants';
 
 function NavBar() {
   const router = useRouter();
@@ -18,7 +17,6 @@ function NavBar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Focus trap for mobile menu
   const handleMenuTab = useCallback((e: KeyboardEvent) => {
     if (e.key !== 'Tab' || !menuRef.current) return;
 
@@ -39,11 +37,9 @@ function NavBar() {
     }
   }, []);
 
-  // Manage focus when mobile menu opens/closes
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleMenuTab);
-      // Focus the first interactive element after animation
       const timer = setTimeout(() => {
         const firstFocusable = menuRef.current?.querySelector<HTMLElement>('button, [href]');
         firstFocusable?.focus();
@@ -54,12 +50,11 @@ function NavBar() {
       };
     } else {
       document.removeEventListener('keydown', handleMenuTab);
-      // Return focus to the menu toggle button
       menuButtonRef.current?.focus();
       return undefined;
     }
   }, [isOpen, handleMenuTab]);
-  
+
   const navItems = [
     { label: 'About', href: '/about' },
     { label: 'Projects', href: '/projects' },
@@ -81,7 +76,7 @@ function NavBar() {
     };
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      setScrolled(window.scrollY > 20);
     };
 
     document.addEventListener('keydown', handleEscape);
@@ -97,139 +92,98 @@ function NavBar() {
 
   return (
     <>
-      {/* Desktop Navigation */}
       <motion.nav
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled
             ? 'bio-nav py-3'
-            : 'bg-transparent py-5'
+            : 'bg-transparent py-4'
         )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="container-premium">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Button
-              variant="ghost"
-              className="text-2xl font-bold font-display tracking-tight px-3 py-2"
+            <button
+              className="text-lg font-display tracking-tight text-foreground"
               onClick={() => router.push('/')}
               aria-label="Go to homepage"
             >
-              <span className="bio-gradient-text">{PROFESSIONAL_INFO.name}.</span>
-            </Button>
+              {PROFESSIONAL_INFO.name.split(' ')[0]}
+              <span className="text-[hsl(var(--accent))]">.</span>
+            </button>
 
-            {/* Desktop Nav Items */}
+            {/* Desktop Nav */}
             <div className="hidden lg:flex items-center gap-1" role="menubar">
-              {navItems.map((item, index) => (
-                <motion.div
+              {navItems.map((item) => (
+                <button
                   key={item.href}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.08 }}
-                  >
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      'relative px-5 py-2.5 font-medium text-sm',
-                      isActiveRoute(item.href)
-                        ? 'text-primary'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
-                    onClick={() => handleNavigation(item.href)}
-                    role="menuitem"
-                    aria-current={isActiveRoute(item.href) ? 'page' : undefined}
-                  >
-                    {item.label}
-
-                    {/* Active Indicator */}
-                    {isActiveRoute(item.href) && (
-                      <motion.div
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full"
-                        layoutId="activeIndicator"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                  </Button>
-                </motion.div>
+                  className={cn(
+                    'relative px-4 py-2 text-sm transition-colors',
+                    isActiveRoute(item.href)
+                      ? 'text-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                  onClick={() => handleNavigation(item.href)}
+                  role="menuitem"
+                  aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                  {isActiveRoute(item.href) && (
+                    <motion.div
+                      className="absolute bottom-0 left-4 right-4 h-px bg-foreground"
+                      layoutId="activeIndicator"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                </button>
               ))}
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-3">
-              {/* Hire Me Button - Desktop Only */}
-              <Button
+            <div className="flex items-center gap-2">
+              <button
                 onClick={() => {
-                  // Check if we're on homepage and scroll to contact section
                   if (typeof window !== 'undefined') {
                     if (window.location.pathname === '/') {
-                      const contactSection = document.querySelector('#contact')
-                      if (contactSection) {
-                        contactSection.scrollIntoView({ behavior: 'smooth' })
-                      }
+                      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
                     } else {
-                      // Navigate to homepage with contact hash
-                      window.location.href = '/#contact'
+                      window.location.href = '/#contact';
                     }
                   }
                 }}
-                variant="default"
-                size="sm"
-                className="hidden md:flex bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="hidden md:inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition-opacity hover:opacity-80"
               >
                 Hire Me
-              </Button>
-
-              {/* Download Resume Button */}
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="hidden lg:flex"
-              >
-                <a href={RESUME_PATH} download={`${PROFESSIONAL_INFO.name.replace(/\s+/g, '_')}_Resume.pdf`}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Resume
-                </a>
-              </Button>
+              </button>
 
               <DarkModeToggle />
 
-              {/* Mobile Menu Toggle */}
-              <Button
+              <button
                 ref={menuButtonRef}
-                variant="outline"
-                size="icon"
-                className="lg:hidden"
+                className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-foreground transition-colors hover:bg-muted"
                 onClick={() => setIsOpen(!isOpen)}
-                aria-label={
-                  isOpen ? 'Close navigation menu' : 'Open navigation menu'
-                }
+                aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={isOpen}
                 aria-controls="mobile-menu"
               >
-                {isOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu size={22} />
-                )}
-              </Button>
+                {isOpen ? <X className="h-5 w-5" /> : <Menu size={22} />}
+              </button>
             </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -237,81 +191,68 @@ function NavBar() {
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Mobile Menu Sheet */}
             <motion.div
               ref={menuRef}
               id="mobile-menu"
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-[90vw] bio-glass-card z-50 lg:hidden border-l border-border/50 rounded-l-3xl"
+              className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[90vw] bg-background border-l border-[hsl(var(--border))] lg:hidden"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             >
-              <div className="flex flex-col h-full p-6">
-                {/* Header */}
+              <div className="flex h-full flex-col p-6">
                 <div className="flex items-center justify-between mb-8">
-                  <div className="text-2xl font-bold font-display bio-gradient-text">
-                    Menu
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
+                  <span className="text-lg font-display">Menu</span>
+                  <button
                     onClick={() => setIsOpen(false)}
                     aria-label="Close menu"
+                    className="rounded-md p-2 transition-colors hover:bg-muted"
                   >
-                    <X className="w-5 h-5" />
-                  </Button>
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
 
-                {/* Navigation Items */}
                 <nav className="flex-1" role="menu">
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {navItems.map((item, index) => (
-                      <motion.div
+                      <motion.button
                         key={item.href}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 16 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.08 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={cn(
+                          'block w-full px-4 py-3 text-left text-base rounded-[var(--radius)] transition-colors',
+                          isActiveRoute(item.href)
+                            ? 'bg-muted text-foreground font-medium'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        )}
+                        onClick={() => handleNavigation(item.href)}
+                        role="menuitem"
+                        aria-current={isActiveRoute(item.href) ? 'page' : undefined}
                       >
-                        <Button
-                          variant={isActiveRoute(item.href) ? 'secondary' : 'ghost'}
-                          className={cn(
-                            'w-full justify-start px-5 py-4 font-medium text-base',
-                            isActiveRoute(item.href)
-                              ? 'text-primary'
-                              : 'text-muted-foreground'
-                          )}
-                          onClick={() => handleNavigation(item.href)}
-                          role="menuitem"
-                          aria-current={
-                            isActiveRoute(item.href) ? 'page' : undefined
-                          }
-                        >
-                          {item.label}
-                        </Button>
-                      </motion.div>
+                        {item.label}
+                      </motion.button>
                     ))}
                   </div>
-
-                  {/* Download Resume - Mobile */}
-                  <motion.div
-                    className="mt-8 pt-8 border-t border-border/50"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: navItems.length * 0.08 }}
-                  >
-                    <Button asChild size="lg" className="w-full">
-                      <a href={RESUME_PATH} download={`${PROFESSIONAL_INFO.name.replace(/\s+/g, '_')}_Resume.pdf`}>
-                        <Download className="w-5 h-5 mr-2" />
-                        Download Resume
-                      </a>
-                    </Button>
-                  </motion.div>
                 </nav>
 
-                {/* Footer in Mobile Menu */}
-                <div className="pt-6 mt-auto border-t border-border/50">
-                  <p className="text-sm text-muted-foreground text-center">
+                <div className="border-t border-[hsl(var(--border))] pt-6">
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      if (typeof window !== 'undefined') {
+                        if (window.location.pathname === '/') {
+                          document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                          window.location.href = '/#contact';
+                        }
+                      }
+                    }}
+                    className="w-full rounded-full bg-foreground py-3 text-sm text-background transition-opacity hover:opacity-80"
+                  >
+                    Hire Me
+                  </button>
+                  <p className="mt-4 text-center text-xs text-muted-foreground">
                     &copy; {new Date().getFullYear()} {PROFESSIONAL_INFO.name}
                   </p>
                 </div>

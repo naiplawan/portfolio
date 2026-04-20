@@ -43,10 +43,10 @@ export function PersonStructuredData({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2),
-      }}
-    />
+      suppressHydrationWarning
+    >
+      {JSON.stringify(structuredData, null, 2)}
+    </script>
   );
 }
 
@@ -86,10 +86,10 @@ export function WebsiteStructuredData({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2),
-      }}
-    />
+      suppressHydrationWarning
+    >
+      {JSON.stringify(structuredData, null, 2)}
+    </script>
   );
 }
 
@@ -137,10 +137,10 @@ export function ProjectStructuredData({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2),
-      }}
-    />
+      suppressHydrationWarning
+    >
+      {JSON.stringify(structuredData, null, 2)}
+    </script>
   );
 }
 
@@ -159,9 +159,9 @@ export function BreadcrumbStructuredData({ items }: { items: Array<{ name: strin
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2),
-      }}
-    />
+      suppressHydrationWarning
+    >
+      {JSON.stringify(structuredData, null, 2)}
+    </script>
   );
 }

@@ -21,7 +21,7 @@ interface LanguageStats {
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 const GITHUB_API_BASE = 'https://api.github.com';
 // Use server-only token — never expose to client bundle
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 // Default fallback contribution count (configurable via env)
 const DEFAULT_CONTRIBUTION_COUNT = parseInt(
