@@ -33,7 +33,3 @@ export interface Project {
   readonly completedYear: number;
 }
 
-export interface ProjectCardProps {
-  readonly project: Project;
-  readonly index: number;
-}
