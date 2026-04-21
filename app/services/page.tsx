@@ -208,9 +208,7 @@ export default function ServicesPage() {
             className="max-w-3xl"
           >
             <p className="section-label mb-3">Services</p>
-            <h1 className="font-display text-4xl sm:text-5xl tracking-tight">
-              Services & Solutions
-            </h1>
+            <h1 className="font-display text-4xl sm:text-5xl tracking-tight">Services & Solutions</h1>
             <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
               Fullstack developer specializing in healthcare platforms, mobile apps, and real-time communication.
             </p>
@@ -268,7 +266,10 @@ export default function ServicesPage() {
                   </ul>
                   <div className="flex flex-wrap gap-1.5">
                     {service.tech.map((tech) => (
-                      <span key={tech} className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground">
+                      <span
+                        key={tech}
+                        className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground"
+                      >
                         {tech}
                       </span>
                     ))}
@@ -303,9 +304,7 @@ export default function ServicesPage() {
                 transition={{ delay: index * 0.08, duration: 0.4 }}
               >
                 <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-6">
-                  <div className="font-display text-3xl text-[hsl(var(--accent))] mb-3">
-                    {item.step}
-                  </div>
+                  <div className="font-display text-3xl text-[hsl(var(--accent))] mb-3">{item.step}</div>
                   <h3 className="font-medium mb-1">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
                 </div>
@@ -338,9 +337,7 @@ export default function ServicesPage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08, duration: 0.4 }}
                 className={`rounded-[var(--radius)] border bg-card p-6 ${
-                  plan.highlighted
-                    ? 'border-foreground'
-                    : 'border-[hsl(var(--border))]'
+                  plan.highlighted ? 'border-foreground' : 'border-[hsl(var(--border))]'
                 }`}
               >
                 {plan.highlighted && (
@@ -382,20 +379,16 @@ export default function ServicesPage() {
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
-              Ready to Start Your Project?
-            </h2>
-            <p className="text-muted max-w-2xl mx-auto">
-              Let&apos;s discuss how I can help bring your ideas to life.
-            </p>
+            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">Ready to Start Your Project?</h2>
+            <p className="text-muted max-w-2xl mx-auto">Let&apos;s discuss how I can help bring your ideas to life.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button
                 size="lg"
                 variant="outline"
-                className="border-background/20 text-background hover:bg-background/10"
+                className="border-background/20 text-background hover:bg-background/10 text-white"
                 onClick={handleContactClick}
               >
-                <Mail className="mr-2 h-4 w-4" />
+                <Mail className="mr-2 h-4 w-4 " />
                 Send a Message
               </Button>
               <Button

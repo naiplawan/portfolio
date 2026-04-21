@@ -23,32 +23,31 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
   useEffect(() => {
-    if (isInView && !hasAnimated) {
-      setHasAnimated(true)
-      const duration = 1500
-      const steps = 40
-      const stepValue = value / steps
-      const stepDuration = duration / steps
+    if (!isInView || hasAnimated) return
 
-      let current = 0
-      const timer = setInterval(() => {
-        current += stepValue
-        if (current >= value) {
-          setCount(value)
-          clearInterval(timer)
-        } else {
-          setCount(Math.floor(current))
-        }
-      }, stepDuration)
+    const duration = 1500
+    const steps = 40
+    const stepValue = value / steps
+    const stepDuration = duration / steps
 
-      return () => clearInterval(timer)
-    }
-    return undefined
+    let current = 0
+    const timer = setInterval(() => {
+      current += stepValue
+      if (current >= value) {
+        setCount(value)
+        setHasAnimated(true)
+        clearInterval(timer)
+      } else {
+        setCount(Math.floor(current))
+      }
+    }, stepDuration)
+
+    return () => clearInterval(timer)
   }, [isInView, value, hasAnimated])
 
   return (
     <span ref={ref} className="stat-number">
-      {hasAnimated ? count : 0}{suffix}
+      {count}{suffix}
     </span>
   )
 }

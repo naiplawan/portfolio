@@ -280,7 +280,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Phone</p>
-                <p className="text-sm font-medium">+66 95 554 6654</p>
+                <p className="text-sm font-medium">+66 91 069 6072</p>
               </div>
             </a>
 
