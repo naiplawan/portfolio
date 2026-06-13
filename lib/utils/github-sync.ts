@@ -66,7 +66,7 @@ export function githubRepoToProject(
   // Determine category based on topics/language
   const determineCategory = (repo: GitHubRepo): Project['category'] => {
     const topics = repo.topics || [];
-    const topicLower = topics.map(t => t.toLowerCase());
+    const topicLower = topics.map((t: string) => t.toLowerCase());
 
     if (topicLower.includes('web') || topicLower.includes('frontend') || topicLower.includes('website')) {
       return 'web';
@@ -99,7 +99,7 @@ export function githubRepoToProject(
     }
 
     // Add relevant topics as technologies
-    const techTopics = repo.topics?.filter(topic => {
+    const techTopics = repo.topics?.filter((topic: string) => {
       const lower = topic.toLowerCase();
       return ['react', 'vue', 'angular', 'nextjs', 'typescript', 'javascript', 'python', 'go', 'rust', 'java', 'docker', 'kubernetes', 'nodejs', 'express', 'mongodb', 'postgresql'].includes(lower);
     }) || [];
@@ -170,7 +170,7 @@ export function githubRepoToProject(
 
   return {
     id: repo.id,
-    title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), // Convert kebab-case to Title Case
+    title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()), // Convert kebab-case to Title Case
     description: repo.description || `A ${repo.language || 'software'} project on GitHub`,
     problemStatement: generateProblemStatement(repo),
     solution: generateSolution(repo),

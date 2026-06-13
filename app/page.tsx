@@ -1,5 +1,3 @@
-'use client'
-
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data'
 import DeveloperHero from '@/components/sections/DeveloperHero'
 import StatsSection from '@/components/sections/StatsSection'

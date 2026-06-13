@@ -2,6 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
+import Image from 'next/image';
 import {
   Github,
   ExternalLink,
@@ -87,10 +88,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     >
       {/* Image */}
       <div className="relative overflow-hidden aspect-[16/10] bg-muted">
-        <img
+        <Image
           src={project.image}
           alt={project.title}
           className="project-image w-full h-full object-cover"
+          width={400}
+          height={200}
+          style={{ objectFit: 'cover' }}
           onError={(e) => {
             e.currentTarget.style.display = 'none';
           }}

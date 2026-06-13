@@ -1,11 +1,13 @@
 'use client'
 
+import type React from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { GitBranch, Star, Users, AlertCircle } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa'
 import { useGitHubStats } from '@/lib/hooks/use-github-stats'
+import type { LanguageStats } from '@/lib/validations/github'
 import { GitHubStatsSkeleton } from '@/components/portfolio/GitHubStatsSkeleton'
 
 export default function GitHubStats() {
@@ -37,7 +39,7 @@ export default function GitHubStats() {
   }
 
   const StatCard = ({ icon: Icon, title, value, subtitle }: { 
-    icon: any, 
+    icon: React.ComponentType<{ className?: string }>, 
     title: string, 
     value: string | number, 
     subtitle?: string 
@@ -177,7 +179,7 @@ export default function GitHubStats() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {stats.topLanguages.map((lang, index) => (
+                {stats.topLanguages.map((lang: LanguageStats, index: number) => (
                   <motion.div
                     key={lang.name}
                     initial={{ opacity: 0, x: -20 }}

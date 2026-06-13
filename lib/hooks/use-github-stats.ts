@@ -41,7 +41,7 @@ export function useGitHubStats() {
         }
       } catch (error) {
         if (mounted) {
-          setStats(prev => ({
+          setStats((prev: GitHubStatsData) => ({
             ...prev,
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to fetch GitHub stats'
