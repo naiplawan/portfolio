@@ -3,11 +3,6 @@ import PageTransition from '@/components/layout/page-transition'
 import { Providers } from '@/components/layout/providers'
 import nextDynamic from 'next/dynamic'
 
-// Force dynamic rendering is needed for authentication features (NextAuth)
-// and CMS functionality with Supabase. While not ideal for a mostly-static portfolio,
-// it's necessary for the blog CMS and auth features. Consider splitting routes if possible.
-export const dynamic = 'force-dynamic'
-
 // Lazy load analytics to reduce initial bundle size and improve time to interactive
 // Note: Analytics component is already a client component, so we just use dynamic for code splitting
 const Analytics = nextDynamic(() => import('@/components/analytics').then(mod => ({ default: mod.Analytics })), {

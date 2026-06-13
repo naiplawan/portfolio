@@ -15,12 +15,6 @@ export function GET() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFreq: 'weekly',
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFreq: 'monthly',

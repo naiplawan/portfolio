@@ -75,13 +75,6 @@ export function GET() {
         description: 'Get in touch for collaboration',
         url: '/contact',
         icons: [{ src: '/icons/contact-96x96.png', sizes: '96x96' }]
-      },
-      {
-        name: 'Read Blog',
-        short_name: 'Blog',
-        description: 'Read my latest articles',
-        url: '/blog',
-        icons: [{ src: '/icons/blog-96x96.png', sizes: '96x96' }]
       }
     ]
   };
