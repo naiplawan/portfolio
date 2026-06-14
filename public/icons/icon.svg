@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>Rachaphol portfolio icon</title>
+  <rect width="512" height="512" rx="112" fill="#0a0a0f"/>
+  <circle cx="384" cy="128" r="56" fill="#f4c95d"/>
+  <path d="M128 352V160h96c52 0 88 32 88 80 0 30-15 55-39 68l55 84h-65l-46-73h-33v73h-56zm56-121h38c20 0 33-12 33-30s-13-30-33-30h-38v60z" fill="#fafafa"/>
+</svg>

@@ -55,6 +55,30 @@ function NavBar() {
     }
   }, [isOpen, handleMenuTab]);
 
+  useEffect(() => {
+    const pageElements = [
+      document.querySelector('main'),
+      document.querySelector('footer'),
+    ].filter(Boolean) as HTMLElement[];
+    const previousBodyOverflow = document.body.style.overflow;
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      pageElements.forEach((element) => {
+        element.setAttribute('inert', '');
+        element.setAttribute('aria-hidden', 'true');
+      });
+    }
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      pageElements.forEach((element) => {
+        element.removeAttribute('inert');
+        element.removeAttribute('aria-hidden');
+      });
+    };
+  }, [isOpen]);
+
   const navItems = [
     { label: 'About', href: '/about' },
     { label: 'Projects', href: '/projects' },
@@ -64,7 +88,16 @@ function NavBar() {
 
   const handleNavigation = (href: string) => {
     setIsOpen(false);
+    if (pathname === href) return;
     router.push(href);
+  };
+
+  const handleContactNavigation = () => {
+    if (window.location.pathname === '/') {
+      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      router.push('/#contact');
+    }
   };
 
   useEffect(() => {
@@ -109,7 +142,11 @@ function NavBar() {
             {/* Logo */}
             <button
               className="text-lg font-display tracking-tight text-foreground"
-              onClick={() => router.push('/')}
+              onClick={() => {
+                if (pathname !== '/') {
+                  router.push('/');
+                }
+              }}
               aria-label="Go to homepage"
             >
               {PROFESSIONAL_INFO.name.split(' ')[0]}
@@ -147,13 +184,7 @@ function NavBar() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    if (window.location.pathname === '/') {
-                      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                      window.location.href = '/#contact';
-                    }
-                  }
+                  handleContactNavigation();
                 }}
                 className="hidden md:inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition-opacity hover:opacity-80"
               >
@@ -183,6 +214,7 @@ function NavBar() {
           <>
             <motion.div
               className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+              aria-hidden="true"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -193,6 +225,9 @@ function NavBar() {
             <motion.div
               ref={menuRef}
               id="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-menu-title"
               className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[90vw] bg-background border-l border-[hsl(var(--border))] lg:hidden"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -201,7 +236,7 @@ function NavBar() {
             >
               <div className="flex h-full flex-col p-6">
                 <div className="flex items-center justify-between mb-8">
-                  <span className="text-lg font-display">Menu</span>
+                  <span id="mobile-menu-title" className="text-lg font-display">Menu</span>
                   <button
                     onClick={() => setIsOpen(false)}
                     aria-label="Close menu"
@@ -239,13 +274,7 @@ function NavBar() {
                   <button
                     onClick={() => {
                       setIsOpen(false);
-                      if (typeof window !== 'undefined') {
-                        if (window.location.pathname === '/') {
-                          document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-                        } else {
-                          window.location.href = '/#contact';
-                        }
-                      }
+                      handleContactNavigation();
                     }}
                     className="w-full rounded-full bg-foreground py-3 text-sm text-background transition-opacity hover:opacity-80"
                   >

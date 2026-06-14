@@ -66,12 +66,12 @@ export default function AboutMe() {
           className="space-y-10 sm:space-y-12 md:space-y-16"
         >
           <motion.div variants={itemVariants} className="text-center space-y-4 sm:space-y-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
               About Me
-            </h2>
+            </h1>
             <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 text-base sm:text-lg leading-relaxed text-muted-foreground px-2">
               <p>
-                <strong className="text-foreground">Crafting exceptional digital experiences.</strong> 
+                <strong className="text-foreground">Crafting exceptional digital experiences.</strong>{' '}
                 As a Frontend Developer at Unixdev Co., Ltd., I design and implement innovative user-facing 
                 features that enhance digital product functionality. My expertise spans modern frontend 
                 technologies including React, Next.js, and TypeScript, with expanding skills in Go and Flutter.

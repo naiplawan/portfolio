@@ -38,6 +38,11 @@ export default function ContactPage() {
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
       setConfigReady(false);
     }
+
+    const subject = new URLSearchParams(window.location.search).get('subject');
+    if (subject) {
+      setMessage((currentMessage) => currentMessage || `${subject}\n\n`);
+    }
   }, []);
 
   const validateForm = () => {

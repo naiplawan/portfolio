@@ -9,7 +9,7 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
       <div className="max-w-2xl w-full text-center">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -41,10 +41,10 @@ export default function NotFound() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="space-y-4 mb-8"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
               Page Not Found
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+            <p className="text-lg text-muted-foreground max-w-md mx-auto">
               Oops! The page you're looking for seems to have wandered off into the digital void.
             </p>
           </motion.div>
@@ -81,17 +81,17 @@ export default function NotFound() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700"
+            className="mt-12 pt-8 border-t border-[hsl(var(--border))]"
           >
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               Popular pages you might be looking for:
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               {[
                 { label: 'Projects', href: '/projects' },
                 { label: 'About', href: '/about' },
+                { label: 'Services', href: '/services' },
                 { label: 'Contact', href: '/contact' },
-                { label: 'Blog', href: '/blog' },
               ].map((link) => (
                 <Button
                   key={link.href}

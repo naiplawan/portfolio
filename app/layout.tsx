@@ -1,5 +1,4 @@
 import './globals.css'
-import PageTransition from '@/components/layout/page-transition'
 import { Providers } from '@/components/layout/providers'
 import nextDynamic from 'next/dynamic'
 
@@ -15,7 +14,6 @@ import Footer from '@/components/portfolio/Footer'
 import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
 import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
-import { BackToTop } from '@/components/ui/back-to-top'
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -113,14 +111,9 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
     ],
-    apple: [
-      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    shortcut: '/icons/icon-192x192.png',
+    shortcut: '/icons/icon.svg',
   },
 }
 
@@ -141,7 +134,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 const stored = localStorage.getItem(themeKey);
                 if (stored) {
                   try {
-                    const theme = JSON.parse(stored);
+                    const parsed = stored[0] === '{' || stored[0] === '"' ? JSON.parse(stored) : stored;
+                    const theme = typeof parsed === 'string' ? parsed : parsed && parsed.theme;
                     if (theme === 'dark' || theme === 'light') {
                       document.documentElement.classList.add(theme);
                     } else if (theme === 'system') {
@@ -194,15 +188,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <NavBar />
           <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
             <ClientErrorBoundary>
-              <PageTransition variant="fade">
-                {children}
-              </PageTransition>
+              {children}
             </ClientErrorBoundary>
           </main>
           <Footer />
           <FloatingActions />
           <ScrollProgressComponents />
-          <BackToTop />
         </Providers>
       </body>
     </html>

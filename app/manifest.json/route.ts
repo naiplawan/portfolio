@@ -13,51 +13,9 @@ export function GET() {
     categories: ['business', 'productivity', 'portfolio'],
     icons: [
       {
-        src: '/icons/icon-72x72.png',
-        sizes: '72x72',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-96x96.png',
-        sizes: '96x96',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-128x128.png',
-        sizes: '128x128',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-144x144.png',
-        sizes: '144x144',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-152x152.png',
-        sizes: '152x152',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-384x384.png',
-        sizes: '384x384',
-        type: 'image/png',
-        purpose: 'maskable any'
-      },
-      {
-        src: '/icons/icon-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
+        src: '/icons/icon.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
         purpose: 'maskable any'
       }
     ],
@@ -67,14 +25,14 @@ export function GET() {
         short_name: 'Projects',
         description: 'See my latest projects and work',
         url: '/projects',
-        icons: [{ src: '/icons/projects-96x96.png', sizes: '96x96' }]
+        icons: [{ src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' }]
       },
       {
         name: 'Contact Me',
         short_name: 'Contact',
         description: 'Get in touch for collaboration',
         url: '/contact',
-        icons: [{ src: '/icons/contact-96x96.png', sizes: '96x96' }]
+        icons: [{ src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' }]
       }
     ]
   };
