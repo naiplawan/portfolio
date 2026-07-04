@@ -16,8 +16,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "migrate:posts": "tsx scripts/migrate-to-supabase.ts"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
