@@ -2,7 +2,8 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Mail, Phone, MapPin, Send, Github, Linkedin, CheckCircle, Check } from 'lucide-react'
+import { FaGithub, FaLinkedin } from 'react-icons/fa'
+import { Mail, Phone, MapPin, Send, CheckCircle, Check } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -292,7 +293,7 @@ export default function ContactSection() {
                   aria-label="GitHub"
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-[hsl(var(--border))] transition-colors hover:bg-foreground hover:text-background hover:border-foreground"
                 >
-                  <Github className="h-4 w-4" />
+                  <FaGithub className="h-4 w-4" />
                 </a>
                 <a
                   href="https://linkedin.com/in/rachaphol-plookaom"
@@ -301,7 +302,7 @@ export default function ContactSection() {
                   aria-label="LinkedIn"
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-[hsl(var(--border))] transition-colors hover:bg-foreground hover:text-background hover:border-foreground"
                 >
-                  <Linkedin className="h-4 w-4" />
+                  <FaLinkedin className="h-4 w-4" />
                 </a>
               </div>
             </div>

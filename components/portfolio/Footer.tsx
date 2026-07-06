@@ -3,6 +3,8 @@
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 
 function Footer() {
+  const year = new Date().getFullYear();
+
   const socialLinks = [
     {
       icon: <FaGithub className="h-4 w-4" />,
@@ -48,7 +50,7 @@ function Footer() {
 
           {/* Copyright */}
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Rachaphol Plookaom. Built in Bangkok.
+            &copy; {year} Rachaphol Plookaom. Built in Bangkok.
           </p>
         </div>
       </div>

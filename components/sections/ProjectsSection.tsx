@@ -3,8 +3,8 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import Image from 'next/image';
+import { FaGithub } from 'react-icons/fa';
 import {
-  Github,
   ExternalLink,
   Code2,
   AlertCircle,
@@ -120,7 +120,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
               aria-label={`View ${project.title} on GitHub`}
             >
-              <Github className="h-4 w-4" />
+              <FaGithub className="h-4 w-4" />
             </a>
           )}
           {project.liveUrl && (
@@ -257,7 +257,7 @@ export default function ProjectsSection() {
                 rel="noopener noreferrer"
                 className="gap-2"
               >
-                <Github className="h-3.5 w-3.5" />
+                <FaGithub className="h-3.5 w-3.5" />
                 View GitHub Profile
               </a>
             </Button>

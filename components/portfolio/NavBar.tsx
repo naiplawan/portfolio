@@ -14,6 +14,7 @@ function NavBar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const year = new Date().getFullYear();
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -112,7 +113,7 @@ function NavBar() {
     };
 
     document.addEventListener('keydown', handleEscape);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
@@ -141,6 +142,7 @@ function NavBar() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <button
+              type="button"
               className="text-lg font-display tracking-tight text-foreground"
               onClick={() => {
                 if (pathname !== '/') {
@@ -157,6 +159,7 @@ function NavBar() {
             <div className="hidden lg:flex items-center gap-1" role="menubar">
               {navItems.map((item) => (
                 <button
+                  type="button"
                   key={item.href}
                   className={cn(
                     'relative px-4 py-2 text-sm transition-colors',
@@ -183,6 +186,7 @@ function NavBar() {
             {/* Right Actions */}
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => {
                   handleContactNavigation();
                 }}
@@ -194,6 +198,7 @@ function NavBar() {
               <DarkModeToggle />
 
               <button
+                type="button"
                 ref={menuButtonRef}
                 className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-foreground transition-colors hover:bg-muted"
                 onClick={() => setIsOpen(!isOpen)}
@@ -250,6 +255,7 @@ function NavBar() {
                   <div className="space-y-1">
                     {navItems.map((item, index) => (
                       <motion.button
+                        type="button"
                         key={item.href}
                         initial={{ opacity: 0, x: 16 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -272,6 +278,7 @@ function NavBar() {
 
                 <div className="border-t border-[hsl(var(--border))] pt-6">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsOpen(false);
                       handleContactNavigation();
@@ -281,7 +288,7 @@ function NavBar() {
                     Hire Me
                   </button>
                   <p className="mt-4 text-center text-xs text-muted-foreground">
-                    &copy; {new Date().getFullYear()} {PROFESSIONAL_INFO.name}
+                    &copy; {year} {PROFESSIONAL_INFO.name}
                   </p>
                 </div>
               </div>

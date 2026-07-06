@@ -123,7 +123,7 @@ export default function AboutSection() {
               <div className="space-y-8">
                 {experiences.map((experience, index) => (
                   <motion.div
-                    key={index}
+                    key={`${experience.title}-${experience.company}`}
                     initial={{ opacity: 0, y: 16 }}
                     animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
                     transition={{
@@ -151,8 +151,8 @@ export default function AboutSection() {
                         </span>
                       </div>
                       <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-                        {experience.description.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2">
+                        {experience.description.map((item) => (
+                          <li key={item} className="flex items-start gap-2">
                             <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
                             <span>{item}</span>
                           </li>

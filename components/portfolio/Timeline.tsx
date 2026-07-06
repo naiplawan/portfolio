@@ -183,8 +183,8 @@ export default function Timeline() {
                               Key Highlights
                             </h4>
                             <ul className="space-y-1">
-                              {item.highlights.map((highlight, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-sm">
+                              {item.highlights.map((highlight) => (
+                                <li key={highlight} className="flex items-start gap-2 text-sm">
                                   <span className="text-primary mt-1.5">•</span>
                                   <span>{highlight}</span>
                                 </li>

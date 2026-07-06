@@ -10,40 +10,37 @@ import { useGitHubStats } from '@/lib/hooks/use-github-stats'
 import type { LanguageStats } from '@/lib/validations/github'
 import { GitHubStatsSkeleton } from '@/components/portfolio/GitHubStatsSkeleton'
 
-export default function GitHubStats() {
-  const stats = useGitHubStats()
-
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
     }
   }
+}
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 300,
-        damping: 24
-      }
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 24
     }
   }
+}
 
-  const StatCard = ({ icon: Icon, title, value, subtitle }: { 
-    icon: React.ComponentType<{ className?: string }>, 
-    title: string, 
-    value: string | number, 
-    subtitle?: string 
-  }) => (
+function StatCard({ icon: Icon, title, value, subtitle }: {
+  icon: React.ComponentType<{ className?: string }>,
+  title: string,
+  value: string | number,
+  subtitle?: string
+}) {
+  return (
     <motion.div variants={itemVariants}>
       <Card className="h-full">
         <CardContent className="p-6">
@@ -57,6 +54,10 @@ export default function GitHubStats() {
       </Card>
     </motion.div>
   )
+}
+
+export default function GitHubStats() {
+  const stats = useGitHubStats()
 
   // Loading state
   if (stats.isLoading) {

@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { FaGithub } from 'react-icons/fa'
 import { Button } from '@/components/ui/button'
-import { ExternalLink, Github, Loader2, AlertCircle, ArrowUpRight } from 'lucide-react'
+import { ExternalLink, Loader2, AlertCircle, ArrowUpRight } from 'lucide-react'
 import { Project } from '@/lib/types/types'
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
@@ -54,7 +55,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
               aria-label={`View ${project.title} on GitHub`}
             >
-              <Github className="h-4 w-4" />
+              <FaGithub className="h-4 w-4" />
             </a>
           )}
           {project.liveUrl && (
@@ -109,23 +110,29 @@ export default function ProjectsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function loadProjects() {
-      try {
-        const response = await fetch('/api/github/projects')
-        if (!response.ok) throw new Error('Failed to fetch projects')
-        const data = await response.json()
-        const projects = data.projects || []
-        setAllProjects(projects)
-        setFilteredProjects(projects)
-        setError(null)
-      } catch (err) {
-        setError('Failed to load projects. Please try again later.')
-      } finally {
-        setIsLoading(false)
-      }
+  const loadProjects = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      const response = await fetch('/api/github/projects')
+      if (!response.ok) throw new Error('Failed to fetch projects')
+      const data = await response.json()
+      const projects = data.projects || []
+      setAllProjects(projects)
+      setFilteredProjects(projects)
+    } catch (err) {
+      setError('Failed to load projects. Please try again later.')
+    } finally {
+      setIsLoading(false)
     }
-    loadProjects()
+  }
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void loadProjects()
+    }, 0)
+
+    return () => window.clearTimeout(timer)
   }, [])
 
   const categories = ['all', ...Array.from(new Set(allProjects.map(p => p.category)))]
@@ -168,6 +175,7 @@ export default function ProjectsPage() {
           >
             {categories.map((category) => (
               <button
+                type="button"
                 key={category}
                 onClick={() => handleFilter(category)}
                 className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
@@ -188,7 +196,7 @@ export default function ProjectsPage() {
             <AlertCircle className="h-10 w-10 text-muted-foreground mb-4" />
             <h3 className="text-lg font-display mb-2">Unable to load projects</h3>
             <p className="text-sm text-muted-foreground mb-6">{error}</p>
-            <Button onClick={() => window.location.reload()} variant="outline" size="sm">
+            <Button onClick={loadProjects} variant="outline" size="sm">
               Try Again
             </Button>
           </div>

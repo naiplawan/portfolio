@@ -12,7 +12,11 @@ export function DarkModeToggle() {
   const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
+    const timer = window.setTimeout(() => {
+      setMounted(true)
+    }, 0)
+
+    return () => window.clearTimeout(timer)
   }, [])
 
   if (!mounted) {

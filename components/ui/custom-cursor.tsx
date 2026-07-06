@@ -139,7 +139,7 @@ export function CustomCursor() {
         {clicked && (
           <motion.div
             className="fixed top-0 left-0 pointer-events-none z-[9997] hidden md:block"
-            initial={{ scale: 0, opacity: 0.5 }}
+            initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 3, opacity: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}

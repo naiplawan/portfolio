@@ -13,6 +13,7 @@ import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+const EMAILJS_CONFIG_READY = Boolean(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
 
 const sanitizeInput = (input: string): string => {
   return input
@@ -32,17 +33,17 @@ export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errors, setErrors] = useState<{ email?: string; message?: string; name?: string }>({});
-  const [configReady, setConfigReady] = useState(true);
+  const [configReady] = useState(EMAILJS_CONFIG_READY);
 
   useEffect(() => {
-    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-      setConfigReady(false);
-    }
+    const timer = window.setTimeout(() => {
+      const subject = new URLSearchParams(window.location.search).get('subject');
+      if (subject) {
+        setMessage((currentMessage) => currentMessage || `${subject}\n\n`);
+      }
+    }, 0);
 
-    const subject = new URLSearchParams(window.location.search).get('subject');
-    if (subject) {
-      setMessage((currentMessage) => currentMessage || `${subject}\n\n`);
-    }
+    return () => window.clearTimeout(timer);
   }, []);
 
   const validateForm = () => {

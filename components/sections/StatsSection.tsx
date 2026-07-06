@@ -18,12 +18,12 @@ const stats: Stat[] = [
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
   const [count, setCount] = useState(0)
-  const [hasAnimated, setHasAnimated] = useState(false)
+  const hasAnimatedRef = useRef(false)
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
   useEffect(() => {
-    if (!isInView || hasAnimated) return
+    if (!isInView || hasAnimatedRef.current) return
 
     const duration = 1500
     const steps = 40
@@ -35,7 +35,7 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
       current += stepValue
       if (current >= value) {
         setCount(value)
-        setHasAnimated(true)
+        hasAnimatedRef.current = true
         clearInterval(timer)
       } else {
         setCount(Math.floor(current))
@@ -43,7 +43,7 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
     }, stepDuration)
 
     return () => clearInterval(timer)
-  }, [isInView, value, hasAnimated])
+  }, [isInView, value])
 
   return (
     <span ref={ref} className="stat-number">
@@ -62,7 +62,7 @@ export default function StatsSection() {
         <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, index) => (
             <motion.div
-              key={index}
+              key={stat.label}
               initial={{ opacity: 0, y: 16 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={{ delay: index * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
