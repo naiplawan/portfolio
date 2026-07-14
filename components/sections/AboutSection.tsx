@@ -65,7 +65,7 @@ export default function AboutSection() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="mb-16"
         >
           <p className="section-label mb-3">About</p>
@@ -79,7 +79,7 @@ export default function AboutSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             className="lg:col-span-2"
           >
             <p className="text-muted-foreground leading-relaxed mb-6">
@@ -129,7 +129,7 @@ export default function AboutSection() {
                     transition={{
                       delay: index * 0.12,
                       duration: 0.5,
-                      ease: [0.22, 1, 0.36, 1],
+                      ease: [0.23, 1, 0.32, 1],
                     }}
                     className="relative pl-10"
                   >

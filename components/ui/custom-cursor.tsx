@@ -73,6 +73,7 @@ export function CustomCursor() {
       {/* Trailing effect */}
       <motion.div
         className="fixed w-6 h-6 rounded-full bg-terracotta/10 dark:bg-terracotta/20 pointer-events-none z-[9998] hidden md:block"
+        style={{ willChange: 'transform' }}
         animate={{
           x: position.x - 12,
           y: position.y - 12,
@@ -89,6 +90,11 @@ export function CustomCursor() {
       {/* Outer cursor */}
       <motion.div
         className="fixed rounded-full border-2 border-terracotta dark:border-terracotta/80 pointer-events-none z-[9999] mix-blend-difference hidden md:block flex items-center justify-center"
+        style={{
+          willChange: 'transform',
+          width: hovered ? '48px' : '32px',
+          height: hovered ? '48px' : '32px',
+        }}
         animate={{
           x: position.x - (hovered ? 24 : 16),
           y: position.y - (hovered ? 24 : 16),
@@ -98,10 +104,6 @@ export function CustomCursor() {
           type: 'spring',
           stiffness: 500,
           damping: 28,
-        }}
-        style={{
-          width: hovered ? '48px' : '32px',
-          height: hovered ? '48px' : '32px',
         }}
       >
         {/* Cursor text label */}
@@ -122,6 +124,7 @@ export function CustomCursor() {
       {/* Inner cursor */}
       <motion.div
         className="fixed w-2 h-2 rounded-full bg-terracotta dark:bg-terracotta/90 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+        style={{ willChange: 'transform' }}
         animate={{
           x: position.x - 4,
           y: position.y - 4,
@@ -141,7 +144,7 @@ export function CustomCursor() {
             className="fixed top-0 left-0 pointer-events-none z-[9997] hidden md:block"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 3, opacity: 0 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
             transition={{ duration: 0.5 }}
             style={{
               left: position.x,

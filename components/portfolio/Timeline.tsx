@@ -78,7 +78,7 @@ export default function Timeline() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -93,13 +93,12 @@ export default function Timeline() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
+          transition={{ delay: 0.2, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
           <Button
             variant={selectedType === 'all' ? 'default' : 'outline'}
             onClick={() => setSelectedType('all')}
-            className="transition-all"
           >
             All
           </Button>
@@ -108,7 +107,6 @@ export default function Timeline() {
               key={type}
               variant={selectedType === type ? 'default' : 'outline'}
               onClick={() => setSelectedType(type as TimelineItem['type'])}
-              className="transition-all"
             >
               {label}
             </Button>

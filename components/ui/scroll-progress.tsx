@@ -10,31 +10,30 @@ export default function ScrollProgress() {
     const handleScroll = () => {
       const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = (scrollTop / docHeight) * 100
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
       setScrollProgress(progress)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // set initial value
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-1 z-50"
+      className="fixed top-0 left-0 right-0 h-1 z-50 origin-left"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
-      <motion.div
+      <div
         className="h-full bg-gradient-to-r from-terracotta via-sage-beige to-terracotta"
         style={{
-          width: `${scrollProgress}%`,
-          backgroundSize: `${200}% 100%`,
+          transform: `scaleX(${scrollProgress / 100})`,
+          transformOrigin: 'left',
+          backgroundSize: '200% 100%',
           backgroundPosition: `${scrollProgress}% 0%`,
         }}
-        initial={{ width: '0%' }}
-        animate={{ width: `${scrollProgress}%` }}
-        transition={{ duration: 0.1 }}
       />
     </motion.div>
   )

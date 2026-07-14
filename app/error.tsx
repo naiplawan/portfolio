@@ -53,8 +53,6 @@ export default function Error({ error, reset }: ErrorPageProps) {
       x: [-5, 5, -5, 5, 0],
       transition: {
         duration: 0.5,
-        repeat: Infinity,
-        repeatDelay: 3
       }
     }
   }
@@ -95,7 +93,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
           <Button 
             onClick={reset}
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Try Again
@@ -105,7 +103,7 @@ export default function Error({ error, reset }: ErrorPageProps) {
             asChild
             variant="outline" 
             size="lg"
-            className="border-border text-muted-foreground px-8 py-3 rounded-lg font-medium hover:bg-accent transition-all duration-200"
+            className="border-border text-muted-foreground px-8 py-3 rounded-lg font-medium hover:bg-accent transition-colors duration-200"
           >
             <Link href="/">
               <Home className="w-4 h-4 mr-2" />

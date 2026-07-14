@@ -101,7 +101,7 @@ export default function ContactSection() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="mb-12"
         >
           <p className="section-label mb-3">Contact</p>
@@ -119,7 +119,7 @@ export default function ContactSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             className="lg:col-span-3"
           >
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -240,7 +240,7 @@ export default function ContactSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
+            transition={{ delay: 0.15, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             className="lg:col-span-2 space-y-6"
           >
             {/* Contact Methods */}

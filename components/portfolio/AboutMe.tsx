@@ -107,9 +107,7 @@ export default function AboutMe() {
                 <motion.div
                   key={area.title}
                   variants={itemVariants}
-                  whileHover={{ y: -8 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="bg-card rounded-lg sm:rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300"
+                  className="bg-card rounded-lg sm:rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md hover:-translate-y-2 transition-shadow duration-300"
                 >
                   <div className="space-y-3 sm:space-y-4">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg sm:rounded-lg flex items-center justify-center mx-auto">

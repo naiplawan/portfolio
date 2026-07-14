@@ -48,7 +48,7 @@ export default function FloatingActions() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20, transition: { duration: 0.15 } }}
             transition={{ duration: 0.2 }}
             className="absolute bottom-20 right-0 space-y-3"
           >
@@ -60,7 +60,7 @@ export default function FloatingActions() {
                 rel={action.label !== 'Email' ? 'noopener noreferrer' : undefined}
                 initial={{ opacity: 0, x: 60, scale: 0.8 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 60, scale: 0.8 }}
+                exit={{ opacity: 0, x: 60, scale: 0.8, transition: { duration: 0.12 } }}
                 transition={{
                   delay: index * 0.06,
                   type: 'spring' as const,
@@ -73,7 +73,7 @@ export default function FloatingActions() {
                   {action.label}
                 </span>
                 <div
-                  className={`bio-glass-card w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${action.color} ${action.textColor} cursor-pointer`}
+                  className={`bio-glass-card w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-200 ${action.color} ${action.textColor} cursor-pointer`}
                 >
                   {action.icon}
                 </div>
@@ -92,7 +92,7 @@ export default function FloatingActions() {
       >
         <motion.div
           animate={{ rotate: isOpen ? 135 : 0 }}
-          transition={{ duration: 0.3, type: 'spring' as const, stiffness: 200 }}
+          transition={{ type: 'spring', stiffness: 200 }}
         >
           {isOpen ? (
             <X className="w-7 h-7" />

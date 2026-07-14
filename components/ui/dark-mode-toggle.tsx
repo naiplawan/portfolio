@@ -50,7 +50,7 @@ export function DarkModeToggle() {
         whileTap={{ scale: 0.95 }}
         transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
-        {/* Animated gradient background */}
+        {/* Gradient background */}
         <motion.div
           className="absolute inset-0 opacity-80"
           animate={{
@@ -62,7 +62,7 @@ export function DarkModeToggle() {
               ? 'linear-gradient(135deg, rgba(196, 136, 92, 0.15), rgba(90, 99, 85, 0.15))'
               : 'linear-gradient(135deg, rgba(184, 124, 76, 0.1), rgba(168, 187, 163, 0.1))',
           }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
         />
 
         {/* Glassmorphism blur effect */}
@@ -90,9 +90,9 @@ export function DarkModeToggle() {
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={theme}
-              initial={{ y: -20, opacity: 0, rotate: -180, scale: 0.5 }}
-              animate={{ y: 0, opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ y: 20, opacity: 0, rotate: 180, scale: 0.5 }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
               transition={{
                 type: 'spring',
                 stiffness: 300,
@@ -104,71 +104,29 @@ export function DarkModeToggle() {
                 <>
                   {/* Moon icon (shows in dark mode to switch to light) */}
                   <Moon className="h-5 w-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.6)]" />
-                  <motion.div
-                    className="absolute inset-0 blur-xl bg-indigo-400/20 rounded-full"
-                    animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
                 </>
               ) : (
                 <>
                   {/* Sun icon (shows in light mode to switch to dark) */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                    className="relative"
-                  >
+                  <div className="relative">
                     <Sun className="h-5 w-5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
-                  </motion.div>
-                  <motion.div
-                    className="absolute inset-0 blur-xl bg-amber-400/30 rounded-full"
-                    animate={{
-                      scale: [1, 1.2, 1],
-                      opacity: [0.5, 0.8, 0.5],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  />
+                  </div>
                 </>
               )}
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Shine effect on hover */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent"
-          animate={{
-            x: isHovered ? ['0%', '200%'] : '0%',
-          }}
-          transition={{
-            duration: 0.6,
-            ease: 'easeInOut',
-          }}
-          style={{
-            transform: 'skewX(-20deg)',
-          }}
-        />
       </motion.div>
 
       {/* Tooltip */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
             className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg whitespace-nowrap"
             style={{
               background: isDark

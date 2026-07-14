@@ -200,13 +200,16 @@ export default function GitHubStats() {
                         {lang.percentage}%
                       </span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                       <motion.div
-                        className="h-2 rounded-full"
-                        style={{ backgroundColor: lang.color }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${lang.percentage}%` }}
-                        transition={{ duration: 0.8, delay: 0.8 + index * 0.1 }}
+                        className="h-2 rounded-full origin-left"
+                        style={{
+                          backgroundColor: lang.color,
+                          transform: `scaleX(0)`,
+                        }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: lang.percentage / 100 }}
+                        transition={{ duration: 0.8, delay: 0.8 + index * 0.1, ease: [0.23, 1, 0.32, 1] }}
                       />
                     </div>
                   </motion.div>
@@ -219,7 +222,7 @@ export default function GitHubStats() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
+          transition={{ delay: 1.0, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="mt-8 text-center"
         >
           <Badge variant="outline" className="px-4 py-2">

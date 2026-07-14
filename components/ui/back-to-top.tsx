@@ -33,13 +33,13 @@ export function BackToTop() {
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
           transition={{
             type: 'spring',
-            stiffness: 300,
-            damping: 20,
+            stiffness: 400,
+            damping: 28,
           }}
           onClick={scrollToTop}
           aria-label="Back to top"
@@ -48,9 +48,9 @@ export function BackToTop() {
             'w-12 h-12 rounded-full',
             'bg-primary text-primary-foreground',
             'shadow-bio-medium hover:shadow-glow-md',
-            'transition-all duration-300',
-            'hover:scale-110 active:scale-95',
-            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
+            'transition-shadow duration-200',
+            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            'active:scale-95'
           )}
         >
           <ChevronUp className="w-5 h-5" />

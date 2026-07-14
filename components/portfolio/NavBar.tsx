@@ -127,7 +127,7 @@ function NavBar() {
     <>
       <motion.nav
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          'fixed top-0 left-0 right-0 z-50 transition-colors duration-200',
           scrolled
             ? 'bio-nav py-3'
             : 'bg-transparent py-4'
@@ -217,6 +217,7 @@ function NavBar() {
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Backdrop — no separate fade; a fast opacity on the same spring curve as the panel */}
             <motion.div
               className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
               aria-hidden="true"
@@ -237,7 +238,7 @@ function NavBar() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 32 }}
             >
               <div className="flex h-full flex-col p-6">
                 <div className="flex items-center justify-between mb-8">

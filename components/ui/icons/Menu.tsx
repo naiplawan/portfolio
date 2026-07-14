@@ -23,40 +23,15 @@ const Menu = forwardRef<SVGSVGElement, IconProps>(
         strokeLinecap="round"
         strokeLinejoin="round"
         className={className}
-        initial={{ scale: 1 }}
-        whileHover={{ 
+        whileHover={{
           scale: 1.05,
           transition: { duration: 0.2 }
         }}
         whileTap={{ scale: 0.95 }}
       >
-        <motion.line
-          x1="4"
-          x2="20"
-          y1="6"
-          y2="6"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        />
-        <motion.line
-          x1="4"
-          x2="20"
-          y1="12"
-          y2="12"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-        />
-        <motion.line
-          x1="4"
-          x2="20"
-          y1="18"
-          y2="18"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
-        />
+        <line x1="4" x2="20" y1="6" y2="6" />
+        <line x1="4" x2="20" y1="12" y2="12" />
+        <line x1="4" x2="20" y1="18" y2="18" />
       </motion.svg>
     );
   }

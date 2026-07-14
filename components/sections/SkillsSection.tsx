@@ -38,7 +38,7 @@ export default function SkillsSection() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="mb-12"
         >
           <p className="section-label mb-3">Capabilities</p>
@@ -54,7 +54,7 @@ export default function SkillsSection() {
               key={category.title}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: catIndex * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: catIndex * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
               <h3 className="text-sm font-medium mb-4 pb-3 border-b border-[hsl(var(--rule))]">
                 {category.title}
@@ -68,8 +68,9 @@ export default function SkillsSection() {
                     transition={{
                       delay: catIndex * 0.1 + skillIndex * 0.03,
                       duration: 0.3,
+                      ease: [0.23, 1, 0.32, 1],
                     }}
-                    className="rounded-full bg-muted px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-[hsl(var(--accent)/0.1)] hover:text-[hsl(var(--accent))]"
+                    className="rounded-full bg-muted px-3.5 py-1.5 text-sm text-muted-foreground transition-colors duration-200 hover:bg-[hsl(var(--accent)/0.1)] hover:text-[hsl(var(--accent))]"
                   >
                     {skill}
                   </motion.span>

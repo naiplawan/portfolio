@@ -396,7 +396,7 @@
     height: 100%;
     background: hsl(var(--accent));
     border-radius: 999px;
-    transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: width 800ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .skill-bar-fill::after {
@@ -431,7 +431,7 @@
   }
 
   .project-image {
-    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .terminal-window {
@@ -527,7 +527,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .link-animated:hover::after {
