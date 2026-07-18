@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
-  "packageManager": "pnpm@11.10.0",
+  "packageManager": "pnpm@10.29.2",
   "overrides": {
     "@babel/core": "7.29.6",
     "brace-expansion": "2.0.3",
