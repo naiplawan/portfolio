@@ -1,186 +1,109 @@
-'use client';
+'use client'
 
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
-import Image from 'next/image';
-import { FaGithub } from 'react-icons/fa';
-import {
-  ExternalLink,
-  Code2,
-  AlertCircle,
-  RefreshCw,
-  ArrowUpRight,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useParallelData } from '@/lib/hooks/use-parallel-data';
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  githubUrl: string;
-  liveUrl?: string;
-  featured: boolean;
-  category: string;
-  status: string;
-  metrics?: {
-    users?: string;
-    performance?: string;
-    responseTime?: string;
-  };
-}
-
-function useGitHubProjects() {
-  const [retryCount, setRetryCount] = useState(0)
-
-  const fetchProjects = async (): Promise<Project[]> => {
-    const response = await fetch('/api/github/projects');
-    if (!response.ok) {
-      throw new Error(`Failed to fetch projects (${response.status})`);
-    }
-    const data = await response.json();
-    return data.projects || [];
-  };
-
-  const { data: projects, isLoading, error } = useParallelData(fetchProjects, [retryCount], []);
-
-  const retry = () => {
-    setRetryCount(prev => prev + 1)
-  }
-
-  return { projects: projects ?? [], isLoading, error, retry };
-}
-
-function ProjectCardSkeleton() {
-  return (
-    <div className="overflow-hidden rounded-[var(--radius)] border border-[hsl(var(--border))]">
-      <Skeleton className="aspect-[16/10] w-full" />
-      <div className="p-5 space-y-3">
-        <Skeleton className="h-5 w-3/4" />
-        <Skeleton className="h-4 w-full" />
-        <div className="flex gap-2 pt-1">
-          <Skeleton className="h-5 w-14 rounded-full" />
-          <Skeleton className="h-5 w-14 rounded-full" />
-        </div>
-      </div>
-    </div>
-  );
-}
+import Link from 'next/link'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { ArrowUpRight, ExternalLink } from 'lucide-react'
+import { FaGithub } from 'react-icons/fa'
+import type { Project } from '@/lib/types/types'
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
-        delay: index * 0.08,
-        duration: 0.5,
+        delay: Math.min(index * 0.06, 0.24),
+        duration: 0.45,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="project-card group border border-[hsl(var(--border))] bg-card overflow-hidden"
+      className="group overflow-hidden rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card"
     >
-      {/* Image */}
-      <div className="relative overflow-hidden aspect-[16/10] bg-muted">
-        <Image
-          src={project.image}
-          alt={project.title}
-          className="project-image w-full h-full object-cover"
-          width={400}
-          height={200}
-          style={{ objectFit: 'cover' }}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-        />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
-
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex gap-2">
-          {project.featured && (
-            <span className="rounded-full bg-foreground/80 px-2.5 py-1 text-[10px] font-medium text-background backdrop-blur-sm uppercase tracking-wider">
-              Featured
+      <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden bg-gradient-to-br from-muted to-background">
+        <FaGithub className="h-16 w-16 text-foreground/80 transition-transform duration-500 motion-safe:group-hover:scale-105" />
+        <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
+          {project.technologies.slice(0, 3).map((technology) => (
+            <span
+              key={technology}
+              className="rounded-full border border-[hsl(var(--border))] bg-background/80 px-2.5 py-1 font-mono text-[10px] text-foreground backdrop-blur-sm"
+            >
+              {technology}
             </span>
-          )}
+          ))}
+        </div>
+      </div>
+
+      <div className="p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              GitHub · {project.completedYear}
+            </p>
+            <h3 className="font-display text-2xl tracking-tight">
+              {project.title}
+            </h3>
+          </div>
+          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </div>
 
-        {/* Hover links */}
-        <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
-              aria-label={`View ${project.title} on GitHub`}
-            >
-              <FaGithub className="h-4 w-4" />
-            </a>
-          )}
+        <p className="mt-3 line-clamp-3 min-h-[3.75rem] text-sm leading-relaxed text-muted-foreground">
+          {project.description}
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3 border-t border-[hsl(var(--rule))] pt-4">
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <FaGithub className="h-4 w-4" />
+            Source
+          </a>
           {project.liveUrl && (
             <a
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-foreground backdrop-blur-sm transition-transform hover:scale-105"
-              aria-label={`View ${project.title} live demo`}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-3.5 w-3.5" />
+              Live
             </a>
           )}
         </div>
       </div>
-
-      {/* Content */}
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-display text-lg leading-tight group-hover:text-[hsl(var(--accent))] transition-colors">
-            {project.title}
-          </h3>
-          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-        </div>
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {project.technologies.slice(0, 3).map((tech) => (
-            <span
-              key={tech}
-              className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground"
-            >
-              {tech}
-            </span>
-          ))}
-          {project.technologies.length > 3 && (
-            <span className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground">
-              +{project.technologies.length - 3}
-            </span>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
+    </motion.article>
+  )
 }
 
-export default function ProjectsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-  const { projects, isLoading, error, retry } = useGitHubProjects();
+export function ProjectGrid({ projects }: { projects: readonly Project[] }) {
+  return (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {projects.map((project, index) => (
+        <ProjectCard key={project.id} project={project} index={index} />
+      ))}
+    </div>
+  )
+}
 
-  const displayedProjects = projects
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
-    .slice(0, 6);
+export default function ProjectsSection({
+  projects,
+}: {
+  projects: readonly Project[]
+}) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { once: true, amount: 0.1 })
+  const displayedProjects = projects.slice(0, 6)
 
   return (
-    <section ref={ref} className="section-padding">
+    <section
+      ref={ref}
+      id="projects"
+      className="section-padding scroll-mt-20 border-t border-[hsl(var(--rule))]"
+    >
       <div className="container-premium">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
@@ -188,82 +111,39 @@ export default function ProjectsSection() {
           className="mb-12"
         >
           <p className="section-label mb-3">Selected Work</p>
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
-              Projects
-            </h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="font-display text-3xl tracking-tight sm:text-4xl">
+                Recent GitHub projects
+              </h2>
+              <p className="mt-4 max-w-2xl text-muted-foreground">
+                Public repositories pulled directly from my GitHub profile,
+                ordered by recent activity.
+              </p>
+            </div>
+            <Link href="/projects" className="link-animated text-sm text-muted-foreground">
+              View all projects
+            </Link>
+          </div>
+        </motion.div>
+
+        {displayedProjects.length > 0 ? (
+          <ProjectGrid projects={displayedProjects} />
+        ) : (
+          <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] p-8 text-center text-sm text-muted-foreground">
+            Projects are temporarily unavailable. Visit{' '}
             <a
               href="https://github.com/naiplawan"
               target="_blank"
               rel="noopener noreferrer"
-              className="link-animated text-sm text-muted-foreground"
+              className="text-foreground underline underline-offset-4"
             >
-              View all on GitHub
+              GitHub
             </a>
+            .
           </div>
-        </motion.div>
-
-        {/* Loading */}
-        {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <ProjectCardSkeleton key={i} />
-            ))}
-          </div>
-        )}
-
-        {/* Error */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center py-20 text-center"
-          >
-            <AlertCircle className="h-10 w-10 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-display mb-2">Unable to load projects</h3>
-            <p className="text-sm text-muted-foreground mb-6">{error}</p>
-            <Button onClick={retry} variant="outline" size="sm" className="gap-2">
-              <RefreshCw className="h-3.5 w-3.5" />
-              Try Again
-            </Button>
-          </motion.div>
-        )}
-
-        {/* Grid */}
-        {!isLoading && !error && displayedProjects.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {displayedProjects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
-            ))}
-          </div>
-        )}
-
-        {/* Empty */}
-        {!isLoading && !error && displayedProjects.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center py-20 text-center"
-          >
-            <Code2 className="h-10 w-10 text-muted-foreground opacity-50 mb-4" />
-            <h3 className="text-lg font-display mb-2">No projects found</h3>
-            <p className="text-sm text-muted-foreground mb-6">
-              Check back later or visit GitHub directly.
-            </p>
-            <Button asChild variant="outline" size="sm">
-              <a
-                href="https://github.com/naiplawan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gap-2"
-              >
-                <FaGithub className="h-3.5 w-3.5" />
-                View GitHub Profile
-              </a>
-            </Button>
-          </motion.div>
         )}
       </div>
     </section>
-  );
+  )
 }

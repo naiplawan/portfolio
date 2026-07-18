@@ -1,14 +1,15 @@
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data'
 import DeveloperHero from '@/components/sections/DeveloperHero'
-import StatsSection from '@/components/sections/StatsSection'
 import ProjectsSection from '@/components/sections/ProjectsSection'
 import SkillsSection from '@/components/sections/SkillsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
+import { getProjects } from '@/lib/data/projects-data'
 
 
-export default function HomePage() {
+export default async function HomePage() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app'
+  const projects = await getProjects()
 
   return (
     <>
@@ -47,11 +48,8 @@ export default function HomePage() {
       {/* Hero Section - Terminal Animation, Typing Effect, Floating Tech Icons */}
       <DeveloperHero />
 
-      {/* Stats Section - Animated Counters */}
-      <StatsSection />
-
-      {/* Projects Showcase - Grid with Hover Effects */}
-      <ProjectsSection />
+      {/* Selected work */}
+      <ProjectsSection projects={projects} />
 
       {/* Skills Section - Progress Bars by Category */}
       <SkillsSection />

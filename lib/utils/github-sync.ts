@@ -138,7 +138,8 @@ export function githubRepoToProject(
 
   // Generate placeholder image URL (using GitHub's default repo icon)
   const generateImage = (repo: GitHubRepo): string => {
-    return `https://opengraph.githubassets.com/${repo.owner.login}/${repo.name}/github-open-graph.png`;
+    const revision = repo.updated_at.replace(/\D/g, '');
+    return `https://opengraph.githubassets.com/${revision}/${repo.owner.login}/${repo.name}`;
   };
 
   // Generate highlights from topics
@@ -203,16 +204,21 @@ export async function fetchProjectsFromGitHub(
   try {
     const repos = await GitHubAPIService.getUserRepos();
 
-    // Transform repos to projects
+    // GitHub already returns repositories by most recently updated. Preserve
+    // that order unless another sort mode was explicitly requested.
     const projects = repos
       .map(repo => githubRepoToProject(repo, username, options))
-      .filter((project): project is Project => project !== null)
-      .sort((a, b) => {
-        // Sort by stars descending
+      .filter((project): project is Project => project !== null);
+
+    if (options.sortBy === 'stars') {
+      projects.sort((a, b) => {
         const aStars = a.metrics?.performance ? parseInt(a.metrics.performance) || 0 : 0;
         const bStars = b.metrics?.performance ? parseInt(b.metrics.performance) || 0 : 0;
         return bStars - aStars;
       });
+    } else if (options.sortBy === 'name') {
+      projects.sort((a, b) => a.title.localeCompare(b.title));
+    }
 
     return projects;
   } catch (error) {

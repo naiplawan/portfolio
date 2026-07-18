@@ -58,6 +58,36 @@ describe('GitHubAPIService', () => {
       await expect(service['fetchWithRetry']('https://api.test.com/data'))
         .rejects.toBeInstanceOf(Error);
     });
+
+    it('should retry public data without authentication when a token is invalid', async () => {
+      const serviceWithInvalidToken = new GitHubAPIService('expired-token');
+      const mockData = { test: 'public-data' };
+
+      (global.fetch as any)
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 401,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => mockData,
+        });
+
+      const result = await serviceWithInvalidToken['fetchWithRetry'](
+        'https://api.test.com/data'
+      );
+
+      expect(result).toEqual(mockData);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenLastCalledWith(
+        'https://api.test.com/data',
+        expect.objectContaining({
+          headers: expect.not.objectContaining({
+            Authorization: expect.any(String),
+          }),
+        })
+      );
+    });
   });
 
   describe('getUserInfo', () => {

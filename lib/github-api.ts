@@ -30,19 +30,34 @@ const DEFAULT_CONTRIBUTION_COUNT = parseInt(
 );
 
 class GitHubAPIService {
+  constructor(private readonly token = GITHUB_TOKEN) {}
+
   private async fetchWithRetry(url: string, retries = 3): Promise<any> {
     for (let i = 0; i < retries; i++) {
       try {
-        const response = await fetch(url, {
+        let response = await fetch(url, {
           headers: {
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': 'Portfolio-App',
             // Use server-only token for better security
-            ...(GITHUB_TOKEN && {
-              'Authorization': `token ${GITHUB_TOKEN}`
+            ...(this.token && {
+              'Authorization': `Bearer ${this.token}`
             })
           },
+          next: { revalidate: 3600 },
         });
+
+        // Public repositories do not require authentication. If a configured
+        // token has expired, retry once without it instead of hiding projects.
+        if (response.status === 401 && this.token) {
+          response = await fetch(url, {
+            headers: {
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'Portfolio-App',
+            },
+            next: { revalidate: 3600 },
+          });
+        }
 
         if (!response.ok) {
           if (response.status === 403) {
@@ -74,7 +89,7 @@ class GitHubAPIService {
       const pageData = await this.fetchWithRetry(
         `${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?` +
         `per_page=${perPage}&page=${page}&sort=updated&` +
-        `type=all` // Include both source and forks
+        `type=owner`
       );
 
       // Validate the page data

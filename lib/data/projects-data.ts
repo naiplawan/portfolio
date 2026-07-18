@@ -4,17 +4,17 @@ import { fetchProjectsFromGitHub } from '../utils/github-sync';
 // GitHub username from environment variable
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 
-// Fallback manual projects (shown when GitHub API fails)
+// Curated projects used by the portfolio.
 const FALLBACK_PROJECTS: readonly Project[] = [
   {
     id: 9999,
     title: 'ByteTrack',
     description:
-      'A sophisticated, production-ready calorie tracking and wellness application with beautiful design system and comprehensive food tracking capabilities.',
+      'A calorie tracking and wellness application designed to make daily food logging clear and approachable.',
     problemStatement:
-      'Health-conscious individuals needed an intuitive, accurate calorie tracking solution with personalized insights and exceptional user experience.',
+      'People tracking their nutrition need a quick way to log food and understand their daily progress without navigating a complicated interface.',
     solution:
-      'Created a modern web application with Apple/Spotify-inspired design, PostgreSQL for data reliability, and Prisma for type-safe database operations.',
+      'Built a responsive Next.js application with clear daily summaries, PostgreSQL for persistent data, and Prisma for type-safe database access.',
     image: '/assets/byte-track.png',
     technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'PostgreSQL'],
     githubUrl: 'https://github.com/naiplawan/bytetrack',
@@ -22,7 +22,7 @@ const FALLBACK_PROJECTS: readonly Project[] = [
     highlights: ['Intuitive UI', 'Real-time Tracking', 'Personalized Insights', 'Cross-platform'],
     category: 'wellness',
     status: 'live',
-    featured: false,
+    featured: true,
     completedYear: 2025,
   },
 ] as const;
@@ -46,7 +46,7 @@ export async function getProjects(): Promise<readonly Project[]> {
     const githubProjects = await fetchProjectsFromGitHub(GITHUB_USERNAME, {
       includeForks: false, // Don't include forked repos
       minStars: 0, // Show all repos regardless of stars
-      sortBy: 'stars',
+      sortBy: 'updated',
     });
 
     if (githubProjects.length > 0) {
