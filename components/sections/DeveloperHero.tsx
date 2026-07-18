@@ -23,21 +23,26 @@ export default function DeveloperHero() {
           </h1>
 
           <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            I build fast, accessible web and mobile products at{' '}
-            <span className="text-foreground">Unixdev Co., Ltd.</span>{' '}
-            Specializing in React, Next.js, Go, and Flutter.
+            I build fast, accessible web and mobile products with React,
+            Next.js, TypeScript, Go, and Flutter—currently shipping at{' '}
+            <span className="text-foreground">Unixdev Co., Ltd.</span>
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="#contact"
-              className="bio-button inline-flex items-center gap-2 px-6 py-3 text-sm"
+              href="#projects"
+              className="bio-button inline-flex items-center px-6 py-3 text-sm"
             >
-              <span className="inline-block h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-              Available for work
+              View selected work
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center rounded-[var(--radius)] border border-[hsl(var(--border))] px-6 py-3 text-sm transition-colors hover:border-foreground"
+            >
+              Start a conversation
             </Link>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="flex basis-full items-center justify-center gap-6 pt-2 text-sm text-muted-foreground sm:basis-auto sm:pt-0">
               <a
                 href="https://github.com/naiplawan"
                 target="_blank"
@@ -79,9 +84,9 @@ export default function DeveloperHero() {
               <span className="mr-2 text-foreground font-medium">Stack</span>
               React · Go · Flutter
             </div>
-            <div>
+            <div className="hidden sm:block">
               <span className="mr-2 text-foreground font-medium">Since</span>
-              2022
+              2023
             </div>
           </div>
         </motion.div>

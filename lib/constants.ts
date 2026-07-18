@@ -12,7 +12,7 @@ export const PROFESSIONAL_INFO = {
   title: 'Frontend Developer',
   company: 'Unixdev Co., Ltd.',
   location: 'Bangkok, Thailand',
-  experience: '11+',
+  experience: '3+',
   technologies: '20+',
 } as const;
 
@@ -22,29 +22,20 @@ export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-po
 // Resume Path
 export const RESUME_PATH = '/Rachaphol_Resume.pdf';
 
-// Analytics & Metrics
-export const METRICS = {
-  uptime: '99.9%',
-  performanceImprovement: '60%',
-  aiReduction: '75%',
-  databaseOptimization: '40%',
-  onboardingImprovement: '50%',
-} as const;
-
 // Typewriter Words
 export const TYPEWRITER_WORDS: string[] = [
-  'Performance-First Fullstack Architect',
-  'Building Scalable Web Solutions',
-  'Crafting Modern User Experiences',
-  'Delivering Measurable Business Impact',
+  'Frontend Developer',
+  'Building accessible web products',
+  'Crafting clear user experiences',
+  'Shipping across web and mobile',
 ];
 
 // Skill Tags
 export const SKILL_TAGS: string[] = [
-  'Fullstack Architecture',
-  'Performance Engineering',
-  'Business Impact',
-  'Scalable Solutions',
+  'Frontend Development',
+  'Accessible Interfaces',
+  'Product Engineering',
+  'Web Performance',
 ];
 
 // Employment History

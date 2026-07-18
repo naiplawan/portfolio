@@ -15,7 +15,7 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
-    title: 'Software Developer',
+    title: 'Frontend Developer',
     company: 'Unixdev Co., Ltd.',
     location: 'Bangkok, Thailand',
     period: 'Feb 2025 - Present',
@@ -28,10 +28,10 @@ const experiences: Experience[] = [
     type: 'work',
   },
   {
-    title: 'Full Stack Developer',
-    company: 'Turfmapp Co., Ltd.',
+    title: 'Junior Full Stack Software Developer',
+    company: 'Turfmapp',
     location: 'Bangkok, Thailand',
-    period: 'Nov 2024 - Feb 2025',
+    period: 'Jan 2024 - Jan 2025',
     description: [
       'Built web applications using React, Node.js, and Django',
       'Managed backend databases with MongoDB and PostgreSQL',
@@ -41,12 +41,12 @@ const experiences: Experience[] = [
     type: 'work',
   },
   {
-    title: 'B.E. Biological Science',
+    title: "Bachelor's Degree in Biological Sciences",
     company: 'Mahidol University',
     location: 'Bangkok, Thailand',
-    period: '2014 - 2018',
+    period: '2015 - 2018',
     description: [
-      'Bachelor of Engineering in Biological Science',
+      'Bachelor’s degree in Biological Sciences',
       'Relevant coursework: Data Analysis, Research Methodologies',
       'Participated in research projects and internships',
     ],

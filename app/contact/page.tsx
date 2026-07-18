@@ -278,7 +278,7 @@ export default function ContactPage() {
             </a>
 
             <a
-              href="tel:+66955546654"
+              href="tel:+66910696072"
               className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">

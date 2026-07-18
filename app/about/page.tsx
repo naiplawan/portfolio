@@ -1,7 +1,6 @@
 'use client';
 
 import AboutMe from '@/components/portfolio/AboutMe';
-import GitHubStats from '@/components/portfolio/GitHubStats';
 import Timeline from '@/components/portfolio/Timeline';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaFacebook } from 'react-icons/fa';
@@ -29,7 +28,6 @@ export default function AboutPage() {
     <div className="min-h-screen pt-20">
       <AboutMe />
       <Timeline />
-      <GitHubStats />
 
       <section className="section-padding border-t border-[hsl(var(--rule))]">
         <div className="container-premium">

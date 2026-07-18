@@ -12,7 +12,6 @@ import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
-import FloatingActions from '@/components/ui/FloatingActions'
 import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 
 const instrumentSerif = Instrument_Serif({
@@ -44,14 +43,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   metadataBase: new URL('https://rachaphol-portfolio.vercel.app'),
   title: {
-    default: 'Rachaphol Plookaom - Performance-First Fullstack Architect',
+    default: 'Rachaphol Plookaom — Frontend Developer',
     template: '%s | Rachaphol Plookaom'
   },
-  description: 'Award-winning Frontend Developer at Unixdev Co., Ltd. crafting high-performance web applications with React, Next.js, TypeScript, and Go. Delivering scalable solutions that drive measurable business impact.',
+  description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
   keywords: [
     'frontend developer',
-    'fullstack architect', 
-    'React expert',
+    'React developer',
     'Next.js developer',
     'TypeScript',
     'Go developer',
@@ -76,22 +74,22 @@ export const metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://rachaphol-portfolio.vercel.app',
-    title: 'Rachaphol Plookaom - Performance-First Fullstack Architect',
-    description: 'Award-winning Frontend Developer crafting high-performance web applications with React, Next.js, TypeScript, and Go. Available for hire.',
+    title: 'Rachaphol Plookaom — Frontend Developer',
+    description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
     siteName: 'Rachaphol Portfolio',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Rachaphol Plookaom - Performance-First Fullstack Architect Portfolio',
+        alt: 'Rachaphol Plookaom frontend developer portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Rachaphol Plookaom - Performance-First Fullstack Architect',
-    description: 'Award-winning Frontend Developer crafting high-performance web applications. Available for hire.',
+    title: 'Rachaphol Plookaom — Frontend Developer',
+    description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products.',
     images: ['/og-image.jpg'],
     creator: '@rachaphol'
   },
@@ -192,7 +190,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </ClientErrorBoundary>
           </main>
           <Footer />
-          <FloatingActions />
           <ScrollProgressComponents />
         </Providers>
       </body>
