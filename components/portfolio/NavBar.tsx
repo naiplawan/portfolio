@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
 import { cn } from '@/lib/utils/cn';
 import { PROFESSIONAL_INFO, SOCIAL_LINKS } from '@/lib/constants';
@@ -85,9 +84,10 @@ function NavBar() {
         <div className="container-premium flex h-14 items-center justify-between">
           <Link
             href="/"
-            className="text-sm font-medium tracking-tight text-foreground"
+            className="font-mono text-sm font-medium tracking-tight text-foreground"
             onClick={() => setIsOpen(false)}
           >
+            <span className="text-[hsl(var(--accent))]" aria-hidden="true">~/</span>
             {PROFESSIONAL_INFO.name}
           </Link>
 
@@ -129,52 +129,46 @@ function NavBar() {
         </div>
       </nav>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            ref={menuRef}
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Site navigation"
-            className="fixed inset-x-0 bottom-0 top-14 z-40 flex flex-col overflow-y-auto bg-background md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            <ul className="container-premium flex-1 pt-6">
-              {navItems.map((item, index) => (
-                <li key={item.href} className="border-b border-[hsl(var(--rule))]">
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    aria-current={isActiveRoute(item.href) ? 'page' : undefined}
-                    className="flex items-baseline gap-4 py-5"
+      {isOpen && (
+        <div
+          ref={menuRef}
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+          className="fixed inset-x-0 bottom-0 top-14 z-40 flex flex-col overflow-y-auto bg-background duration-150 animate-in fade-in md:hidden"
+        >
+          <ul className="container-premium flex-1 pt-6">
+            {navItems.map((item, index) => (
+              <li key={item.href} className="border-b border-[hsl(var(--rule))]">
+                <Link
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                  className="flex items-baseline gap-4 py-5"
+                >
+                  <span className="pixel-label text-muted-foreground">0{index + 1}</span>
+                  <span
+                    className={cn(
+                      'font-display text-4xl tracking-tight',
+                      isActiveRoute(item.href) && 'text-[hsl(var(--accent))]'
+                    )}
                   >
-                    <span className="index-num">0{index + 1}</span>
-                    <span
-                      className={cn(
-                        'font-display text-4xl tracking-tight',
-                        isActiveRoute(item.href) && 'italic text-[hsl(var(--accent))]'
-                      )}
-                    >
-                      {item.label}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                    {item.label}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-            <div className="container-premium flex items-center justify-between py-6 text-sm text-muted-foreground">
-              <a href={`mailto:${SOCIAL_LINKS.email}`} className="ed-link">
-                {SOCIAL_LINKS.email}
-              </a>
-              <span>{PROFESSIONAL_INFO.location.split(',')[0]}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <div className="container-premium flex items-center justify-between py-6 text-sm text-muted-foreground">
+            <a href={`mailto:${SOCIAL_LINKS.email}`} className="ed-link">
+              {SOCIAL_LINKS.email}
+            </a>
+            <span>{PROFESSIONAL_INFO.location.split(',')[0]}</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }
