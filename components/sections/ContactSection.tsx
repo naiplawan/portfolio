@@ -6,6 +6,7 @@ const channels = [
   { label: 'Phone', value: '+66 91 069 6072', href: 'tel:+66910696072', external: false },
   { label: 'GitHub', value: 'naiplawan', href: SOCIAL_LINKS.github, external: true },
   { label: 'LinkedIn', value: 'rachaphol-plookaom', href: SOCIAL_LINKS.linkedin, external: true },
+  { label: 'Facebook', value: 'mos.jrpt', href: SOCIAL_LINKS.facebook, external: true },
 ]
 
 export default function ContactSection({ index }: { index?: string }) {
@@ -29,7 +30,7 @@ export default function ContactSection({ index }: { index?: string }) {
         </a>
 
         <div className="mt-14 grid gap-10 border-t border-background/20 pt-8 md:grid-cols-[1fr_auto] md:items-end">
-          <dl className="grid gap-4 sm:grid-cols-3 sm:gap-8">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-4 lg:gap-8">
             {channels.map(({ label, value, href, external }) => (
               <div key={label}>
                 <dt className="font-mono text-xs uppercase tracking-widest text-background/60">{label}</dt>
