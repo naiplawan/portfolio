@@ -1,7 +1,4 @@
-'use client'
-
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { SectionHeading } from '@/components/ui/section-heading'
 
 interface SkillCategory {
   title: string
@@ -22,73 +19,32 @@ const skillCategories: SkillCategory[] = [
     skills: ['Flutter', 'Dart', 'React Native'],
   },
   {
-    title: 'Tools & Database',
+    title: 'Tools & Data',
     skills: ['PostgreSQL', 'MySQL', 'Firebase', 'Git / GitHub', 'Docker'],
   },
 ]
 
 export default function SkillsSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.1 })
-
   return (
-    <section ref={ref} className="section-padding border-t border-[hsl(var(--rule))]">
+    <section className="section-padding">
       <div className="container-premium">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-12"
-        >
-          <p className="section-label mb-3">Capabilities</p>
-          <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
-            Skills & Technologies
-          </h2>
-        </motion.div>
+        <SectionHeading index="02" label="Capabilities" title="What I work with" />
 
-        {/* Skills Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {skillCategories.map((category, catIndex) => (
-            <motion.div
+        <dl className="grid border-t border-[hsl(var(--rule))] sm:grid-cols-2 lg:grid-cols-4">
+          {skillCategories.map((category) => (
+            <div
               key={category.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: catIndex * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              className="border-b border-[hsl(var(--rule))] py-6 sm:pr-8 lg:border-b-0"
             >
-              <h3 className="text-sm font-medium mb-4 pb-3 border-b border-[hsl(var(--rule))]">
-                {category.title}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill, skillIndex) => (
-                  <motion.span
-                    key={skill}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-                    transition={{
-                      delay: catIndex * 0.1 + skillIndex * 0.03,
-                      duration: 0.3,
-                      ease: [0.23, 1, 0.32, 1],
-                    }}
-                    className="rounded-full bg-muted px-3.5 py-1.5 text-sm text-muted-foreground transition-colors duration-200 hover:bg-[hsl(var(--accent)/0.1)] hover:text-[hsl(var(--accent))]"
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
+              <dt className="section-label mb-4">{category.title}</dt>
+              {category.skills.map((skill) => (
+                <dd key={skill} className="py-1 text-lg leading-snug">
+                  {skill}
+                </dd>
+              ))}
+            </div>
           ))}
-        </div>
-
-        {/* Currently focused */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="mt-10 text-sm text-muted-foreground text-center"
-        >
-          Currently exploring advanced React patterns and cloud architecture.
-        </motion.p>
+        </dl>
       </div>
     </section>
   )

@@ -1,30 +1,10 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import {
-  Code,
-  Zap,
-  Smartphone,
-  Database,
-  Palette,
-  Rocket,
-  CheckCircle,
-  ArrowRight,
-  Mail,
-  Calendar,
-  MessageSquare,
-  Video,
-  HeartPulse,
-  Building,
-} from 'lucide-react';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/section-heading';
 import { ROUTES } from '@/lib/constants/routes';
 
 const services = [
   {
-    icon: Code,
     title: 'Frontend Development',
     description: 'Modern web applications with Next.js, React, and shadcn/ui',
     features: [
@@ -37,7 +17,6 @@ const services = [
     tech: ['Next.js', 'React', 'TypeScript', 'shadcn/ui', 'Framer Motion'],
   },
   {
-    icon: Database,
     title: 'Backend Development',
     description: 'High-performance APIs with Go Fiber and Clean Architecture',
     features: [
@@ -49,7 +28,6 @@ const services = [
     tech: ['Go Fiber', 'Clean Arch', 'Docker', 'PostgreSQL', 'MongoDB'],
   },
   {
-    icon: Smartphone,
     title: 'Mobile Development',
     description: 'Flutter apps with BLoC state management',
     features: [
@@ -61,7 +39,6 @@ const services = [
     tech: ['Flutter', 'Dart', 'BLoC', 'ZegoCloud'],
   },
   {
-    icon: Video,
     title: 'Real-time Communication',
     description: 'Video calling, chat, and push notifications',
     features: [
@@ -73,7 +50,6 @@ const services = [
     tech: ['ZegoCloud RTC', 'ZIM', 'WebSockets', 'Push Notifications'],
   },
   {
-    icon: HeartPulse,
     title: 'Healthcare Platforms',
     description: 'Complete healthcare platforms with patient, doctor, and admin apps',
     features: [
@@ -85,7 +61,6 @@ const services = [
     tech: ['Flutter', 'Next.js', 'Go', 'Healthcare'],
   },
   {
-    icon: Building,
     title: 'Full-Stack Platforms',
     description: 'End-to-end platforms with web, mobile, and backend integration',
     features: [
@@ -97,7 +72,6 @@ const services = [
     tech: ['Next.js', 'Flutter', 'Go Fiber', 'NextAuth'],
   },
   {
-    icon: Palette,
     title: 'UI/UX Implementation',
     description: 'Pixel-perfect implementations with modern design systems',
     features: [
@@ -109,7 +83,6 @@ const services = [
     tech: ['shadcn/ui', 'Radix UI', 'Tailwind CSS', 'next-themes'],
   },
   {
-    icon: Rocket,
     title: 'Testing & DevOps',
     description: 'Testing, CI/CD, and performance monitoring',
     features: [
@@ -121,7 +94,6 @@ const services = [
     tech: ['Vitest', 'Playwright', 'GitLab CI', 'Sentry'],
   },
   {
-    icon: Zap,
     title: 'Performance Optimization',
     description: 'Optimized builds and Core Web Vitals',
     features: [
@@ -186,223 +158,95 @@ const process = [
 ];
 
 export default function ServicesPage() {
-  const router = useRouter();
-
-  const handleContactClick = useCallback(() => {
-    router.push(ROUTES.CONTACT);
-  }, [router]);
-
-  const handleBookingClick = useCallback(() => {
-    router.push(ROUTES.BOOKING);
-  }, [router]);
-
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <section className="pt-24 pb-16">
-        <div className="container-premium">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl"
+    <>
+      <section className="container-premium pt-[clamp(4rem,10vw,8rem)]">
+        <SectionHeading as="h1" label="Services" title="Product engineering across web, mobile and API">
+          I build healthcare platforms, mobile apps and real-time features —
+          from first prototype to production handoff.
+        </SectionHeading>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+          <Link
+            href={ROUTES.CONTACT}
+            className="inline-flex h-11 items-center gap-2 rounded-lg bg-foreground px-5 text-background transition-opacity hover:opacity-85"
           >
-            <p className="section-label mb-3">Services</p>
-            <h1 className="font-display text-4xl sm:text-5xl tracking-tight">Services & Solutions</h1>
-            <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-              Fullstack developer specializing in healthcare platforms, mobile apps, and real-time communication.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" onClick={handleContactClick}>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Get a Quote
-              </Button>
-              <Button size="lg" variant="outline" onClick={handleBookingClick}>
-                <Calendar className="mr-2 h-4 w-4" />
-                Book a Call
-              </Button>
+            Get a quote
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+          <Link href={ROUTES.BOOKING} className="ed-link">
+            Book a call
+          </Link>
+        </div>
+      </section>
+
+      <section className="container-premium section-padding">
+        <SectionHeading index="01" label="Offer" title="What I can help with" />
+        <ol className="grid border-t border-[hsl(var(--rule))] md:grid-cols-2 md:gap-x-12">
+          {services.map((service, index) => (
+            <li key={service.title} className="border-b border-[hsl(var(--rule))] py-8">
+              <div className="flex items-baseline gap-4">
+                <span className="index-num">{String(index + 1).padStart(2, '0')}</span>
+                <h3 className="font-display text-2xl tracking-tight">{service.title}</h3>
+              </div>
+              <p className="mt-3 text-muted-foreground">{service.description}</p>
+              <ul className="mt-4 space-y-1.5 text-sm">
+                {service.features.map((feature) => (
+                  <li key={feature} className="flex gap-3">
+                    <span aria-hidden="true" className="text-muted-foreground">–</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mono-tag mt-5">{service.tech.join(' · ')}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="container-premium pb-[clamp(4rem,10vw,8rem)]">
+        <SectionHeading index="02" label="Process" title="How a project runs" />
+        <ol className="grid border-t border-[hsl(var(--rule))] sm:grid-cols-2 lg:grid-cols-4">
+          {process.map((item) => (
+            <li key={item.step} className="border-b border-[hsl(var(--rule))] py-6 sm:pr-8 lg:border-b-0">
+              <span className="font-display text-4xl italic text-[hsl(var(--accent))]">{item.step}</span>
+              <h3 className="mt-3 font-medium">{item.title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="container-premium pb-[clamp(4rem,10vw,8rem)]">
+        <SectionHeading index="03" label="Engagements" title="Ways to work together">
+          Every project is scoped individually. These are typical starting points.
+        </SectionHeading>
+        <div className="grid gap-px overflow-hidden border border-[hsl(var(--rule))] bg-[hsl(var(--rule))] md:grid-cols-3">
+          {pricing.map((plan) => (
+            <div key={plan.name} className="flex flex-col bg-background p-6 sm:p-8">
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="font-display text-2xl tracking-tight">{plan.name}</h3>
+                {plan.highlighted && <span className="section-label text-[hsl(var(--accent))]">Most common</span>}
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+              <ul className="mt-6 flex-1 space-y-2 text-sm">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex gap-3">
+                    <span aria-hidden="true" className="text-muted-foreground">–</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={`${ROUTES.CONTACT}?subject=${encodeURIComponent(`Enquiry: ${plan.name}`)}`}
+                className="ed-link mt-8 inline-flex items-center gap-1 self-start text-sm"
+              >
+                Start a {plan.name} project
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
             </div>
-          </motion.div>
+          ))}
         </div>
       </section>
-
-      {/* Services Grid */}
-      <section className="border-t border-[hsl(var(--rule))] py-16 sm:py-20">
-        <div className="container-premium">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">What I Offer</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05, duration: 0.4 }}
-                  className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-6 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted mb-4">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="font-display text-lg mb-1">{service.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{service.description}</p>
-                  <ul className="space-y-2 mb-4">
-                    {service.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex flex-wrap gap-1.5">
-                    {service.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="border-t border-[hsl(var(--rule))] py-16 sm:py-20 bg-muted/30">
-        <div className="container-premium">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">How It Works</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {process.map((item, index) => (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.4 }}
-              >
-                <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-6">
-                  <div className="font-display text-3xl text-[hsl(var(--accent))] mb-3">{item.step}</div>
-                  <h3 className="font-medium mb-1">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-16 sm:py-20">
-        <div className="container-premium">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">Simple Pricing</h2>
-            <p className="mt-3 text-muted-foreground">Choose the package that fits your needs.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
-            {pricing.map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.4 }}
-                className={`rounded-[var(--radius)] border bg-card p-6 ${
-                  plan.highlighted ? 'border-foreground' : 'border-[hsl(var(--border))]'
-                }`}
-              >
-                {plan.highlighted && (
-                  <span className="mb-4 inline-block rounded-full bg-foreground px-3 py-1 text-xs text-background">
-                    Most Popular
-                  </span>
-                )}
-                <h3 className="font-display text-xl mb-1">{plan.name}</h3>
-                <p className="text-sm text-muted-foreground mb-6">{plan.description}</p>
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  className="w-full"
-                  variant={plan.highlighted ? 'default' : 'outline'}
-                  onClick={handleContactClick}
-                >
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="border-t border-[hsl(var(--rule))] py-16 sm:py-20 bg-foreground text-background">
-        <div className="container-premium text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6"
-          >
-            <h2 className="font-display text-3xl sm:text-4xl tracking-tight">Ready to Start Your Project?</h2>
-            <p className="text-muted max-w-2xl mx-auto">Let&apos;s discuss how I can help bring your ideas to life.</p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-background/20 text-background hover:bg-background/10 text-white"
-                onClick={handleContactClick}
-              >
-                <Mail className="mr-2 h-4 w-4 " />
-                Send a Message
-              </Button>
-              <Button
-                size="lg"
-                className="bg-background text-foreground hover:bg-background/90"
-                onClick={handleBookingClick}
-              >
-                <Calendar className="mr-2 h-4 w-4" />
-                Schedule a Call
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </div>
+    </>
   );
 }

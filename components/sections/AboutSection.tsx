@@ -1,171 +1,53 @@
-'use client';
-
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { MapPin, Briefcase, Code } from 'lucide-react';
-
-interface Experience {
-  title: string;
-  company: string;
-  location: string;
-  period: string;
-  description: string[];
-  type: 'work' | 'education';
-}
-
-const experiences: Experience[] = [
-  {
-    title: 'Frontend Developer',
-    company: 'Unixdev Co., Ltd.',
-    location: 'Bangkok, Thailand',
-    period: 'Feb 2025 - Present',
-    description: [
-      'Developing web applications using React and TypeScript',
-      'Implementing responsive designs and UI/UX best practices',
-      'Optimizing application performance and load times',
-      'Collaborating with cross-functional teams',
-    ],
-    type: 'work',
-  },
-  {
-    title: 'Junior Full Stack Software Developer',
-    company: 'Turfmapp',
-    location: 'Bangkok, Thailand',
-    period: 'Jan 2024 - Jan 2025',
-    description: [
-      'Built web applications using React, Node.js, and Django',
-      'Managed backend databases with MongoDB and PostgreSQL',
-      'Deployed applications on DigitalOcean with Cloudflare',
-      'Integrated AI technologies including LLM and RAG systems',
-    ],
-    type: 'work',
-  },
-  {
-    title: "Bachelor's Degree in Biological Sciences",
-    company: 'Mahidol University',
-    location: 'Bangkok, Thailand',
-    period: '2015 - 2018',
-    description: [
-      'Bachelor’s degree in Biological Sciences',
-      'Relevant coursework: Data Analysis, Research Methodologies',
-      'Participated in research projects and internships',
-    ],
-    type: 'education',
-  },
-];
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
+import { SectionHeading } from '@/components/ui/section-heading'
+import { formatTimelinePeriod, getTimelineSorted } from '@/lib/data/timeline-data'
 
 export default function AboutSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const timeline = getTimelineSorted()
 
   return (
-    <section ref={ref} className="section-padding">
+    <section className="section-padding">
       <div className="container-premium">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-          className="mb-16"
-        >
-          <p className="section-label mb-3">About</p>
-          <h2 className="font-display text-3xl sm:text-4xl tracking-tight">
-            A bit about me
-          </h2>
-        </motion.div>
+        <SectionHeading index="03" label="About" title="From biology lab to product teams" />
 
-        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
-          {/* Bio Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-            className="lg:col-span-2"
-          >
-            <p className="text-muted-foreground leading-relaxed mb-6">
-              I'm a software developer at Unixdev Co., Ltd. with expertise in
-              frontend development (React, Next.js, TypeScript), backend (Go, Fiber,
-              Node.js), and mobile (Flutter). I build clean, scalable applications
-              that solve real-world problems.
+        <div className="grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-20">
+          <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
+            <p>
+              I studied Biological Sciences at Mahidol University, then moved
+              into software through an intensive bootcamp in 2023. The habit of
+              testing assumptions carried over.
             </p>
-
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Based in Bangkok, Thailand. Always eager to learn new technologies
-              and take on challenging projects.
+            <p>
+              Today I build product interfaces with React, Next.js and
+              TypeScript, and work across Go APIs and Flutter apps when the
+              product calls for it.
             </p>
-
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <MapPin className="h-4 w-4 shrink-0" />
-                <span>Bangkok, Thailand</span>
-              </div>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <Briefcase className="h-4 w-4 shrink-0" />
-                <span>Software Developer at Unixdev</span>
-              </div>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <Code className="h-4 w-4 shrink-0" />
-                <span>3+ years of professional experience</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Timeline Column */}
-          <div className="lg:col-span-3">
-            <h3 className="text-sm font-medium mb-8 pb-3 border-b border-[hsl(var(--rule))]">
-              Experience & Education
-            </h3>
-
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[hsl(var(--border))]" />
-
-              <div className="space-y-8">
-                {experiences.map((experience, index) => (
-                  <motion.div
-                    key={`${experience.title}-${experience.company}`}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                    transition={{
-                      delay: index * 0.12,
-                      duration: 0.5,
-                      ease: [0.23, 1, 0.32, 1],
-                    }}
-                    className="relative pl-10"
-                  >
-                    {/* Dot */}
-                    <div className="absolute left-[7px] top-2 timeline-dot" />
-
-                    <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-card p-5">
-                      <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
-                        <div>
-                          <h4 className="font-display text-base">
-                            {experience.title}
-                          </h4>
-                          <p className="text-sm text-[hsl(var(--accent))]">
-                            {experience.company}
-                          </p>
-                        </div>
-                        <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
-                          {experience.period}
-                        </span>
-                      </div>
-                      <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-                        {experience.description.map((item) => (
-                          <li key={item} className="flex items-start gap-2">
-                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <Link
+              href="/about"
+              className="ed-link inline-flex items-center gap-1 text-base text-foreground"
+            >
+              More about me
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </div>
+
+          <ol className="border-t border-[hsl(var(--rule))]">
+            {timeline.map((item) => (
+              <li
+                key={item.id}
+                className="grid gap-1 border-b border-[hsl(var(--rule))] py-5 sm:grid-cols-[11rem_1fr] sm:gap-6"
+              >
+                <span className="mono-tag pt-1">{formatTimelinePeriod(item)}</span>
+                <div>
+                  <p className="font-medium">{item.title}</p>
+                  <p className="text-sm text-muted-foreground">{item.organization}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>
-  );
+  )
 }

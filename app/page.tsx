@@ -41,24 +41,11 @@ export default async function HomePage() {
         url={baseUrl}
       />
 
-      {/* ========================================
-          DEVELOPER PORTFOLIO MAIN LAYOUT
-          ======================================== */}
-
-      {/* Hero Section - Terminal Animation, Typing Effect, Floating Tech Icons */}
       <DeveloperHero />
-
-      {/* Selected work */}
       <ProjectsSection projects={projects} />
-
-      {/* Skills Section - Progress Bars by Category */}
       <SkillsSection />
-
-      {/* About Section - Timeline with Experience */}
       <AboutSection />
-
-      {/* Contact Section - Form + Social Links */}
-      <ContactSection />
+      <ContactSection index="04" />
     </>
   )
 }

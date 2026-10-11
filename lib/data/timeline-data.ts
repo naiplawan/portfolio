@@ -96,3 +96,10 @@ export function getTimelineSorted(): TimelineItem[] {
     return dateB.getTime() - dateA.getTime();
   });
 }
+
+export function formatTimelinePeriod(item: Pick<TimelineItem, 'date' | 'endDate'>): string {
+  const format = (date: string) =>
+    new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', timeZone: 'UTC' });
+
+  return `${format(item.date)} – ${item.endDate ? format(item.endDate) : 'Present'}`;
+}

@@ -1,29 +1,35 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DarkModeToggle } from '@/components/ui/dark-mode-toggle';
-import Menu from '@/components/ui/icons/Menu';
-import { X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { PROFESSIONAL_INFO } from '@/lib/constants';
+import { PROFESSIONAL_INFO, SOCIAL_LINKS } from '@/lib/constants';
+
+const navItems = [
+  { label: 'Work', href: '/projects' },
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Contact', href: '/contact' },
+];
 
 function NavBar() {
-  const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const year = new Date().getFullYear();
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
 
-  const handleMenuTab = useCallback((e: KeyboardEvent) => {
+  const handleMenuKeys = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+      return;
+    }
     if (e.key !== 'Tab' || !menuRef.current) return;
 
-    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+    const focusable = menuRef.current.querySelectorAll<HTMLElement>('button, [href]');
     if (focusable.length === 0) return;
 
     const first = focusable[0];
@@ -38,263 +44,135 @@ function NavBar() {
     }
   }, []);
 
+  // Focus trap, scroll lock and inert page while the mobile menu is open
   useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleMenuTab);
-      const timer = setTimeout(() => {
-        const firstFocusable = menuRef.current?.querySelector<HTMLElement>('button, [href]');
-        firstFocusable?.focus();
-      }, 100);
-      return () => {
-        document.removeEventListener('keydown', handleMenuTab);
-        clearTimeout(timer);
-      };
-    } else {
-      document.removeEventListener('keydown', handleMenuTab);
-      menuButtonRef.current?.focus();
+    if (!isOpen) {
+      if (wasOpenRef.current) menuButtonRef.current?.focus();
+      wasOpenRef.current = false;
       return undefined;
     }
-  }, [isOpen, handleMenuTab]);
+    wasOpenRef.current = true;
 
-  useEffect(() => {
     const pageElements = [
       document.querySelector('main'),
       document.querySelector('footer'),
     ].filter(Boolean) as HTMLElement[];
     const previousBodyOverflow = document.body.style.overflow;
 
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      pageElements.forEach((element) => {
-        element.setAttribute('inert', '');
-        element.setAttribute('aria-hidden', 'true');
-      });
-    }
+    document.body.style.overflow = 'hidden';
+    pageElements.forEach((element) => element.setAttribute('inert', ''));
+    document.addEventListener('keydown', handleMenuKeys);
+    const timer = window.setTimeout(() => {
+      menuRef.current?.querySelector<HTMLElement>('[href]')?.focus();
+    }, 50);
 
     return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener('keydown', handleMenuKeys);
       document.body.style.overflow = previousBodyOverflow;
-      pageElements.forEach((element) => {
-        element.removeAttribute('inert');
-        element.removeAttribute('aria-hidden');
-      });
+      pageElements.forEach((element) => element.removeAttribute('inert'));
     };
-  }, [isOpen]);
+  }, [isOpen, handleMenuKeys]);
 
-  const navItems = [
-    { label: 'About', href: '/about' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Services', href: '/services' },
-    { label: 'Contact', href: '/contact' },
-  ];
-
-  const handleNavigation = (href: string) => {
-    setIsOpen(false);
-    if (pathname === href) return;
-    router.push(href);
-  };
-
-  const handleContactNavigation = () => {
-    if (window.location.pathname === '/') {
-      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      router.push('/#contact');
-    }
-  };
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isOpen]);
-
-  const isActiveRoute = (href: string) => pathname === href;
+  const isActiveRoute = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <>
-      <motion.nav
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-colors duration-200',
-          scrolled
-            ? 'bio-nav py-3'
-            : 'bg-transparent py-4'
-        )}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        role="navigation"
+      <nav
+        className="fixed inset-x-0 top-0 z-50 border-b border-[hsl(var(--rule))] bg-background/90 backdrop-blur-sm"
         aria-label="Main navigation"
       >
-        <div className="container-premium">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
+        <div className="container-premium flex h-14 items-center justify-between">
+          <Link
+            href="/"
+            className="text-sm font-medium tracking-tight text-foreground"
+            onClick={() => setIsOpen(false)}
+          >
+            {PROFESSIONAL_INFO.name}
+          </Link>
+
+          <div className="flex items-center gap-1 sm:gap-2">
+            <ul className="hidden items-center gap-6 md:flex">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                    className={cn(
+                      'text-sm transition-colors',
+                      isActiveRoute(item.href)
+                        ? 'text-foreground underline decoration-1 underline-offset-[6px]'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <span className="mx-2 hidden h-4 w-px bg-[hsl(var(--rule))] md:block" aria-hidden="true" />
+
+            <DarkModeToggle />
+
             <button
               type="button"
-              className="text-lg font-display tracking-tight text-foreground"
-              onClick={() => {
-                if (pathname !== '/') {
-                  router.push('/');
-                }
-              }}
-              aria-label="Go to homepage"
+              ref={menuButtonRef}
+              className="inline-flex h-9 items-center px-2 font-mono text-xs uppercase tracking-widest text-foreground md:hidden"
+              onClick={() => setIsOpen((open) => !open)}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
             >
-              {PROFESSIONAL_INFO.name.split(' ')[0]}
-              <span className="text-[hsl(var(--accent))]">.</span>
+              {isOpen ? 'Close' : 'Menu'}
             </button>
-
-            {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-1" role="menubar">
-              {navItems.map((item) => (
-                <button
-                  type="button"
-                  key={item.href}
-                  className={cn(
-                    'relative px-4 py-2 text-sm transition-colors',
-                    isActiveRoute(item.href)
-                      ? 'text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                  onClick={() => handleNavigation(item.href)}
-                  role="menuitem"
-                  aria-current={isActiveRoute(item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                  {isActiveRoute(item.href) && (
-                    <motion.div
-                      className="absolute bottom-0 left-4 right-4 h-px bg-foreground"
-                      layoutId="activeIndicator"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  handleContactNavigation();
-                }}
-                className="hidden md:inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm text-background transition-opacity hover:opacity-80"
-              >
-                Hire Me
-              </button>
-
-              <DarkModeToggle />
-
-              <button
-                type="button"
-                ref={menuButtonRef}
-                className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-foreground transition-colors hover:bg-muted"
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                aria-expanded={isOpen}
-                aria-controls="mobile-menu"
-              >
-                {isOpen ? <X className="h-5 w-5" /> : <Menu size={22} />}
-              </button>
-            </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <>
-            {/* Backdrop — no separate fade; a fast opacity on the same spring curve as the panel */}
-            <motion.div
-              className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
-              aria-hidden="true"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsOpen(false)}
-            />
-
-            <motion.div
-              ref={menuRef}
-              id="mobile-menu"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="mobile-menu-title"
-              className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[90vw] bg-background border-l border-[hsl(var(--border))] lg:hidden"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-            >
-              <div className="flex h-full flex-col p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <span id="mobile-menu-title" className="text-lg font-display">Menu</span>
-                  <button
+          <motion.div
+            ref={menuRef}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+            className="fixed inset-x-0 bottom-0 top-14 z-40 flex flex-col overflow-y-auto bg-background md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+          >
+            <ul className="container-premium flex-1 pt-6">
+              {navItems.map((item, index) => (
+                <li key={item.href} className="border-b border-[hsl(var(--rule))]">
+                  <Link
+                    href={item.href}
                     onClick={() => setIsOpen(false)}
-                    aria-label="Close menu"
-                    className="rounded-md p-2 transition-colors hover:bg-muted"
+                    aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                    className="flex items-baseline gap-4 py-5"
                   >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
+                    <span className="index-num">0{index + 1}</span>
+                    <span
+                      className={cn(
+                        'font-display text-4xl tracking-tight',
+                        isActiveRoute(item.href) && 'italic text-[hsl(var(--accent))]'
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
-                <nav className="flex-1" role="menu">
-                  <div className="space-y-1">
-                    {navItems.map((item, index) => (
-                      <motion.button
-                        type="button"
-                        key={item.href}
-                        initial={{ opacity: 0, x: 16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className={cn(
-                          'block w-full px-4 py-3 text-left text-base rounded-[var(--radius)] transition-colors',
-                          isActiveRoute(item.href)
-                            ? 'bg-muted text-foreground font-medium'
-                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                        )}
-                        onClick={() => handleNavigation(item.href)}
-                        role="menuitem"
-                        aria-current={isActiveRoute(item.href) ? 'page' : undefined}
-                      >
-                        {item.label}
-                      </motion.button>
-                    ))}
-                  </div>
-                </nav>
-
-                <div className="border-t border-[hsl(var(--border))] pt-6">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsOpen(false);
-                      handleContactNavigation();
-                    }}
-                    className="w-full rounded-full bg-foreground py-3 text-sm text-background transition-opacity hover:opacity-80"
-                  >
-                    Hire Me
-                  </button>
-                  <p className="mt-4 text-center text-xs text-muted-foreground">
-                    &copy; {year} {PROFESSIONAL_INFO.name}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </>
+            <div className="container-premium flex items-center justify-between py-6 text-sm text-muted-foreground">
+              <a href={`mailto:${SOCIAL_LINKS.email}`} className="ed-link">
+                {SOCIAL_LINKS.email}
+              </a>
+              <span>{PROFESSIONAL_INFO.location.split(',')[0]}</span>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

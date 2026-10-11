@@ -186,7 +186,7 @@ export function githubRepoToProject(
     completedYear,
     metrics: {
       users: repo.forks_count > 0 ? `${repo.forks_count} forks` : undefined,
-      performance: repo.stargazers_count > 0 ? `${repo.stargazers_count} stars` : undefined,
+      performance: repo.stargazers_count > 0 ? `${repo.stargazers_count} star${repo.stargazers_count === 1 ? '' : 's'}` : undefined,
       responseTime: repo.updated_at ? `Updated ${new Date(repo.updated_at).toLocaleDateString()}` : undefined,
     },
   };

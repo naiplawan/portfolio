@@ -1,58 +1,39 @@
-'use client';
+import { PROFESSIONAL_INFO, SOCIAL_LINKS } from '@/lib/constants';
 
-import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
+const links = [
+  { label: 'GitHub', href: SOCIAL_LINKS.github, external: true },
+  { label: 'LinkedIn', href: SOCIAL_LINKS.linkedin, external: true },
+  { label: 'Email', href: `mailto:${SOCIAL_LINKS.email}`, external: false },
+];
 
 function Footer() {
   const year = new Date().getFullYear();
 
-  const socialLinks = [
-    {
-      icon: <FaGithub className="h-4 w-4" />,
-      href: 'https://github.com/naiplawan',
-      label: 'GitHub',
-    },
-    {
-      icon: <FaLinkedin className="h-4 w-4" />,
-      href: 'https://linkedin.com/in/rachaphol-plookaom',
-      label: 'LinkedIn',
-    },
-    {
-      icon: <FaEnvelope className="h-4 w-4" />,
-      href: 'mailto:rachaphol.plo@gmail.com',
-      label: 'Email',
-    },
-  ];
-
   return (
     <footer className="border-t border-[hsl(var(--rule))]">
-      <div className="container-premium py-12">
-        <div className="flex flex-col items-center gap-6 text-center">
-          {/* Name */}
-          <span className="font-display text-lg">
-            Rachaphol<span className="text-[hsl(var(--accent))]">.</span>
-          </span>
+      <div className="container-premium flex flex-col gap-6 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          &copy; {year} {PROFESSIONAL_INFO.name}. Built in Bangkok.
+        </p>
 
-          {/* Social */}
-          <div className="flex items-center gap-4">
-            {socialLinks.map((social) => (
+        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          {links.map((link) => (
+            <li key={link.label}>
               <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                href={link.href}
+                {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+                className="transition-colors hover:text-foreground"
               >
-                {social.icon}
+                {link.label}
               </a>
-            ))}
-          </div>
-
-          {/* Copyright */}
-          <p className="text-xs text-muted-foreground">
-            &copy; {year} Rachaphol Plookaom. Built in Bangkok.
-          </p>
-        </div>
+            </li>
+          ))}
+          <li>
+            <a href="#main-content" className="transition-colors hover:text-foreground">
+              Back to top ↑
+            </a>
+          </li>
+        </ul>
       </div>
     </footer>
   );

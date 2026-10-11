@@ -1,10 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Home, RefreshCw, AlertTriangle, Mail } from 'lucide-react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -14,148 +10,45 @@ interface ErrorPageProps {
 }
 
 export default function Error({ error, reset }: ErrorPageProps) {
-  const router = useRouter();
-
-  const handleContactClick = useCallback(() => {
-    router.push(ROUTES.CONTACT);
-  }, [router]);
-
   useEffect(() => {
     console.error(error)
   }, [error])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 300,
-        damping: 24
-      }
-    }
-  }
-
-  const shakeVariants = {
-    shake: {
-      x: [-5, 5, -5, 5, 0],
-      transition: {
-        duration: 0.5,
-      }
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-destructive/5 flex items-center justify-center px-6">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="text-center max-w-2xl mx-auto"
-      >
-        <motion.div
-          variants={shakeVariants}
-          animate="shake"
-          className="mb-8"
+    <div className="container-premium section-padding">
+      <p className="section-label mb-6 border-t border-foreground pt-3">Something went wrong</p>
+      <h1 className="max-w-3xl font-display text-[clamp(2.5rem,7vw,5rem)] leading-none tracking-tight">
+        This page hit an unexpected error.
+      </h1>
+      <p className="mt-8 max-w-lg text-lg text-muted-foreground">
+        Try again — if it keeps happening, let me know what you were doing.
+      </p>
+
+      <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+        <button
+          type="button"
+          onClick={reset}
+          className="inline-flex h-11 items-center rounded-lg bg-foreground px-5 text-background transition-opacity hover:opacity-85"
         >
-          <div className="w-24 h-24 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <AlertTriangle className="w-12 h-12 text-destructive" />
-          </div>
-        </motion.div>
+          Try again
+        </button>
+        <Link href={ROUTES.HOME} className="ed-link">
+          Go home
+        </Link>
+        <Link href={ROUTES.CONTACT} className="ed-link">
+          Report the problem
+        </Link>
+      </div>
 
-        <motion.div variants={itemVariants} className="space-y-6">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-            Something went wrong
-          </h1>
-          
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            We encountered an unexpected error. This has been logged and our team 
-            will look into it. Please try again or contact support if the problem persists.
-          </p>
-        </motion.div>
-
-        <motion.div 
-          variants={itemVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8"
-        >
-          <Button 
-            onClick={reset}
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
-          </Button>
-          
-          <Button 
-            asChild
-            variant="outline" 
-            size="lg"
-            className="border-border text-muted-foreground px-8 py-3 rounded-lg font-medium hover:bg-accent transition-colors duration-200"
-          >
-            <Link href="/">
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Link>
-          </Button>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="mt-12">
-          <div className="bg-card rounded-lg p-8 shadow-sm border border-border">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Mail className="w-6 h-6 text-primary" />
-              </div>
-            </div>
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">
-              Need help?
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              If this error continues to occur, please reach out to us with details 
-              about what you were trying to do.
-            </p>
-            <div className="flex justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleContactClick}
-                className="text-primary hover:bg-primary/10"
-              >
-                Contact Support
-              </Button>
-            </div>
-            
-            {process.env.NODE_ENV === 'development' && error && (
-              <details className="mt-6 text-left">
-                <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
-                  Error Details (Development)
-                </summary>
-                <pre className="mt-2 p-4 bg-muted rounded-lg text-xs text-muted-foreground overflow-auto">
-                  {error.message}
-                  {error.stack && (
-                    <>
-                      {'\n\n'}
-                      {error.stack}
-                    </>
-                  )}
-                </pre>
-              </details>
-            )}
-          </div>
-        </motion.div>
-      </motion.div>
+      {process.env.NODE_ENV === 'development' && (
+        <details className="mt-12 max-w-3xl">
+          <summary className="section-label cursor-pointer">Error details (development)</summary>
+          <pre className="mt-3 overflow-auto rounded-lg bg-muted p-4 text-xs text-muted-foreground">
+            {error.message}
+            {error.stack && `\n\n${error.stack}`}
+          </pre>
+        </details>
+      )}
     </div>
   )
 }

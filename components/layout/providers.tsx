@@ -1,5 +1,6 @@
 'use client'
 
+import { MotionConfig } from 'framer-motion'
 import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
@@ -16,7 +17,7 @@ export function Providers({ children }: ProvidersProps) {
       storageKey="portfolio-theme"
       themes={['light', 'dark']}
     >
-      {children}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </ThemeProvider>
   )
 }

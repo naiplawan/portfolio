@@ -12,7 +12,6 @@ import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
-import { ScrollProgressComponents } from '@/components/ui/scroll-progress'
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -190,7 +189,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </ClientErrorBoundary>
           </main>
           <Footer />
-          <ScrollProgressComponents />
         </Providers>
       </body>
     </html>

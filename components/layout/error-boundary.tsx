@@ -1,9 +1,6 @@
 'use client';
 
 import { Component, ReactNode, ErrorInfo, ComponentType } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -73,81 +70,36 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 function DefaultErrorFallback({ error, reset }: { error?: Error; reset: () => void }) {
-  const handleGoHome = () => {
-    window.location.href = '/';
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <Card className="w-full max-w-md border-red-200 dark:border-red-800">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
-          </div>
-          <CardTitle className="text-red-800 dark:text-red-200">Oops! Something went wrong</CardTitle>
-          <CardDescription>
-            {error?.message || 'An unexpected error occurred while rendering this page.'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button
-            onClick={reset}
-            className="w-full"
-            variant="default"
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Try Again
-          </Button>
-          <Button
-            onClick={handleGoHome}
-            className="w-full"
-            variant="outline"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Go Home
-          </Button>
-          {process.env.NODE_ENV === 'development' && error && (
-            <details className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md text-xs">
-              <summary className="cursor-pointer text-red-800 dark:text-red-200 font-medium">
-                Error Details (Development)
-              </summary>
-              <pre className="mt-2 text-red-700 dark:text-red-300 whitespace-pre-wrap">
-                {error.stack}
-              </pre>
-            </details>
-          )}
-        </CardContent>
-      </Card>
+    <div className="container-premium section-padding">
+      <p className="section-label mb-6 border-t border-foreground pt-3">Something went wrong</p>
+      <h1 className="max-w-3xl font-display text-[clamp(2.5rem,7vw,5rem)] leading-none tracking-tight">
+        This page hit an unexpected error.
+      </h1>
+      <p className="mt-8 max-w-lg text-lg text-muted-foreground">
+        {error?.message || 'An unexpected error occurred while rendering this page.'}
+      </p>
+      <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+        <button
+          type="button"
+          onClick={reset}
+          className="inline-flex h-11 items-center rounded-lg bg-foreground px-5 text-background transition-opacity hover:opacity-85"
+        >
+          Try again
+        </button>
+        <a href="/" className="ed-link">
+          Go home
+        </a>
+      </div>
+      {process.env.NODE_ENV === 'development' && error && (
+        <details className="mt-12 max-w-3xl">
+          <summary className="section-label cursor-pointer">Error details (development)</summary>
+          <pre className="mt-3 overflow-auto whitespace-pre-wrap rounded-lg bg-muted p-4 text-xs text-muted-foreground">
+            {error.stack}
+          </pre>
+        </details>
+      )}
     </div>
-  );
-}
-
-// Simplified error boundary for specific sections
-export interface SectionErrorBoundaryProps {
-  children: ReactNode;
-  sectionName: string;
-}
-
-export function SectionErrorBoundary({ children, sectionName }: SectionErrorBoundaryProps) {
-  return (
-    <ErrorBoundary
-      fallback={
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
-          <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
-            {sectionName} Unavailable
-          </h3>
-          <p className="text-red-600 dark:text-red-400 text-sm">
-            This section encountered an error and couldn't load. Please refresh the page or try again later.
-          </p>
-        </div>
-      }
-      onError={(error, errorInfo) => {
-        console.error(`Error in ${sectionName}:`, error, errorInfo);
-      }}
-    >
-      {children}
-    </ErrorBoundary>
   );
 }
 

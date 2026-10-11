@@ -5,15 +5,22 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
-import { motion } from 'framer-motion';
 import { contactFormLimiter, formatTimeRemaining } from '@/lib/utils/rate-limit';
 import { trackContactFormSubmit } from '@/components/analytics';
-import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { SOCIAL_LINKS } from '@/lib/constants';
 
 const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
 const EMAILJS_CONFIG_READY = Boolean(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
+
+const directChannels = [
+  { label: 'Email', value: SOCIAL_LINKS.email, href: `mailto:${SOCIAL_LINKS.email}` },
+  { label: 'Phone', value: '+66 91 069 6072', href: 'tel:+66910696072' },
+  { label: 'Location', value: 'Bangkok, Thailand', href: undefined },
+] as const;
 
 const sanitizeInput = (input: string): string => {
   return input
@@ -130,190 +137,149 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20">
-      <div className="container-premium section-padding">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <p className="section-label mb-3">Contact</p>
-          <h1 className="font-display text-4xl sm:text-5xl tracking-tight">Get in Touch</h1>
-          <p className="mt-4 max-w-lg text-muted-foreground">
-            Have a project in mind? Send me a message or reach out directly.
-          </p>
-        </motion.div>
+    <div className="container-premium section-padding">
+      <SectionHeading as="h1" label="Contact" title="Tell me what you're building">
+        Who it&apos;s for, where you&apos;re stuck, and when you need it. I usually
+        reply within 24 hours.
+      </SectionHeading>
 
-        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
-          {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="lg:col-span-3"
-          >
-            {!configReady && (
-              <div className="mb-6 rounded-[var(--radius)] border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-                Contact form is not configured. Please reach out directly at{' '}
-                <a className="underline" href="mailto:rachaphol.plo@gmail.com">
-                  rachaphol.plo@gmail.com
-                </a>.
-              </div>
-            )}
+      <div className="grid gap-16 lg:grid-cols-[3fr_2fr] lg:gap-20">
+        <div>
+          {!configReady && (
+            <p role="status" className="mb-8 border-l-2 border-destructive pl-4 text-sm text-destructive">
+              The contact form isn&apos;t configured. Please email{' '}
+              <a className="ed-link" href={`mailto:${SOCIAL_LINKS.email}`}>
+                {SOCIAL_LINKS.email}
+              </a>{' '}
+              directly.
+            </p>
+          )}
 
-            {status === 'success' && (
-              <div className="mb-6 flex items-center gap-2 rounded-[var(--radius)] border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-600 dark:text-green-400">
-                <CheckCircle className="h-4 w-4" />
-                Message sent successfully! Thank you for reaching out.
-              </div>
-            )}
+          {status === 'success' && (
+            <p role="status" className="mb-8 flex items-center gap-2 border-l-2 border-success pl-4 text-sm text-success">
+              <CheckCircle className="h-4 w-4" />
+              Message sent. Thank you for reaching out.
+            </p>
+          )}
 
-            {status === 'error' && (
-              <div className="mb-6 rounded-[var(--radius)] border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-                Failed to send message. Please try again or contact me directly.
-              </div>
-            )}
+          {status === 'error' && (
+            <p role="alert" className="mb-8 border-l-2 border-destructive pl-4 text-sm text-destructive">
+              The message couldn&apos;t be sent. Please try again or email me directly.
+            </p>
+          )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <input
-                type="text"
-                name="bot-field"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                style={{ display: 'none' }}
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-              />
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <input
+              type="text"
+              name="bot-field"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              style={{ display: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
 
-              <div className="grid sm:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm">Name</label>
-                  <Input
-                    id="name"
-                    name="senderName"
-                    type="text"
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
-                    maxLength={100}
-                    placeholder="Your name"
-                    className={errors.name ? 'border-destructive' : ''}
-                    disabled={isLoading}
-                  />
-                  {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm">Email</label>
-                  <Input
-                    id="email"
-                    name="senderEmail"
-                    type="email"
-                    value={senderEmail}
-                    onChange={(e) => setSenderEmail(e.target.value)}
-                    maxLength={500}
-                    placeholder="you@example.com"
-                    className={errors.email ? 'border-destructive' : ''}
-                    disabled={isLoading}
-                  />
-                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
-                </div>
+            <div className="grid gap-8 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label htmlFor="name" className="section-label">Name</label>
+                <Input
+                  id="name"
+                  name="senderName"
+                  type="text"
+                  autoComplete="name"
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
+                  maxLength={100}
+                  placeholder="Your name"
+                  aria-invalid={Boolean(errors.name)}
+                  aria-describedby={errors.name ? 'name-error' : undefined}
+                  className={`h-12 text-base ${errors.name ? 'border-destructive' : ''}`}
+                  disabled={isLoading}
+                />
+                {errors.name && <p id="name-error" className="text-sm text-destructive">{errors.name}</p>}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="message" className="text-sm">Message</label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  placeholder="Tell me about your project..."
-                  maxLength={5000}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className={`min-h-[150px] resize-none ${errors.message ? 'border-destructive' : ''}`}
+                <label htmlFor="email" className="section-label">Email</label>
+                <Input
+                  id="email"
+                  name="senderEmail"
+                  type="email"
+                  autoComplete="email"
+                  value={senderEmail}
+                  onChange={(e) => setSenderEmail(e.target.value)}
+                  maxLength={500}
+                  placeholder="you@example.com"
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  className={`h-12 text-base ${errors.email ? 'border-destructive' : ''}`}
                   disabled={isLoading}
                 />
-                {errors.message && <p className="text-xs text-destructive">{errors.message}</p>}
-                <p className="text-xs text-muted-foreground">{message.length}/5000 characters</p>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading || !configReady}
-                className="w-full sm:w-auto min-w-[160px]"
-              >
-                {isLoading ? (
-                  <>
-                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </form>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="lg:col-span-2 space-y-4"
-          >
-            <a
-              href="mailto:rachaphol.plo@gmail.com"
-              className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Email</p>
-                <p className="text-sm font-medium">rachaphol.plo@gmail.com</p>
-              </div>
-            </a>
-
-            <a
-              href="tel:+66910696072"
-              className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4 transition-colors hover:border-[hsl(var(--muted-foreground)/0.3)]"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                <Phone className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Phone</p>
-                <p className="text-sm font-medium">+66 91 069 6072</p>
-              </div>
-            </a>
-
-            <div className="flex items-center gap-4 rounded-[var(--radius)] border border-[hsl(var(--border))] p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                <MapPin className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Location</p>
-                <p className="text-sm font-medium">Bangkok, Thailand</p>
+                {errors.email && <p id="email-error" className="text-sm text-destructive">{errors.email}</p>}
               </div>
             </div>
 
-            <div className="rounded-[var(--radius)] border border-[hsl(var(--border))] bg-muted/50 p-4">
-              <div className="flex items-center gap-2.5">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-                </span>
-                <span className="text-sm font-medium">Available for work</span>
+            <div className="space-y-2">
+              <div className="flex items-baseline justify-between">
+                <label htmlFor="message" className="section-label">Message</label>
+                <span className="mono-tag">{message.length}/5000</span>
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Open to freelance projects and full-time opportunities.
-              </p>
+              <Textarea
+                id="message"
+                name="message"
+                placeholder="Tell me about your project…"
+                maxLength={5000}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                aria-invalid={Boolean(errors.message)}
+                aria-describedby={errors.message ? 'message-error' : undefined}
+                className={`min-h-[180px] resize-y text-base ${errors.message ? 'border-destructive' : ''}`}
+                disabled={isLoading}
+              />
+              {errors.message && <p id="message-error" className="text-sm text-destructive">{errors.message}</p>}
             </div>
-          </motion.div>
+
+            <Button
+              type="submit"
+              size="lg"
+              disabled={isLoading || !configReady}
+              className="w-full sm:w-auto"
+            >
+              {isLoading ? (
+                <>
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  Sending…
+                </>
+              ) : (
+                <>
+                  Send message
+                  <Send className="ml-2 h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </form>
         </div>
+
+        <aside>
+          <dl className="border-t border-[hsl(var(--rule))]">
+            {directChannels.map(({ label, value, href }) => (
+              <div key={label} className="border-b border-[hsl(var(--rule))] py-5">
+                <dt className="section-label mb-1">{label}</dt>
+                <dd className="text-lg">
+                  {href ? (
+                    <a href={href} className="ed-link break-all">{value}</a>
+                  ) : (
+                    value
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Open to freelance projects and full-time opportunities.
+          </p>
+        </aside>
       </div>
     </div>
   );
