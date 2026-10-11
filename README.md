@@ -2,7 +2,7 @@
 
 Personal portfolio of a frontend developer in Bangkok, built with Next.js 16, React 19, TypeScript, and Tailwind CSS 3.4.
 
-Live: https://rachaphol-portfolio.vercel.app
+Live: https://rachaphol.vercel.app
 
 ![Home page](audit-screenshots/home-light.png)
 

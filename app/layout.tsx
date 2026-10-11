@@ -12,6 +12,7 @@ import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { KonamiCode } from '@/components/motion/KonamiCode'
+import { SITE_URL } from '@/lib/constants'
 import { Geist, Inter, JetBrains_Mono, Silkscreen } from 'next/font/google'
 
 const geist = Geist({
@@ -48,7 +49,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 
 export const metadata = {
-  metadataBase: new URL('https://rachaphol-portfolio.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Rachaphol Plookaom — Frontend Developer',
     template: '%s | Rachaphol Plookaom'
@@ -69,7 +70,7 @@ export const metadata = {
     'portfolio',
     'hire developer'
   ],
-  authors: [{ name: 'Rachaphol Plookaom', url: 'https://rachaphol-portfolio.vercel.app' }],
+  authors: [{ name: 'Rachaphol Plookaom', url: SITE_URL }],
   creator: 'Rachaphol Plookaom',
   publisher: 'Rachaphol Plookaom',
   formatDetection: {
@@ -80,7 +81,7 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://rachaphol-portfolio.vercel.app',
+    url: SITE_URL,
     title: 'Rachaphol Plookaom — Frontend Developer',
     description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
     siteName: 'Rachaphol Portfolio',
@@ -163,7 +164,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 "@type": "Organization",
                 "name": "Unixdev Co., Ltd."
               },
-              "url": "https://rachaphol-portfolio.vercel.app",
+              "url": SITE_URL,
               "sameAs": [
                 "https://github.com/naiplawan",
                 "https://www.linkedin.com/in/rachaphol-plookaom"

@@ -17,7 +17,7 @@ export const PROFESSIONAL_INFO = {
 } as const;
 
 // Site URLs
-export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app';
+export const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol.vercel.app';
 
 // Resume Path
 export const RESUME_PATH = '/Rachaphol_Resume.pdf';

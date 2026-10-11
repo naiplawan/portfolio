@@ -7,10 +7,11 @@ import SkillsSection from '@/components/sections/SkillsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 import { getProjects } from '@/lib/data/projects-data'
+import { SITE_URL } from '@/lib/constants'
 
 
 export default async function HomePage() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app'
+  const baseUrl = SITE_URL
   const projects = await getProjects()
 
   return (

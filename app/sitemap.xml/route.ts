@@ -1,5 +1,7 @@
+import { SITE_URL } from '@/lib/constants';
+
 export function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app';
+  const baseUrl = SITE_URL;
 
   const pages = [
     {

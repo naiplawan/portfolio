@@ -1,9 +1,11 @@
+import { SITE_URL } from '@/lib/constants';
+
 export function GET() {
   const robotsContent = `User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: ${process.env.NEXT_PUBLIC_APP_URL || 'https://rachaphol-portfolio.vercel.app'}/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap.xml
 
 # Crawl-delay for bots
 Crawl-delay: 1
