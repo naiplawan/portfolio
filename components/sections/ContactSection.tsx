@@ -14,8 +14,10 @@ export default function ContactSection({ index }: { index?: string }) {
     <section id="contact" className="section-padding scroll-mt-20 bg-foreground text-background">
       <div className="container-premium">
         <div className="mb-10 flex items-baseline gap-4 border-t border-background pt-3">
-          {index && <span className="index-num text-background">{index}</span>}
-          <span className="section-label text-background/70">Contact</span>
+          {index && <span className="pixel-label text-background">[{index}]</span>}
+          <span className="font-mono text-xs text-background/70">
+            <span className="text-[hsl(var(--accent))]">// </span>contact
+          </span>
         </div>
 
         <h2 className="max-w-4xl text-balance font-display text-[clamp(2.5rem,7vw,5rem)] leading-[1] tracking-tight">
@@ -24,7 +26,7 @@ export default function ContactSection({ index }: { index?: string }) {
 
         <a
           href={`mailto:${SOCIAL_LINKS.email}`}
-          className="mt-10 inline-block break-all font-display text-[clamp(1.5rem,5vw,3rem)] italic underline decoration-1 underline-offset-[0.2em] transition-colors hover:text-[hsl(var(--accent))]"
+          className="mt-10 inline-block break-all font-mono text-[clamp(1.25rem,4vw,2.5rem)] underline decoration-1 underline-offset-[0.2em] transition-colors hover:text-[hsl(var(--accent))]"
         >
           {SOCIAL_LINKS.email}
         </a>

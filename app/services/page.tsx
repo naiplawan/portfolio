@@ -208,7 +208,7 @@ export default function ServicesPage() {
         <ol className="grid border-t border-[hsl(var(--rule))] sm:grid-cols-2 lg:grid-cols-4">
           {process.map((item) => (
             <li key={item.step} className="border-b border-[hsl(var(--rule))] py-6 sm:pr-8 lg:border-b-0">
-              <span className="font-display text-4xl italic text-[hsl(var(--accent))]">{item.step}</span>
+              <span className="font-pixel text-3xl text-[hsl(var(--accent))]">{item.step}</span>
               <h3 className="mt-3 font-medium">{item.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
             </li>

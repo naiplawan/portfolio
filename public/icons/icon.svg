@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges" role="img" aria-labelledby="title">
   <title>Rachaphol portfolio icon</title>
-  <rect width="512" height="512" rx="112" fill="#0a0a0f"/>
-  <circle cx="384" cy="128" r="56" fill="#f4c95d"/>
-  <path d="M128 352V160h96c52 0 88 32 88 80 0 30-15 55-39 68l55 84h-65l-46-73h-33v73h-56zm56-121h38c20 0 33-12 33-30s-13-30-33-30h-38v60z" fill="#fafafa"/>
+  <rect width="16" height="16" fill="#141210"/>
+  <!-- pixel cell dividing into code braces -->
+  <path fill="#3fbf6a" d="M3 3h2v1H3zM2 4h1v3H2zM1 7h1v2H1zM2 9h1v3H2zM3 12h2v1H3zM11 3h2v1h-2zM13 4h1v3h-1zM14 7h1v2h-1zM13 9h1v3h-1zM11 12h2v1h-2z"/>
+  <path fill="#3fbf6a" d="M6 6h4v4H6z"/>
+  <path fill="#e9e5dc" d="M7 7h2v2H7z"/>
 </svg>

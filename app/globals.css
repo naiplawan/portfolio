@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Editorial: warm paper, ink, one vermilion accent */
+    /* Lab notebook: warm paper, ink, one chlorophyll-green accent */
     --background: 40 23% 97%;
     --foreground: 30 10% 9%;
 
@@ -23,7 +23,7 @@
     --muted: 38 14% 92%;
     --muted-foreground: 30 6% 38%;
 
-    --accent: 11 76% 45%;
+    --accent: 142 64% 28%;
     --accent-foreground: 40 23% 97%;
 
     --destructive: 0 70% 42%;
@@ -38,6 +38,11 @@
     --radius: 0.25rem;
 
     --rule: 35 12% 85%;
+
+    /* Pixel-art sprite colors (see components/pixel) */
+    --pixel-skin: 27 50% 72%;
+    --pixel-hair: 25 20% 18%;
+    --pixel-coat: 0 0% 100%;
 
   }
 
@@ -60,7 +65,7 @@
     --muted: 30 5% 13%;
     --muted-foreground: 35 6% 63%;
 
-    --accent: 14 85% 62%;
+    --accent: 142 55% 55%;
     --accent-foreground: 30 6% 7%;
 
     --destructive: 0 70% 60%;
@@ -74,6 +79,10 @@
     --ring: 40 15% 91%;
 
     --rule: 30 5% 18%;
+
+    --pixel-skin: 27 40% 66%;
+    --pixel-hair: 25 12% 32%;
+    --pixel-coat: 35 6% 56%;
 
   }
 
@@ -95,9 +104,9 @@
 
   h1, h2, h3, h4, h5, h6 {
     text-rendering: optimizeLegibility;
-    font-family: var(--font-display), "Instrument Serif", Georgia, serif;
-    letter-spacing: -0.03em;
-    font-weight: 400;
+    font-family: var(--font-display), "Geist", system-ui, sans-serif;
+    letter-spacing: -0.04em;
+    font-weight: 600;
   }
 
   *:focus-visible {
@@ -134,6 +143,28 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+@keyframes pixel-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Sprite palette: one class per pixel character (components/pixel/sprites.ts).
+   Outside @layer so Tailwind keeps the dynamically built `px-${char}` classes. */
+.px-o { fill: hsl(var(--foreground)); }
+.px-h { fill: hsl(var(--pixel-hair)); }
+.px-s { fill: hsl(var(--pixel-skin)); }
+.px-c { fill: hsl(var(--pixel-coat)); }
+.px-g { fill: hsl(var(--accent)); }
+.px-p { fill: hsl(var(--accent) / 0.18); }
+.px-l { fill: hsl(var(--muted-foreground)); }
+.px-m { fill: hsl(var(--rule)); }
+
+/* Decorative art hidden until GSAP sets its first frame (html.motion-ok is set in <head>) */
+.motion-ok [data-motion-pending] {
+  visibility: hidden;
 }
 
 :root {
@@ -195,6 +226,12 @@
     color: hsl(var(--muted-foreground));
   }
 
+  /* Code-comment kicker prefix, e.g. "// 01 — work" */
+  .code-comment::before {
+    content: '// ';
+    color: hsl(var(--accent));
+  }
+
   /* Backs the `premium` Button and Input variants */
   .bio-button {
     background: hsl(var(--primary));
@@ -222,7 +259,47 @@
   }
 
   .font-display {
-    font-family: var(--font-display), "Instrument Serif", Georgia, serif;
+    font-family: var(--font-display), "Geist", system-ui, sans-serif;
+  }
+
+  .font-pixel {
+    font-family: var(--font-pixel), "Silkscreen", monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* Pixel-font kicker for short labels and buttons (never body copy) */
+  .pixel-label {
+    font-family: var(--font-pixel), "Silkscreen", monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Stepped 2px border with clipped corners, like an 8-bit UI frame */
+  .pixel-border {
+    border: 2px solid currentColor;
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+  }
+
+  /* Chunky block cursor; blinks in hard steps */
+  .pixel-cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    margin-left: 0.15em;
+    vertical-align: -0.12em;
+    background: hsl(var(--accent));
+    animation: pixel-blink 1s steps(1, end) infinite;
+  }
+
+  .pixelated {
+    image-rendering: pixelated;
+    shape-rendering: crispEdges;
   }
 
   .font-body {
