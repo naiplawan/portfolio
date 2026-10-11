@@ -76,20 +76,11 @@ export const metadata = {
     title: 'Rachaphol Plookaom — Frontend Developer',
     description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
     siteName: 'Rachaphol Portfolio',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Rachaphol Plookaom frontend developer portfolio',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Rachaphol Plookaom — Frontend Developer',
     description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products.',
-    images: ['/og-image.jpg'],
     creator: '@rachaphol'
   },
   robots: {
