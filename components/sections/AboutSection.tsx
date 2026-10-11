@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { LevelMap } from '@/components/motion/LevelMap'
+import { RevealRows } from '@/components/motion/RevealRows'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { cn } from '@/lib/utils/cn'
 import { formatTimelinePeriod, getTimelineSorted } from '@/lib/data/timeline-data'
@@ -40,35 +41,37 @@ export default function AboutSection() {
               <span className="text-[hsl(var(--accent))]">$</span> git log --graph career
             </p>
             <LevelMap>
-              <ol>
-                {timeline.map((item, index) => {
-                  const isHead = index === 0
-                  return (
-                    <li key={item.id} className="relative grid grid-cols-[2.25rem_1fr] py-5">
-                      <span
-                        className={cn(
-                          'relative z-0 ml-[6px] mt-1.5 h-[10px] w-[10px] border-2 border-[hsl(var(--accent))]',
-                          isHead ? 'bg-[hsl(var(--accent))]' : 'bg-background'
-                        )}
-                        aria-hidden="true"
-                      />
-                      <div className="border-b border-[hsl(var(--rule))] pb-5">
-                        <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
-                          <span>
-                            <span className="text-[hsl(var(--accent))]">{item.commit.hash}</span>
-                            {isHead && <span> (HEAD -&gt; main)</span>}
-                          </span>
-                          <span className="pixel-label">world {item.commit.world}</span>
-                        </p>
-                        <p className="mt-1.5 font-mono text-sm text-foreground">{item.commit.message}</p>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {item.title}, {item.organization} · {formatTimelinePeriod(item)}
-                        </p>
-                      </div>
-                    </li>
-                  )
-                })}
-              </ol>
+              <RevealRows rows="li">
+                <ol>
+                  {timeline.map((item, index) => {
+                    const isHead = index === 0
+                    return (
+                      <li key={item.id} className="relative grid grid-cols-[2.25rem_1fr] py-5">
+                        <span
+                          className={cn(
+                            'relative z-0 ml-[6px] mt-1.5 h-[10px] w-[10px] border-2 border-[hsl(var(--accent))]',
+                            isHead ? 'bg-[hsl(var(--accent))]' : 'bg-background'
+                          )}
+                          aria-hidden="true"
+                        />
+                        <div className="border-b border-[hsl(var(--rule))] pb-5">
+                          <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
+                            <span>
+                              <span className="text-[hsl(var(--accent))]">{item.commit.hash}</span>
+                              {isHead && <span> (HEAD -&gt; main)</span>}
+                            </span>
+                            <span className="pixel-label">world {item.commit.world}</span>
+                          </p>
+                          <p className="mt-1.5 font-mono text-sm text-foreground">{item.commit.message}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {item.title}, {item.organization} · {formatTimelinePeriod(item)}
+                          </p>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </RevealRows>
             </LevelMap>
           </div>
         </div>

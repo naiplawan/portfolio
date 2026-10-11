@@ -139,7 +139,9 @@ export function Component({ prop }: ComponentProps) {
 - **Default state = final state.** The server render is the finished frame (bars full, text visible, sprite standing). Animate *from* other states; never hide content until JS runs
 - Decorative art that must not flash its final frame gets `data-motion-pending`; it stays hidden only while `html.motion-ok` is set (inline `<head>` script) and GSAP reveals it with `autoAlpha`
 - Use `stepped(n)` / `steps()` easing for the 8-bit feel; CSS transitions can use `[transition-timing-function:steps(2)]`
-- Current assets: `MitosisHero`, `DecodeText` (section labels), `XpFill`, `LevelMap` (walker), `DnaDivider`, `SpecimenScene` (404), `KonamiCode`
+- Current assets: `MitosisHero` (intro, idle, eye tracking, parallax, replay), `DecodeText` (section labels), `XpFill`, `RevealRows` (stepped scanline wipe for list rows), `LevelMap` (walker), `DnaDivider`, `AmbientCells` (margin cells, ≥1360px), `SpecimenScene` (404), `KonamiCode`
+- Above-the-fold text animates with CSS only (`animate-pixel-in`, `animate-type-line` with inline `steps(<chars>)`), so it renders and animates without JS; the reduced-motion rule zeroes durations and delays
+- Pressable buttons get `active:translate-y-px`; hover sprites use `group-hover:animate-pixel-wiggle`
 - A global CSS rule also neutralises CSS animations under `prefers-reduced-motion`
 
 ## Development Commands

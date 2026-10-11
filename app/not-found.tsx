@@ -25,7 +25,7 @@ export default function NotFound() {
           </p>
           <Link
             href="/"
-            className="mt-8 inline-flex h-11 items-center rounded-lg bg-foreground px-5 text-background transition-opacity hover:opacity-85"
+            className="mt-8 inline-flex h-11 items-center rounded-lg bg-foreground px-5 text-background transition-[opacity,transform] hover:opacity-85 active:translate-y-px"
           >
             <span className="pixel-label">▶ Press start to go home</span>
           </Link>

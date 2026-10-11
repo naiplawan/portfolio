@@ -1,4 +1,5 @@
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data'
+import { AmbientCells } from '@/components/motion/AmbientCells'
 import { DnaDivider } from '@/components/motion/DnaDivider'
 import DeveloperHero from '@/components/sections/DeveloperHero'
 import ProjectsSection from '@/components/sections/ProjectsSection'
@@ -42,6 +43,7 @@ export default async function HomePage() {
         url={baseUrl}
       />
 
+      <AmbientCells />
       <DeveloperHero />
       <ProjectsSection projects={projects} />
       <DnaDivider />

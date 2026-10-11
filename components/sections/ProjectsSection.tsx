@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import { RevealRows } from '@/components/motion/RevealRows'
 import { PixelSprite } from '@/components/pixel/PixelSprite'
 import { ICONS, type IconName } from '@/components/pixel/sprites'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -36,7 +37,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
     <li className="group grid grid-cols-[2.75rem_1fr] gap-x-4 border-b border-[hsl(var(--rule))] py-8 sm:grid-cols-[4.5rem_1fr_auto] sm:gap-x-8 sm:py-10">
       <div className="flex flex-col items-start gap-3 pt-1">
         <span className="pixel-border inline-flex p-1.5 text-[hsl(var(--rule))] transition-[color,transform] duration-200 [transition-timing-function:steps(2)] group-hover:-translate-y-1 group-hover:text-[hsl(var(--accent))]">
-          <PixelSprite sprite={ICONS[CATEGORY_ICON[project.category]]} className="h-6 w-6 sm:h-8 sm:w-8" />
+          <PixelSprite sprite={ICONS[CATEGORY_ICON[project.category]]} className="h-6 w-6 group-hover:animate-pixel-wiggle sm:h-8 sm:w-8" />
         </span>
         <span className="pixel-label text-muted-foreground">exp-{String(index + 1).padStart(2, '0')}</span>
       </div>
@@ -119,11 +120,13 @@ export function ProjectList({ projects }: { projects: readonly Project[] }) {
   }
 
   return (
-    <ol className="border-t border-[hsl(var(--rule))]">
-      {projects.map((project, index) => (
-        <ProjectRow key={project.id} project={project} index={index} />
-      ))}
-    </ol>
+    <RevealRows rows="li">
+      <ol className="border-t border-[hsl(var(--rule))]">
+        {projects.map((project, index) => (
+          <ProjectRow key={project.id} project={project} index={index} />
+        ))}
+      </ol>
+    </RevealRows>
   )
 }
 

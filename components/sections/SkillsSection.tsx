@@ -1,3 +1,4 @@
+import { RevealRows } from '@/components/motion/RevealRows'
 import { XpFill } from '@/components/motion/XpFill'
 import { SectionHeading } from '@/components/ui/section-heading'
 
@@ -98,30 +99,32 @@ export default function SkillsSection() {
           ))}
         </dl>
 
-        <XpFill className="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-4">
-          {kingdoms.map(({ kingdom, skills }) => (
-            <section key={kingdom} className="border-t border-foreground pb-8 pt-3">
-              <h3 className="mb-4 flex items-baseline justify-between gap-3">
-                <span className="mono-tag">kingdom</span>
-                <span className="font-display text-xl font-semibold tracking-tight">{kingdom}</span>
-              </h3>
-              <ul className="space-y-3">
-                {skills.map(({ name, level }) => (
-                  <li key={name}>
-                    <div className="mb-1 flex items-baseline justify-between gap-3">
-                      <span className="text-base">{name}</span>
-                      <span className="pixel-label text-muted-foreground">
-                        lv.{level}
-                        <span className="sr-only"> of {MAX_LEVEL}</span>
-                      </span>
-                    </div>
-                    <XpBar level={level} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </XpFill>
+        <RevealRows rows=".kingdom">
+          <XpFill className="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-4">
+            {kingdoms.map(({ kingdom, skills }) => (
+              <section key={kingdom} className="kingdom border-t border-foreground pb-8 pt-3">
+                <h3 className="mb-4 flex items-baseline justify-between gap-3">
+                  <span className="mono-tag">kingdom</span>
+                  <span className="font-display text-xl font-semibold tracking-tight">{kingdom}</span>
+                </h3>
+                <ul className="space-y-3">
+                  {skills.map(({ name, level }) => (
+                    <li key={name}>
+                      <div className="mb-1 flex items-baseline justify-between gap-3">
+                        <span className="text-base">{name}</span>
+                        <span className="pixel-label text-muted-foreground">
+                          lv.{level}
+                          <span className="sr-only"> of {MAX_LEVEL}</span>
+                        </span>
+                      </div>
+                      <XpBar level={level} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </XpFill>
+        </RevealRows>
       </div>
     </section>
   )

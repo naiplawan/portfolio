@@ -64,9 +64,27 @@ export default {
           from: { opacity: 0, transform: 'translateY(12px)' },
           to: { opacity: 1, transform: 'translateY(0)' },
         },
+        // Hero words drop in a few pixels at a time
+        'pixel-in': {
+          from: { opacity: 0, transform: 'translateY(0.25em)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        // Terminal line printing left to right; pair with steps(<chars>)
+        'type-line': {
+          from: { clipPath: 'inset(0 100% 0 0)' },
+          to: { clipPath: 'inset(0 0 0 0)' },
+        },
+        'pixel-wiggle': {
+          '0%, 100%': { transform: 'translate(0, 0)' },
+          '25%': { transform: 'translate(-1px, -2px)' },
+          '75%': { transform: 'translate(1px, -2px)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'pixel-in': 'pixel-in 360ms steps(3, end) both',
+        'type-line': 'type-line 600ms both',
+        'pixel-wiggle': 'pixel-wiggle 400ms steps(1, end) 2',
       },
     },
   },
