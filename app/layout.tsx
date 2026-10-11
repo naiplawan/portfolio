@@ -12,6 +12,7 @@ import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { KonamiCode } from '@/components/motion/KonamiCode'
+import { SiteStructuredData } from '@/components/seo/structured-data'
 import { SITE_URL } from '@/lib/constants'
 import { Geist, Inter, JetBrains_Mono, Silkscreen } from 'next/font/google'
 
@@ -152,40 +153,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             `,
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              "name": "Rachaphol Plookaom",
-              "jobTitle": "Frontend Developer",
-              "worksFor": {
-                "@type": "Organization",
-                "name": "Unixdev Co., Ltd."
-              },
-              "url": SITE_URL,
-              "sameAs": [
-                "https://github.com/naiplawan",
-                "https://www.linkedin.com/in/rachaphol-plookaom"
-              ],
-              "knowsAbout": [
-                "React.js", "Next.js", "TypeScript", "Go", "Flutter",
-                "Performance Optimization", "Web Development", "Biological Sciences"
-              ],
-              "alumniOf": {
-                "@type": "CollegeOrUniversity",
-                "name": "Mahidol University"
-              },
-              "email": "rachaphol.plo@gmail.com",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Bangkok",
-                "addressCountry": "Thailand"
-              }
-            })
-          }}
-        />
+        <SiteStructuredData />
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen font-body overflow-x-hidden max-w-full">
         <SkipLink />

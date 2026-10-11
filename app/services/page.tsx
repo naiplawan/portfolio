@@ -1,7 +1,16 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  title: 'Services',
+  description:
+    'Freelance product engineering by Rachaphol Plookaom: Next.js and React frontends, Go Fiber APIs and Flutter mobile apps, from first prototype to production handoff.',
+  path: '/services',
+});
 
 const services = [
   {
@@ -160,6 +169,7 @@ const process = [
 export default function ServicesPage() {
   return (
     <>
+      <BreadcrumbStructuredData name="Services" path="/services" />
       <section className="container-premium pt-[clamp(4rem,10vw,8rem)]">
         <SectionHeading as="h1" label="Services" title="Product engineering across web, mobile and API">
           I build healthcare platforms, mobile apps and real-time features —

@@ -21,6 +21,7 @@ const project = (name: string, extra: Partial<Project> = {}): Project => ({
 describe('applyProjectOverrides', () => {
   it('adds the Vercel URL and description to a repo without a homepage', () => {
     const [result] = applyProjectOverrides([project('rob-ban')]);
+    expect(result.title).toBe('Rob Baan');
     expect(result.liveUrl).toBe('https://rob-baan.vercel.app');
     expect(result.description).toMatch(/wildlife dex/);
     expect(result.problemStatement).toBe(result.description);

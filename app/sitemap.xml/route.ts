@@ -11,6 +11,12 @@ export function GET() {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/projects`,
+      lastModified: new Date(),
+      changeFreq: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFreq: 'monthly',

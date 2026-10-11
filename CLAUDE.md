@@ -128,6 +128,14 @@ export function Component({ prop }: ComponentProps) {
 - Success/error states use `success` and `destructive` color tokens
 - `?subject=` query param prefills the message (used by Booking and Services links)
 
+### SEO, AEO and GEO
+- Site URL comes from `SITE_URL` (`lib/constants.ts`, `NEXT_PUBLIC_APP_URL` or `https://rachaphol.vercel.app`); never hardcode a domain
+- Every page exports `metadata = pageMetadata({ title, description, path })` from `lib/seo.ts` (canonical + OG + Twitter). Client pages put it in a sibling `layout.tsx` (see `app/contact`)
+- JSON-LD lives in `components/seo/structured-data.tsx`: one Person/WebSite graph in the root layout (stable `@id`s in `SCHEMA_IDS`), plus ProfilePage + FAQPage on home, ItemList on `/projects`, BreadcrumbList on subpages. Never add a second Person
+- FAQ answers (`lib/data/faq-data.ts`) are written in the third person, self-contained, and reused verbatim for the visible section, FAQPage and `llms.txt`
+- `/llms.txt` is generated from site data; `robots.txt` explicitly allows search and AI crawlers and blocks only `/api/`; add new pages to `app/sitemap.xml/route.ts`
+- Project names/descriptions/live URLs that GitHub gets wrong go in `PROJECT_OVERRIDES` (`lib/data/projects-data.ts`)
+
 ### Dark Mode
 - Toggle component: `components/ui/dark-mode-toggle.tsx`
 - Uses CSS custom properties for seamless switching

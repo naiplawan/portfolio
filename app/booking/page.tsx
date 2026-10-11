@@ -1,7 +1,16 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
+import { pageMetadata } from '@/lib/seo';
+
+export const metadata = pageMetadata({
+  title: 'Book a call',
+  description:
+    'Book a 15 to 60 minute call with Rachaphol Plookaom to discuss a project, a collaboration or a technical review. Replies usually within 24 hours.',
+  path: '/booking',
+});
 
 const timeSlots = [
   { time: '15 minutes', type: 'Quick chat', description: 'Brief introduction or question' },
@@ -29,6 +38,7 @@ const meetingRequestHref = (subject: string) =>
 export default function BookingPage() {
   return (
     <div className="container-premium section-padding">
+      <BreadcrumbStructuredData name="Book a call" path="/booking" />
       <SectionHeading as="h1" label="Booking" title="Schedule a call">
         Pick a length that fits, send a short request, and I&apos;ll confirm a
         time that works across our timezones. I usually reply within 24 hours.

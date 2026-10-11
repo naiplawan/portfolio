@@ -28,6 +28,8 @@ const FALLBACK_PROJECTS: readonly Project[] = [
 ] as const;
 
 interface ProjectOverride {
+  /** Product name when it differs from the repo name */
+  readonly title?: string;
   readonly description?: string;
   /** Production URL from Vercel; `null` removes a stale GitHub homepage */
   readonly liveUrl?: string | null;
@@ -39,11 +41,13 @@ interface ProjectOverride {
  */
 const PROJECT_OVERRIDES: Readonly<Record<string, ProjectOverride>> = {
   'layer-3d': {
+    title: 'Layer 3D',
     description:
       'Website for Layer, a Bangkok 3D-printing service: prototypes, finished parts and small production runs, quoted over LINE in about 10 minutes.',
     liveUrl: 'https://layer-3d.vercel.app',
   },
   'rob-ban': {
+    title: 'Rob Baan',
     description:
       "Rob Baan (รอบบ้าน): a wildlife dex for Bangkok's public parks. Spot the animals and plants around you and collect them like a field guide.",
     liveUrl: 'https://rob-baan.vercel.app',
@@ -65,6 +69,7 @@ export function applyProjectOverrides(projects: readonly Project[]): Project[] {
     const { liveUrl, ...rest } = project;
     return {
       ...rest,
+      ...(override.title && { title: override.title }),
       ...(override.description && {
         description: override.description,
         problemStatement: override.description,
