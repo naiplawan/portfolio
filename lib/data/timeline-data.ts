@@ -10,6 +10,12 @@ export interface TimelineItem {
   highlights?: string[];
   technologies?: string[];
   icon?: string;
+  /** How the entry reads in the home page's `git log` / level map */
+  commit: {
+    hash: string;
+    message: string;
+    world: string;
+  };
 }
 
 export const timelineData: TimelineItem[] = [
@@ -28,7 +34,8 @@ export const timelineData: TimelineItem[] = [
       'Facilitate cross-functional collaboration between design, development, and product management teams',
       'Drive continuous technological innovation by researching and integrating emerging web technologies'
     ],
-    technologies: ['React.js 19', 'Next.js 15', 'Tailwind CSS', 'Flutter', 'TypeScript']
+    technologies: ['React.js 19', 'Next.js 15', 'Tailwind CSS', 'Flutter', 'TypeScript'],
+    commit: { hash: 'f3e91c2', message: 'feat: frontend developer @ unixdev', world: '3-1' }
   },
   {
     id: 'work-2',
@@ -46,7 +53,8 @@ export const timelineData: TimelineItem[] = [
       'Integrated AI technologies including LLM and RAG systems to improve functionality',
       'Utilized Postman for comprehensive API testing and documentation'
     ],
-    technologies: ['React.js', 'Node.js', 'Express.js', 'Django', 'MongoDB', 'PostgreSQL', 'DigitalOcean', 'Cloudflare', 'LLM', 'RAG']
+    technologies: ['React.js', 'Node.js', 'Express.js', 'Django', 'MongoDB', 'PostgreSQL', 'DigitalOcean', 'Cloudflare', 'LLM', 'RAG'],
+    commit: { hash: '9b2d7a4', message: 'feat: full stack developer @ turfmapp', world: '2-2' }
   },
 
 
@@ -65,7 +73,8 @@ export const timelineData: TimelineItem[] = [
       'MongoDB and PostgreSQL database management',
       'Software testing methodologies',
       'Hands-on project-based learning'
-    ]
+    ],
+    commit: { hash: '4c18e0b', message: 'checkout -b software (techup bootcamp)', world: '2-1' }
   },
   {
     id: 'edu-1',
@@ -80,7 +89,8 @@ export const timelineData: TimelineItem[] = [
       'Biology/Biological Sciences program',
       'Strong analytical and problem-solving skills',
       'Scientific research methodology'
-    ]
+    ],
+    commit: { hash: '0000001', message: 'initial commit: b.sc. biological sciences', world: '1-1' }
   },
 ];
 

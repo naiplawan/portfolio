@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import { SpecimenScene } from '@/components/motion/SpecimenScene';
 
 const links = [
-  { label: 'Home', href: '/' },
   { label: 'Work', href: '/projects' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
@@ -10,22 +10,38 @@ const links = [
 export default function NotFound() {
   return (
     <div className="container-premium section-padding">
-      <p className="section-label mb-6 border-t border-foreground pt-3">Error 404</p>
-      <h1 className="font-display text-[clamp(4rem,18vw,12rem)] italic leading-none tracking-tight">
-        Not found.
-      </h1>
-      <p className="mt-8 max-w-lg text-lg text-muted-foreground">
-        This page doesn&apos;t exist, or it moved. Try one of these instead:
+      <p className="mb-6 flex items-baseline gap-4 border-t border-foreground pt-3">
+        <span className="pixel-label">[404]</span>
+        <span className="code-comment font-mono text-xs text-muted-foreground">error</span>
       </p>
-      <ul className="mt-6 flex flex-wrap gap-x-8 gap-y-3 text-lg">
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className="ed-link">
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      <div className="grid gap-10 md:grid-cols-[1fr_minmax(0,24rem)] md:items-center">
+        <div>
+          <h1 className="font-display text-[clamp(3rem,10vw,7rem)] font-semibold leading-none tracking-tight">
+            Specimen not found.
+          </h1>
+          <p className="mt-8 max-w-lg text-lg text-muted-foreground">
+            This page doesn&apos;t exist, or it migrated. We checked every slide.
+          </p>
+          <Link
+            href="/"
+            className="mt-8 inline-flex h-11 items-center rounded-lg bg-foreground px-5 text-background transition-opacity hover:opacity-85"
+          >
+            <span className="pixel-label">▶ Press start to go home</span>
+          </Link>
+          <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="ed-link">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <SpecimenScene className="pixelated w-full" />
+      </div>
     </div>
   );
 }

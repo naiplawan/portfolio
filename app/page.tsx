@@ -1,4 +1,5 @@
 import { PersonStructuredData, WebsiteStructuredData } from '@/components/seo/structured-data'
+import { DnaDivider } from '@/components/motion/DnaDivider'
 import DeveloperHero from '@/components/sections/DeveloperHero'
 import ProjectsSection from '@/components/sections/ProjectsSection'
 import SkillsSection from '@/components/sections/SkillsSection'
@@ -32,18 +33,20 @@ export default async function HomePage() {
           'Django',
           'Performance Optimization',
         ]}
-        description="Frontend Developer at Unixdev Co., Ltd. specializing in innovative user experiences, performance optimization, and modern web/mobile technologies. Full-stack capabilities with Go and Flutter."
+        description="Biologist turned Frontend Developer at Unixdev Co., Ltd. B.Sc. Biological Sciences (Mahidol University), now building web and mobile products with React, Next.js, TypeScript, Go and Flutter."
       />
 
       <WebsiteStructuredData
         name="Rachaphol Plookaom - Portfolio"
-        description="Frontend Developer at Unixdev Co., Ltd. specializing in innovative user experiences, performance optimization, and modern web/mobile technologies. Full-stack capabilities with Go and Flutter."
+        description="Biologist turned Frontend Developer at Unixdev Co., Ltd. B.Sc. Biological Sciences (Mahidol University), now building web and mobile products with React, Next.js, TypeScript, Go and Flutter."
         url={baseUrl}
       />
 
       <DeveloperHero />
       <ProjectsSection projects={projects} />
+      <DnaDivider />
       <SkillsSection />
+      <DnaDivider />
       <AboutSection />
       <ContactSection index="04" />
     </>

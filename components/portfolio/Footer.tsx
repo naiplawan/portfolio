@@ -12,9 +12,14 @@ function Footer() {
   return (
     <footer className="border-t border-[hsl(var(--rule))]">
       <div className="container-premium flex flex-col gap-6 py-10 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          &copy; {year} {PROFESSIONAL_INFO.name}. Built in Bangkok.
-        </p>
+        <div className="space-y-1">
+          <p>
+            &copy; {year} {PROFESSIONAL_INFO.name}. Built in Bangkok.
+          </p>
+          <p className="font-mono text-xs">
+            <span className="text-[hsl(var(--accent))]">●</span> uptime since 2023 · formerly in the lab
+          </p>
+        </div>
 
         <ul className="flex flex-wrap gap-x-6 gap-y-2">
           {links.map((link) => (

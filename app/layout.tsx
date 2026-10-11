@@ -11,15 +11,23 @@ import { SkipLink } from '@/components/accessibility/skip-link'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
-import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
+import { KonamiCode } from '@/components/motion/KonamiCode'
+import { Geist, Inter, JetBrains_Mono, Silkscreen } from 'next/font/google'
 
-const instrumentSerif = Instrument_Serif({
+const geist = Geist({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
   preload: true,
+  weight: ['500', '600'],
+})
+
+const silkscreen = Silkscreen({
+  subsets: ['latin'],
+  variable: '--font-pixel',
+  display: 'swap',
+  preload: true,
   weight: ['400'],
-  style: ['normal', 'italic'],
 })
 
 const inter = Inter({
@@ -45,7 +53,7 @@ export const metadata = {
     default: 'Rachaphol Plookaom — Frontend Developer',
     template: '%s | Rachaphol Plookaom'
   },
-  description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
+  description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
   keywords: [
     'frontend developer',
     'React developer',
@@ -74,13 +82,13 @@ export const metadata = {
     locale: 'en_US',
     url: 'https://rachaphol-portfolio.vercel.app',
     title: 'Rachaphol Plookaom — Frontend Developer',
-    description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
+    description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
     siteName: 'Rachaphol Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Rachaphol Plookaom — Frontend Developer',
-    description: 'Frontend Developer in Bangkok building fast, accessible web and mobile products.',
+    description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products.',
     creator: '@rachaphol'
   },
   robots: {
@@ -111,11 +119,16 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${inter.variable} ${jetbrainsMono.variable} ${silkscreen.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              // Let GSAP assets hide their first frame until hydration (see .motion-ok in globals.css)
+              if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+                document.documentElement.classList.add('motion-ok');
+              }
+
               // Prevent flash of wrong theme
               (function() {
                 const themeKey = 'portfolio-theme';
@@ -157,8 +170,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
               ],
               "knowsAbout": [
                 "React.js", "Next.js", "TypeScript", "Go", "Flutter",
-                "Performance Optimization", "Web Development"
+                "Performance Optimization", "Web Development", "Biological Sciences"
               ],
+              "alumniOf": {
+                "@type": "CollegeOrUniversity",
+                "name": "Mahidol University"
+              },
               "email": "rachaphol.plo@gmail.com",
               "address": {
                 "@type": "PostalAddress",
@@ -180,6 +197,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </ClientErrorBoundary>
           </main>
           <Footer />
+          <KonamiCode />
         </Providers>
       </body>
     </html>
