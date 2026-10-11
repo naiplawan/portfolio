@@ -8,7 +8,7 @@ import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 import FaqSection from '@/components/sections/FaqSection'
 import { getProjects } from '@/lib/data/projects-data'
-import { PERSON_SUMMARY } from '@/lib/seo'
+import { OG_IMAGE, PERSON_SUMMARY } from '@/lib/seo'
 import type { Metadata } from 'next'
 
 const HOME_TITLE = 'Rachaphol Plookaom — Biologist turned Frontend Developer'
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
   description: PERSON_SUMMARY,
   alternates: { canonical: '/' },
-  openGraph: { title: HOME_TITLE, description: PERSON_SUMMARY, url: '/', type: 'profile' },
-  twitter: { card: 'summary_large_image', title: HOME_TITLE, description: PERSON_SUMMARY },
+  openGraph: { title: HOME_TITLE, description: PERSON_SUMMARY, url: '/', type: 'profile', images: [OG_IMAGE] },
+  twitter: { card: 'summary_large_image', title: HOME_TITLE, description: PERSON_SUMMARY, images: [OG_IMAGE] },
 }
 
 export default async function HomePage() {

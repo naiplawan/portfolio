@@ -31,6 +31,9 @@ export const KNOWS_ABOUT = [
   'Biological Sciences',
 ];
 
+/** Page-level `openGraph` replaces the layout's, so each page names the shared card image. */
+export const OG_IMAGE = '/opengraph-image';
+
 export const SAME_AS = [SOCIAL_LINKS.github, SOCIAL_LINKS.linkedin, SOCIAL_LINKS.facebook];
 
 interface PageMetadataInput {
@@ -47,8 +50,8 @@ export function pageMetadata({ title, description, path }: PageMetadataInput): M
     title,
     description,
     alternates: { canonical: path },
-    openGraph: { title: fullTitle, description, url: path, type: 'website' },
-    twitter: { card: 'summary_large_image', title: fullTitle, description },
+    openGraph: { title: fullTitle, description, url: path, type: 'website', images: [OG_IMAGE] },
+    twitter: { card: 'summary_large_image', title: fullTitle, description, images: [OG_IMAGE] },
   };
 }
 
