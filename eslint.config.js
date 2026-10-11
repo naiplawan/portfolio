@@ -25,7 +25,7 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true, allowExportNames: ['metadata'] }],
       'no-unused-vars': 'off',
       'no-undef': 'off',
     },
@@ -42,7 +42,7 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true, allowExportNames: ['metadata'] }],
       'no-unused-vars': 'warn',
       'no-undef': 'warn',
     },

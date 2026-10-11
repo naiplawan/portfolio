@@ -31,4 +31,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, varia
 });
 Input.displayName = 'Input';
 
-export { Input, inputVariants };
+export { Input };
