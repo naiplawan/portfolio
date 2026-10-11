@@ -27,6 +27,55 @@ const FALLBACK_PROJECTS: readonly Project[] = [
   },
 ] as const;
 
+interface ProjectOverride {
+  readonly description?: string;
+  /** Production URL from Vercel; `null` removes a stale GitHub homepage */
+  readonly liveUrl?: string | null;
+}
+
+/**
+ * Corrections on top of GitHub repo metadata, keyed by repo name (lowercase).
+ * Live URLs come from the Vercel project list (`vercel project ls`), checked 2026-10-11.
+ */
+const PROJECT_OVERRIDES: Readonly<Record<string, ProjectOverride>> = {
+  'layer-3d': {
+    description:
+      'Website for Layer, a Bangkok 3D-printing service: prototypes, finished parts and small production runs, quoted over LINE in about 10 minutes.',
+    liveUrl: 'https://layer-3d.vercel.app',
+  },
+  'rob-ban': {
+    description:
+      "Rob Baan (รอบบ้าน): a wildlife dex for Bangkok's public parks. Spot the animals and plants around you and collect them like a field guide.",
+    liveUrl: 'https://rob-baan.vercel.app',
+  },
+  // No longer deployed: the GitHub homepages point at dead URLs
+  'kiddugorn-backend': { liveUrl: null },
+  'to-do-list-next-js': { liveUrl: null },
+  'tourist-attraction-webpage': { liveUrl: null },
+};
+
+const repoName = (githubUrl: string) => githubUrl.replace(/\/+$/, '').split('/').pop()?.toLowerCase() ?? '';
+
+/** Applies {@link PROJECT_OVERRIDES} to projects built from GitHub data. */
+export function applyProjectOverrides(projects: readonly Project[]): Project[] {
+  return projects.map((project) => {
+    const override = PROJECT_OVERRIDES[repoName(project.githubUrl)];
+    if (!override) return project;
+
+    const { liveUrl, ...rest } = project;
+    return {
+      ...rest,
+      ...(override.description && {
+        description: override.description,
+        problemStatement: override.description,
+      }),
+      ...(override.liveUrl === null
+        ? {}
+        : { liveUrl: override.liveUrl ?? liveUrl }),
+    };
+  });
+}
+
 // Projects cache
 let cachedProjects: readonly Project[] | null = null;
 let cacheTimestamp = 0;
@@ -50,9 +99,9 @@ export async function getProjects(): Promise<readonly Project[]> {
     });
 
     if (githubProjects.length > 0) {
-      cachedProjects = githubProjects;
+      cachedProjects = applyProjectOverrides(githubProjects);
       cacheTimestamp = Date.now();
-      return githubProjects;
+      return cachedProjects;
     }
   } catch (error) {
     console.warn('GitHub API fetch failed, using fallback projects:', error);
