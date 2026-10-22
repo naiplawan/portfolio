@@ -19,6 +19,8 @@ function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const desktopLinksRef = useRef<HTMLUListElement>(null);
   const wasOpenRef = useRef(false);
 
   const handleMenuKeys = useCallback((e: KeyboardEvent) => {
@@ -46,13 +48,20 @@ function NavBar() {
   // Focus trap, scroll lock and inert page while the mobile menu is open
   useEffect(() => {
     if (!isOpen) {
-      if (wasOpenRef.current) menuButtonRef.current?.focus();
+      if (wasOpenRef.current) {
+        const target = window.matchMedia('(min-width: 768px)').matches
+          ? desktopLinksRef.current?.querySelector<HTMLElement>('[aria-current="page"]')
+            ?? desktopLinksRef.current?.querySelector<HTMLElement>('a')
+          : menuButtonRef.current;
+        target?.focus();
+      }
       wasOpenRef.current = false;
       return undefined;
     }
     wasOpenRef.current = true;
 
     const pageElements = [
+      navRef.current,
       document.querySelector('main'),
       document.querySelector('footer'),
     ].filter(Boolean) as HTMLElement[];
@@ -61,13 +70,19 @@ function NavBar() {
     document.body.style.overflow = 'hidden';
     pageElements.forEach((element) => element.setAttribute('inert', ''));
     document.addEventListener('keydown', handleMenuKeys);
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const closeOnDesktop = () => {
+      if (desktop.matches) setIsOpen(false);
+    };
+    desktop.addEventListener('change', closeOnDesktop);
     const timer = window.setTimeout(() => {
-      menuRef.current?.querySelector<HTMLElement>('[href]')?.focus();
+      menuRef.current?.querySelector<HTMLElement>('button, [href]')?.focus();
     }, 50);
 
     return () => {
       window.clearTimeout(timer);
       document.removeEventListener('keydown', handleMenuKeys);
+      desktop.removeEventListener('change', closeOnDesktop);
       document.body.style.overflow = previousBodyOverflow;
       pageElements.forEach((element) => element.removeAttribute('inert'));
     };
@@ -78,6 +93,7 @@ function NavBar() {
   return (
     <>
       <nav
+        ref={navRef}
         className="fixed inset-x-0 top-0 z-50 border-b border-[hsl(var(--rule))] bg-background/90 backdrop-blur-sm"
         aria-label="Main navigation"
       >
@@ -92,7 +108,7 @@ function NavBar() {
           </Link>
 
           <div className="flex items-center gap-1 sm:gap-2">
-            <ul className="hidden items-center gap-6 md:flex">
+            <ul ref={desktopLinksRef} className="hidden items-center gap-6 md:flex">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -123,7 +139,7 @@ function NavBar() {
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
             >
-              {isOpen ? 'Close' : 'Menu'}
+              Menu
             </button>
           </div>
         </div>
@@ -136,8 +152,18 @@ function NavBar() {
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
-          className="fixed inset-x-0 bottom-0 top-14 z-40 flex flex-col overflow-y-auto bg-background duration-150 animate-in fade-in md:hidden"
+          className="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-background duration-150 animate-in fade-in md:hidden"
         >
+          <div className="container-premium flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--rule))]">
+            <span className="pixel-label text-muted-foreground">Navigation</span>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="inline-flex h-11 items-center px-2 font-mono text-xs uppercase tracking-widest active:translate-y-px"
+            >
+              Close
+            </button>
+          </div>
           <ul className="container-premium flex-1 pt-6">
             {navItems.map((item, index) => (
               <li key={item.href} className="border-b border-[hsl(var(--rule))]">

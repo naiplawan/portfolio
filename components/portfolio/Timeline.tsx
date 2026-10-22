@@ -13,7 +13,8 @@ export default function Timeline() {
           {timelineItems.map((item) => (
             <li
               key={item.id}
-              className="grid gap-4 border-b border-[hsl(var(--rule))] py-8 md:grid-cols-[14rem_1fr] md:gap-10 md:py-10"
+              id={item.id}
+              className="grid scroll-mt-20 gap-4 border-b border-[hsl(var(--rule))] py-8 md:grid-cols-[14rem_1fr] md:gap-10 md:py-10"
             >
               <div className="space-y-1">
                 <p className="mono-tag">{formatTimelinePeriod(item)}</p>

@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Download } from 'lucide-react'
 import { MitosisHero } from '@/components/motion/MitosisHero'
-import { PROFESSIONAL_INFO } from '@/lib/constants'
+import { PROFESSIONAL_INFO, RESUME_PATH } from '@/lib/constants'
 
 const config = [
   { key: 'role', value: `"${PROFESSIONAL_INFO.title} @ Unixdev"` },
@@ -57,10 +57,13 @@ export default function DeveloperHero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            I debug interfaces the way I used to run experiments: form a
-            hypothesis, change one variable, measure. Today that means React,
-            Next.js and TypeScript at {PROFESSIONAL_INFO.company}, with Go and
-            Flutter when a product needs them.
+            I build websites and product interfaces for small businesses and
+            product teams, using React, Next.js and TypeScript. Currently a{' '}
+            {PROFESSIONAL_INFO.title} at {PROFESSIONAL_INFO.company} in Bangkok.
+          </p>
+          <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">
+            My biology background shapes how I work: form a hypothesis, change
+            one variable, measure the result.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
@@ -75,6 +78,10 @@ export default function DeveloperHero() {
               Get in touch
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
+            <a href={RESUME_PATH} download className="ed-link inline-flex items-center gap-2">
+              Download résumé <span className="text-muted-foreground">(PDF)</span>
+              <Download className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
         </div>
 

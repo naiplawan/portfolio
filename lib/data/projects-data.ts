@@ -1,24 +1,26 @@
 import { Project } from '../types/types';
 import { fetchProjectsFromGitHub } from '../utils/github-sync';
+import { FEATURED_PROJECTS } from './featured-projects';
 
 // GitHub username from environment variable
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 
 // Curated projects used by the portfolio.
 const FALLBACK_PROJECTS: readonly Project[] = [
+  ...FEATURED_PROJECTS,
   {
     id: 9999,
     title: 'ByteTrack',
     description:
-      'A calorie tracking and wellness application designed to make daily food logging clear and approachable.',
+      'A bilingual calorie-tracking frontend demo with Thai food search, daily summaries and browser-local storage.',
     problemStatement:
       'People tracking their nutrition need a quick way to log food and understand their daily progress without navigating a complicated interface.',
     solution:
-      'Built a responsive Next.js application with clear daily summaries, PostgreSQL for persistent data, and Prisma for type-safe database access.',
+      'Built a responsive Next.js frontend with Thai/English interfaces, food search and a localStorage-backed demo data layer.',
     image: '/assets/byte-track.png',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'PostgreSQL'],
+    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'localStorage'],
     githubUrl: 'https://github.com/naiplawan/bytetrack',
-    liveUrl: 'https://calorie-diary.vercel.app/',
+    liveUrl: 'https://bytetrack-vert.vercel.app/',
     highlights: ['Intuitive UI', 'Real-time Tracking', 'Personalized Insights', 'Cross-platform'],
     category: 'wellness',
     status: 'live',
@@ -63,7 +65,13 @@ const repoName = (githubUrl: string) => githubUrl.replace(/\/+$/, '').split('/')
 /** Applies {@link PROJECT_OVERRIDES} to projects built from GitHub data. */
 export function applyProjectOverrides(projects: readonly Project[]): Project[] {
   return projects.map((project) => {
-    const override = PROJECT_OVERRIDES[repoName(project.githubUrl)];
+    const name = repoName(project.githubUrl);
+    const curated = FALLBACK_PROJECTS.find((entry) => repoName(entry.githubUrl) === name);
+    if (curated) {
+      const { liveUrl: _unverifiedUrl, ...repository } = project;
+      return { ...repository, ...curated };
+    }
+    const override = PROJECT_OVERRIDES[name];
     if (!override) return project;
 
     const { liveUrl, ...rest } = project;
@@ -129,8 +137,7 @@ export async function projects(): Promise<readonly Project[]> {
  * Get featured projects
  */
 export async function getFeaturedProjects(): Promise<readonly Project[]> {
-  const allProjects = await getProjects();
-  return allProjects.filter(project => project.featured);
+  return FEATURED_PROJECTS;
 }
 
 /**

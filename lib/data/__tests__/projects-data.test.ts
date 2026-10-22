@@ -42,7 +42,14 @@ describe('applyProjectOverrides', () => {
   });
 
   it('leaves other projects untouched', () => {
-    const original = project('perd-wai', { liveUrl: 'https://perd-wai.vercel.app' });
+    const original = project('unlisted-tool', { liveUrl: 'https://example.com' });
     expect(applyProjectOverrides([original])[0]).toBe(original);
+  });
+
+  it('does not carry an unverified homepage into a curated source-only project', () => {
+    const [result] = applyProjectOverrides([
+      project('cafe-nme', { liveUrl: 'https://stale.example.com' }),
+    ]);
+    expect(result).not.toHaveProperty('liveUrl');
   });
 });

@@ -25,7 +25,7 @@ export function AmbientCells() {
     () => {
       const mm = gsap.matchMedia()
 
-      mm.add(MOTION_OK, () => {
+      mm.add(`${MOTION_OK} and (min-width: 1360px)`, () => {
         gsap.utils.toArray<HTMLElement>('.ambient-cell', root.current).forEach((cell, i) => {
           gsap.to(cell, {
             y: gsap.utils.random(-28, 28, 4),

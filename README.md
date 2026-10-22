@@ -9,7 +9,9 @@ Live: https://rachaphol.vercel.app
 ## Features
 
 - **Minimal editorial design** — serif display type, hairline rules, one vermilion accent, light and dark themes
-- **Projects from GitHub** — public, non-fork repositories fetched at build time (revalidated hourly) with a curated fallback
+- **Selected case studies** — three handpicked projects with screenshots, contributions, design decisions and qualitative outcomes; the home page renders independently of GitHub
+- **Project archive from GitHub** — public, non-fork repositories fetched at build time (revalidated hourly) with curated corrections and a fallback
+- **Evidence-backed capabilities** — skills link to project examples and career responsibilities; the hero includes a résumé download
 - **Contact form** — EmailJS delivery with validation, a honeypot field, and client-side rate limiting
 - **Pages** — home, projects, about, services, booking, contact, plus 404 and error pages
 - **SEO** — metadata, JSON-LD structured data, generated sitemap, robots and manifest routes, and a generated Open Graph image
@@ -64,7 +66,7 @@ components/
   ui/                    Button, Input, Textarea, SectionHeading, theme toggle
   seo/ analytics/ layout/ accessibility/
 lib/
-  data/                  Project fallback data and career timeline
+  data/                  Featured case studies, project fallback data and career timeline
   github-api.ts          GitHub API client
   utils/                 GitHub sync, rate limiter, class merging
 audit-screenshots/       Current light/dark and mobile screenshots of every page
@@ -73,6 +75,8 @@ audit-screenshots/       Current light/dark and mobile screenshots of every page
 ## Design system
 
 Colors are HSL tokens in `app/globals.css` (`:root` and `.dark`) and are exposed to Tailwind through `tailwind.config.js`. Pages are built from a shared `SectionHeading` and ruled lists instead of cards. See [`CLAUDE.md`](CLAUDE.md) for the full conventions.
+
+Homepage case studies live in `lib/data/featured-projects.ts`. Their screenshots are stored in `public/assets/projects/`; source README and screenshot paths are recorded alongside the data. Keep results factual and qualitative unless measured evidence is available. Services link to the same case studies.
 
 ## Deployment
 

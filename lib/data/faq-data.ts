@@ -29,7 +29,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'What has Rachaphol Plookaom built?',
     answer:
-      'Public projects include Rob Baan, a wildlife dex for Bangkok parks; Perd Wai, a café launch simulator; ByteTrack, a calorie tracker; PayKit, a retail point-of-sale template; and Layer, a website for a Bangkok 3D-printing service. The full list is on the Projects page.',
+      'Selected projects include Perd Wai, a café launch simulator; Layer 3D, a website for a Bangkok 3D-printing studio; and Cafe’nMe, a café point-of-sale application with shop administration and LINE membership. Other public work includes Rob Baan, a wildlife dex, and ByteTrack, a calorie-tracking frontend demo. The full list is on the Projects page.',
   },
   {
     question: 'Is Rachaphol Plookaom available for freelance work?',

@@ -31,7 +31,7 @@ export async function GET() {
 - [Home](${SITE_URL}/): overview, selected projects, skills and career
 - [Projects](${SITE_URL}/projects): every public project with live demo and source links
 - [About](${SITE_URL}/about): background from biology to software, full timeline
-- [Services](${SITE_URL}/services): freelance frontend, backend and mobile work
+- [Services](${SITE_URL}/services): business websites, interactive web products and connected business tools
 - [Contact](${SITE_URL}/contact): contact form, email and phone
 
 ## Projects

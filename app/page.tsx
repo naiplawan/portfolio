@@ -7,7 +7,6 @@ import SkillsSection from '@/components/sections/SkillsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 import FaqSection from '@/components/sections/FaqSection'
-import { getProjects } from '@/lib/data/projects-data'
 import { OG_IMAGE, PERSON_SUMMARY } from '@/lib/seo'
 import type { Metadata } from 'next'
 
@@ -21,16 +20,14 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: HOME_TITLE, description: PERSON_SUMMARY, images: [OG_IMAGE] },
 }
 
-export default async function HomePage() {
-  const projects = await getProjects()
-
+export default function HomePage() {
   return (
     <>
       <ProfilePageStructuredData />
 
       <AmbientCells />
       <DeveloperHero />
-      <ProjectsSection projects={projects} />
+      <ProjectsSection />
       <DnaDivider />
       <SkillsSection />
       <DnaDivider />
