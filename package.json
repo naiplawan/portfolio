@@ -22,6 +22,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "content:schemas": "tsx scripts/content-json-schemas.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",

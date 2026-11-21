@@ -180,3 +180,20 @@ export const bookingSchema = z.object({
   topics: titled,
   preparation: titled,
 })
+
+/**
+ * Every single-file content document, keyed by its name in `content/<name>.json`
+ * and in the content API (`/api/content/<name>`). Projects are separate.
+ */
+export const CONTENT_DOCUMENTS = {
+  site: siteSchema,
+  seo: seoSchema,
+  faq: faqSchema,
+  home: homeSchema,
+  about: aboutSchema,
+  timeline: timelineSchema,
+  services: servicesSchema,
+  booking: bookingSchema,
+  'project-overrides': projectOverridesSchema,
+} as const
+export type ContentDocumentName = keyof typeof CONTENT_DOCUMENTS

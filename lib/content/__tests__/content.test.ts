@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest'
 import config from '@/keystatic.config'
 import { EMPLOYMENT } from '@/lib/constants'
 import { pageSeo } from '@/lib/seo'
+import { SCHEMA_DIRECTORY, contentJsonSchemas } from '@/scripts/content-json-schemas'
 import { HOME, SERVICES, TIMELINE } from '..'
 import { PROJECTS } from '../projects'
 import {
@@ -72,6 +73,10 @@ describe('content', () => {
   it('covers every Keystatic singleton and collection', () => {
     expect(Object.keys(config.singletons ?? {}).sort()).toEqual(Object.keys(singletons).sort())
     expect(Object.keys(config.collections ?? {})).toEqual(['projects'])
+  })
+
+  it.each(Object.entries(contentJsonSchemas()))('the Go API schema %s matches zod (run pnpm content:schemas)', (file, json) => {
+    expect(readFileSync(path.join(root, SCHEMA_DIRECTORY, file), 'utf8')).toBe(json)
   })
 
   it.each(SEO_PAGE_PATHS)('builds metadata for %s', (pagePath) => {
