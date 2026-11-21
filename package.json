@@ -18,11 +18,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx scripts/pull-content.ts && next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "content:schemas": "tsx scripts/content-json-schemas.ts",
+    "content:pull": "tsx scripts/pull-content.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",

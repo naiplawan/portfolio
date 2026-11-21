@@ -5,6 +5,7 @@
 ### Added
 
 - Add a Go (Fiber) content API in `backend/` for Railway: Postgres storage with revision history, validation against JSON Schemas generated from the site's zod schemas, single-admin login with lockout, and a batched Vercel deploy hook after each save.
+- Pull content from the API before `next build` when `CONTENT_API_URL` is set, validating it with zod and checking that project screenshots exist; without it the committed `content/` files are used (`pnpm content:pull` snapshots the database locally).
 - Add a Keystatic content admin at `/keystatic`: local files in development, GitHub branches in production once the GitHub App credentials are set (404 until then); hidden from crawlers and the site navigation.
 - Make site identity, contact links, SEO titles and descriptions, keywords, skills, manifest text and the FAQ editable in Keystatic, stored as validated JSON in `content/`.
 - Make curated projects (case studies, screenshots, order) and GitHub corrections editable in Keystatic; tests check screenshot dimensions and a 600 KB size budget.
