@@ -279,11 +279,11 @@ The owner chose to store content in Postgres behind a Go backend on Railway. Key
 | Validation | JSON Schemas generated from zod (`pnpm content:schemas`) | One source of rules; a test fails if the Go copy is stale |
 | Site rendering | `pnpm build` pulls `GET /api/content` into `content/`, then builds | Pages stay fully static and nothing else in the app changes; a failed pull fails the build, so Vercel keeps the last deployment |
 | Publishing | The API calls a Vercel deploy hook 30 s after the last save | Batches edits into one rebuild (≈1–2 min to go live) |
-| Admin | `/admin` in the Next app: password login (bcrypt in Go, lockout), HMAC session token in an httpOnly cookie, JSON editors checked with zod | Smallest secure surface; forms per field are a follow-up |
+| Admin | `/admin` in the Next app: password login (bcrypt in Go, per-client lockout), HMAC session token in an httpOnly cookie, JSON editors checked with zod; the admin API only accepts requests carrying `ADMIN_PROXY_SECRET` (from the Next server) | Smallest secure surface; forms per field are a follow-up |
 | Images | Stay in `public/assets/projects/<slug>/` in git; the build refuses missing files | Uploads to R2/S3 are a follow-up |
 | CI | New `Backend` job: gofmt, `go vet`, `go test -race` against a Postgres service, build | Existing `Verify` job is unchanged and still builds from the committed snapshot |
 
-**Owner setup:** see `backend/README.md` → "Deploying on Railway". In short: a Railway service with root directory `/backend`, a Postgres database, `ADMIN_PASSWORD_HASH`, `SESSION_SECRET` and `VERCEL_DEPLOY_HOOK_URL` variables, then seed. Finally set `CONTENT_API_URL` on Vercel.
+**Owner setup:** see `backend/README.md` → "Deploying on Railway". In short: a Railway service with root directory `/backend`, a Postgres database, and the `ADMIN_PASSWORD_HASH`, `SESSION_SECRET`, `ADMIN_PROXY_SECRET` and `VERCEL_DEPLOY_HOOK_URL` variables, then seed. Finally set `CONTENT_API_URL` and the same `ADMIN_PROXY_SECRET` on Vercel.
 
 **Follow-ups, not done:**
 - Form-based editors per field.

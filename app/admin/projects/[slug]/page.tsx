@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { deleteProjectAction, saveProjectAction } from '../../actions'
 import { AdminHeader } from '@/components/admin/AdminHeader'
-import { DeleteForm, JsonEditor } from '@/components/admin/forms'
+import { DeleteForm, JsonEditor } from '@/components/admin/AdminForms'
 import { getBundle } from '@/lib/admin/api'
 import { requireSession } from '@/lib/admin/session'
 

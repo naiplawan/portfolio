@@ -13,12 +13,12 @@
       "accent": true
     }
   ],
-  "lead": "I build websites and product interfaces for small businesses and product teams, using React, Next.js and TypeScript. Currently a Frontend Developer at Unixdev Co., Ltd. in Bangkok.",
+  "lead": "I build websites and product interfaces for small businesses and product teams, using React, Next.js and TypeScript. Currently a {jobTitle} at {company} in Bangkok.",
   "detail": "My biology background shapes how I work: form a hypothesis, change one variable, measure the result.",
   "config": [
     {
       "key": "role",
-      "value": "\"Frontend Developer @ Unixdev\""
+      "value": "\"{jobTitle} @ Unixdev\""
     },
     {
       "key": "stack",

@@ -123,7 +123,8 @@ export function Component({ prop }: ComponentProps) {
 - `lib/content/schemas.ts` (zod) is the single source of validation rules. After changing it run `pnpm content:schemas` to regenerate `backend/internal/content/schemas/*.json`; `lib/content/__tests__/content.test.ts` fails while they are stale
 - `lib/content/index.ts` parses each `content/*.json` at import (server-only); curated projects are `content/projects/<slug>.json`, loaded by `lib/content/projects.ts`, with screenshots in `public/assets/projects/<slug>/`
 - Client components that need site facts import `lib/constants.ts`, which reads the raw `content/site.json` (keeps zod out of the browser)
-- `/admin` server actions must call `requireSession()` (`lib/admin/session.ts`); the session token lives in an httpOnly cookie scoped to `/admin`
+- Text in home/about/faq can use `{name}`, `{jobTitle}`, `{company}`, `{location}`, `{email}` (resolved from the site document in `lib/content/index.ts`; a test rejects unknown placeholders)
+- `/admin` server actions must call `requireSession()` (`lib/admin/session.ts`); the session token lives in an httpOnly cookie scoped to `/admin`, and admin API calls carry `ADMIN_PROXY_SECRET`
 - Page titles/descriptions: `export const metadata = pageSeo('/path')` for pages listed in the SEO document
 - Go code: `gofmt`, `go vet ./...`, `go test -race ./...` (store tests need `TEST_DATABASE_URL`)
 

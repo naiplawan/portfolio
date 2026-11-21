@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { newProjectAction } from './actions'
 import { AdminHeader } from '@/components/admin/AdminHeader'
-import { SlugForm } from '@/components/admin/forms'
+import { SlugForm } from '@/components/admin/AdminForms'
 import { getBundle } from '@/lib/admin/api'
 import { requireSession } from '@/lib/admin/session'
 import { CONTENT_DOCUMENTS } from '@/lib/content/schemas'

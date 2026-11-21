@@ -1,5 +1,5 @@
 import { loginAction } from '../actions'
-import { LoginForm } from '@/components/admin/forms'
+import { LoginForm } from '@/components/admin/AdminForms'
 
 export default function AdminLoginPage() {
   return (

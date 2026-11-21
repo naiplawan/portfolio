@@ -40,7 +40,8 @@ Requires Node.js 24 and pnpm 10.
 | `GITHUB_TOKEN` | Optional; raises the GitHub API rate limit |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional Google Analytics ID |
 | `GOOGLE_VERIFICATION_CODE` | Optional Search Console verification |
-| `CONTENT_API_URL` | Go content API (see [Editing content](#editing-content)). When set, the build pulls content from it and `/admin` edits it; without it the committed `content/` files are used and `/admin` returns 404 in production |
+| `CONTENT_API_URL` | Go content API (see [Editing content](#editing-content)). When set, the build pulls content from it; without it the committed `content/` files are used |
+| `ADMIN_PROXY_SECRET` | Shared secret with the content API. `/admin` needs it and `CONTENT_API_URL`, and returns 404 in production without them |
 
 ## Scripts
 
@@ -92,6 +93,7 @@ Text, links, SEO metadata and projects are stored in Postgres behind a small Go 
 - **Editing:** sign in at `/admin` with the admin password, open a document or project, edit the JSON and save. The admin checks it with the site's zod schemas, the API checks it again, and the API keeps the previous version. About 30 seconds after the last save, the API calls a Vercel deploy hook. The build (`pnpm build`) first runs `scripts/pull-content.ts`, which downloads the content into `content/` and validates it, so the site stays fully static.
 - **Safety:** if the API is unreachable or returns invalid content, the build fails and Vercel keeps the previous deployment. Without `CONTENT_API_URL` (CI, local), the committed `content/` files are used.
 - **Snapshots:** `CONTENT_API_URL=https://… pnpm content:pull` writes the live content into `content/` so you can commit it. The committed files are the seed data and the CI fixture.
+- **Placeholders:** text in the home, about and FAQ documents can use `{name}`, `{jobTitle}`, `{company}`, `{location}` and `{email}`. They are filled in from Site & contact, so changing your job title or email updates the hero and FAQ too.
 - **Screenshots:** add project images to `public/assets/projects/<slug>/` in the repository before referencing them; the build refuses projects whose screenshot is missing.
 - **Schema changes:** edit `lib/content/schemas.ts`, then run `pnpm content:schemas` so the API validates the same rules (a test fails until you do).
 

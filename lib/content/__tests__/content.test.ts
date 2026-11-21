@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 import { EMPLOYMENT } from '@/lib/constants'
 import { pageSeo } from '@/lib/seo'
 import { SCHEMA_DIRECTORY, contentJsonSchemas } from '@/scripts/content-json-schemas'
-import { HOME, SERVICES, TIMELINE } from '..'
+import { ABOUT, FAQ, HOME, SERVICES, SITE_PLACEHOLDERS, TIMELINE } from '..'
 import { PROJECTS } from '../projects'
 import { CONTENT_DOCUMENTS, SEO_PAGE_PATHS, projectSchema } from '../schemas'
 
@@ -53,6 +53,14 @@ describe('content', () => {
       expect(href).toMatch(/^(\/[\w/-]*|https:\/\/\S+)$/)
     }
   })
+
+  it.each(Object.entries({ home: HOME, about: ABOUT, faq: FAQ }))(
+    '%s uses only known placeholders',
+    (_name, document) => {
+      const leftovers = JSON.stringify(document).match(/\{\w+\}/g)
+      expect(leftovers, `unknown placeholders; use one of ${Object.keys(SITE_PLACEHOLDERS).map((key) => `{${key}}`).join(', ')}`).toBeNull()
+    }
+  )
 
   it('keeps the EMPLOYMENT facts (llms.txt) in line with the career timeline', () => {
     const roles = TIMELINE.items.filter((item) => item.type === 'work')
