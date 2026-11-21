@@ -26,7 +26,7 @@ export function GET() {
 ${AI_CRAWLERS.map((bot) => `User-agent: ${bot}`).join('\n')}
 Allow: /
 Disallow: /api/
-Disallow: /keystatic
+Disallow: /admin
 
 Sitemap: ${SITE_URL}/sitemap.xml
 `;

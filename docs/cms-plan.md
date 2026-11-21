@@ -265,3 +265,29 @@ Done: phases 0, 1, 2, 3 and 5. Deviations from the design above, found while bui
 - **Kept in code:** UI microcopy, section headings, the résumé PDF, the OG image tagline, and `EMPLOYMENT`/`EDUCATION` in `lib/constants.ts`. The Turfmapp title mismatch was resolved from the résumé PDF ("Full Stack Software Developer", Jan 2024 – Jan 2025), and a content test now fails if `EMPLOYMENT` titles drift from the timeline.
 - **Production gate:** `/keystatic` and `/api/keystatic` return 404 in production until all four GitHub App env vars exist. `NEXT_PUBLIC_KEYSTATIC_STORAGE=github` switches `next dev` to GitHub mode for the one-time app setup.
 - **PR-gating needs branch protection.** Keystatic can commit straight to `main` for anyone with push access. Only a protected `main` (require a PR and the `Verify` check) forces edits through `content/*` branches.
+
+---
+
+## 7. Switch to Go + Postgres on Railway (branch `rachaphol/go-cms`, stacked on `rachaphol/keystatic-cms`)
+
+The owner chose to store content in Postgres behind a Go backend on Railway. Keystatic is removed. The content extraction from sections 4 and 6 (JSON documents, zod schemas, loaders, tests) carries over unchanged.
+
+| Decision | Choice | Why |
+| --- | --- | --- |
+| Service | Go + Fiber v3 in `backend/` of this repo | Matches the owner's Go Fiber stack; one repo keeps schemas and seed data together |
+| Database | Railway Postgres; `documents` and `projects` as `json` (exact text), plus `revisions` | Same shapes as `content/`, no per-field tables to migrate; every write is recoverable |
+| Validation | JSON Schemas generated from zod (`pnpm content:schemas`) | One source of rules; a test fails if the Go copy is stale |
+| Site rendering | `pnpm build` pulls `GET /api/content` into `content/`, then builds | Pages stay fully static and nothing else in the app changes; a failed pull fails the build, so Vercel keeps the last deployment |
+| Publishing | The API calls a Vercel deploy hook 30 s after the last save | Batches edits into one rebuild (≈1–2 min to go live) |
+| Admin | `/admin` in the Next app: password login (bcrypt in Go, per-client lockout), HMAC session token in an httpOnly cookie, JSON editors checked with zod; the admin API only accepts requests carrying `ADMIN_PROXY_SECRET` (from the Next server) | Smallest secure surface; forms per field are a follow-up |
+| Images | Stay in `public/assets/projects/<slug>/` in git; the build refuses missing files | Uploads to R2/S3 are a follow-up |
+| CI | New `Backend` job: gofmt, `go vet`, `go test -race` against a Postgres service, build | Existing `Verify` job is unchanged and still builds from the committed snapshot |
+
+**Owner setup:** see `backend/README.md` → "Deploying on Railway". In short: a Railway service with root directory `/backend`, a Postgres database, and the `ADMIN_PASSWORD_HASH`, `SESSION_SECRET`, `ADMIN_PROXY_SECRET` and `VERCEL_DEPLOY_HOOK_URL` variables, then seed. Finally set `CONTENT_API_URL` and the same `ADMIN_PROXY_SECRET` on Vercel.
+
+**Follow-ups, not done:**
+- Form-based editors per field.
+- Image uploads to R2/S3.
+- A revisions browser in the admin.
+- Phase 4 (resources, legal pages, route registry), still waiting for the other team's work.
+- Adding the `Backend` check to `main`'s required checks once this PR is merged.

@@ -17,8 +17,8 @@ export default function AboutSection() {
 
         <div className="grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-20">
           <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
-            {HOME.aboutParagraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+            {HOME.aboutParagraphs.map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
             ))}
             <Link
               href="/about"

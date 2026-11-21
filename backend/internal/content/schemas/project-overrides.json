@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "notes": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "repo": {
+            "type": "string",
+            "pattern": "^[a-z0-9._-]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "liveUrl": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "discriminant": {
+                    "type": "string",
+                    "const": "keep"
+                  },
+                  "value": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "discriminant"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "discriminant": {
+                    "type": "string",
+                    "const": "replace"
+                  },
+                  "value": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "discriminant",
+                  "value"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "discriminant": {
+                    "type": "string",
+                    "const": "remove"
+                  },
+                  "value": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "discriminant"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "repo",
+          "title",
+          "description",
+          "liveUrl"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "notes",
+    "items"
+  ],
+  "additionalProperties": false
+}

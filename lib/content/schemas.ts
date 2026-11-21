@@ -1,8 +1,10 @@
 import { z } from 'zod'
 
 /**
- * Runtime schemas for the JSON files in `content/`, mirroring the Keystatic
- * schema in `keystatic.config.ts`. Parsing happens at import time, so invalid
+ * Runtime schemas for the JSON files in `content/`. They are the single source
+ * of validation rules: the admin checks edits with them, the build parses
+ * content with them, and `pnpm content:schemas` exports them as JSON Schemas
+ * for the Go content API. Parsing happens at import time, so invalid
  * content fails the build and the test suite rather than rendering broken pages.
  */
 
@@ -56,13 +58,13 @@ export const PROJECT_CATEGORIES = [
 ] as const
 export const PROJECT_STATUSES = ['live', 'development', 'archived'] as const
 
-/** Keystatic omits an empty optional URL (or stores `null`); the site treats it as absent. */
+/** An empty optional URL may be omitted or `null`; the site treats it as absent. */
 const optionalUrl = z
   .url()
   .nullish()
   .transform((value) => value ?? undefined)
 
-/** Keystatic writes an empty conditional branch with `value: null` or without `value`. */
+/** A conditional field's empty branch may have `value: null` or no `value`. */
 const emptyValue = z.null().optional()
 
 const caseStudySchema = z.discriminatedUnion('discriminant', [
@@ -180,3 +182,20 @@ export const bookingSchema = z.object({
   topics: titled,
   preparation: titled,
 })
+
+/**
+ * Every single-file content document, keyed by its name in `content/<name>.json`
+ * and in the content API (`/api/content/<name>`). Projects are separate.
+ */
+export const CONTENT_DOCUMENTS = {
+  site: siteSchema,
+  seo: seoSchema,
+  faq: faqSchema,
+  home: homeSchema,
+  about: aboutSchema,
+  timeline: timelineSchema,
+  services: servicesSchema,
+  booking: bookingSchema,
+  'project-overrides': projectOverridesSchema,
+} as const
+export type ContentDocumentName = keyof typeof CONTENT_DOCUMENTS

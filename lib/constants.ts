@@ -3,7 +3,7 @@
 // same file on the server at build time and in the content tests.
 import SITE from '@/content/site.json';
 
-// Social Media Links (edited in Keystatic: Site & contact)
+// Social Media Links (edited in the admin: Site & contact)
 export const SOCIAL_LINKS = {
   github: SITE.github,
   linkedin: SITE.linkedin,
@@ -11,7 +11,7 @@ export const SOCIAL_LINKS = {
   email: SITE.email,
 } as const;
 
-// Professional Information (edited in Keystatic: Site & contact)
+// Professional Information (edited in the admin: Site & contact)
 export const PROFESSIONAL_INFO = {
   name: SITE.name,
   title: SITE.jobTitle,

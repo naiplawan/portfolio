@@ -1,77 +1,33 @@
 // @vitest-environment node
-import { readFileSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
-import { createReader } from '@keystatic/core/reader'
 import { imageSize } from 'image-size'
 import { describe, expect, it } from 'vitest'
-import config from '@/keystatic.config'
 import { EMPLOYMENT } from '@/lib/constants'
 import { pageSeo } from '@/lib/seo'
-import { HOME, SERVICES, TIMELINE } from '..'
+import { SCHEMA_DIRECTORY, contentJsonSchemas } from '@/scripts/content-json-schemas'
+import { ABOUT, FAQ, HOME, SERVICES, SITE_PLACEHOLDERS, TIMELINE } from '..'
 import { PROJECTS } from '../projects'
-import {
-  SEO_PAGE_PATHS,
-  aboutSchema,
-  bookingSchema,
-  faqSchema,
-  homeSchema,
-  projectOverridesSchema,
-  projectSchema,
-  seoSchema,
-  servicesSchema,
-  siteSchema,
-  timelineSchema,
-} from '../schemas'
+import { CONTENT_DOCUMENTS, SEO_PAGE_PATHS, projectSchema } from '../schemas'
 
 const root = path.resolve(__dirname, '../../..')
-const reader = createReader(root, config)
 const readJson = (file: string) => JSON.parse(readFileSync(path.join(root, 'content', file), 'utf8'))
 
-const singletons = {
-  site: siteSchema,
-  seo: seoSchema,
-  faq: faqSchema,
-  projectOverrides: projectOverridesSchema,
-  home: homeSchema,
-  about: aboutSchema,
-  timeline: timelineSchema,
-  services: servicesSchema,
-  booking: bookingSchema,
-} as const
-type SingletonKey = keyof typeof singletons
-
-/** Keystatic omits empty optional values on save but reads them back as `null`. */
-const withoutNulls = (value: unknown): unknown =>
-  Array.isArray(value)
-    ? value.map(withoutNulls)
-    : value && typeof value === 'object'
-      ? Object.fromEntries(
-          Object.entries(value)
-            .filter(([, entry]) => entry !== null)
-            .map(([key, entry]) => [key, withoutNulls(entry)])
-        )
-      : value
-
-/** Keystatic file name for each singleton key. */
-const fileName = (key: string) => `${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}.json`
-
-/** Large screenshots slow the home page; resize before uploading. */
+/** Large screenshots slow the home page; resize before adding them. */
 const MAX_IMAGE_BYTES = 600 * 1024
 
 describe('content', () => {
-  it.each(Object.keys(singletons) as SingletonKey[])(
-    '%s passes the site schema and matches what Keystatic reads',
-    async (key) => {
-      const file = readJson(fileName(key))
-      expect(() => singletons[key].parse(file)).not.toThrow()
-      // readOrThrow validates against the Keystatic schema; equality catches the two schemas drifting apart
-      expect(withoutNulls(await reader.singletons[key].readOrThrow())).toEqual(withoutNulls(file))
-    }
-  )
+  it('has exactly one file per content document', () => {
+    const files = readdirSync(path.join(root, 'content')).filter((file) => file.endsWith('.json'))
+    expect(files.map((file) => file.replace(/\.json$/, '')).sort()).toEqual(Object.keys(CONTENT_DOCUMENTS).sort())
+  })
 
-  it('covers every Keystatic singleton and collection', () => {
-    expect(Object.keys(config.singletons ?? {}).sort()).toEqual(Object.keys(singletons).sort())
-    expect(Object.keys(config.collections ?? {})).toEqual(['projects'])
+  it.each(Object.entries(CONTENT_DOCUMENTS))('%s passes its schema', (name, schema) => {
+    expect(() => schema.parse(readJson(`${name}.json`))).not.toThrow()
+  })
+
+  it.each(Object.entries(contentJsonSchemas()))('the Go API schema %s matches zod (run pnpm content:schemas)', (file, json) => {
+    expect(readFileSync(path.join(root, SCHEMA_DIRECTORY, file), 'utf8')).toBe(json)
   })
 
   it.each(SEO_PAGE_PATHS)('builds metadata for %s', (pagePath) => {
@@ -98,6 +54,14 @@ describe('content', () => {
     }
   })
 
+  it.each(Object.entries({ home: HOME, about: ABOUT, faq: FAQ }))(
+    '%s uses only known placeholders',
+    (_name, document) => {
+      const leftovers = JSON.stringify(document).match(/\{\w+\}/g)
+      expect(leftovers, `unknown placeholders; use one of ${Object.keys(SITE_PLACEHOLDERS).map((key) => `{${key}}`).join(', ')}`).toBeNull()
+    }
+  )
+
   it('keeps the EMPLOYMENT facts (llms.txt) in line with the career timeline', () => {
     const roles = TIMELINE.items.filter((item) => item.type === 'work')
     for (const job of [EMPLOYMENT.current, EMPLOYMENT.previous]) {
@@ -106,20 +70,14 @@ describe('content', () => {
     }
   })
 
-  it('loads every project file', async () => {
-    expect((await reader.collections.projects.list()).sort()).toEqual(PROJECTS.map((project) => project.slug).sort())
-  })
-
   describe.each(PROJECTS.map((project) => [project.slug, project] as const))('project %s', (slug, project) => {
     const file = path.join(root, 'public', project.image)
 
-    it('passes the site schema and matches what Keystatic reads', async () => {
-      const json = readJson(`projects/${slug}.json`)
-      expect(() => projectSchema.parse(json)).not.toThrow()
-      expect(withoutNulls(await reader.collections.projects.readOrThrow(slug))).toEqual(withoutNulls(json))
+    it('passes its schema', () => {
+      expect(() => projectSchema.parse(readJson(`projects/${slug}.json`))).not.toThrow()
     })
 
-    it('keeps its screenshot in the folder Keystatic uses for the slug', () => {
+    it('keeps its screenshot in its own folder', () => {
       expect(path.dirname(project.image)).toBe(`/assets/projects/${slug}`)
     })
 

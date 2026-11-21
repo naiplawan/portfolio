@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "order": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "notes": {
+      "type": "string"
+    },
+    "githubRepoId": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "githubUrl": {
+      "type": "string",
+      "format": "uri"
+    },
+    "liveUrl": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "problemStatement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "solution": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image": {
+      "type": "string",
+      "pattern": "^\\/assets\\/projects\\/[a-z0-9-]+\\/image\\.(png|jpe?g|webp|avif)$"
+    },
+    "technologies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "web",
+        "fullstack",
+        "mobile",
+        "backend",
+        "ai",
+        "enterprise",
+        "wellness",
+        "gaming",
+        "tools",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "live",
+        "development",
+        "archived"
+      ]
+    },
+    "completedYear": {
+      "type": "integer",
+      "minimum": 2000,
+      "maximum": 2100
+    },
+    "caseStudy": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "discriminant": {
+              "type": "boolean",
+              "const": false
+            },
+            "value": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "discriminant"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "discriminant": {
+              "type": "boolean",
+              "const": true
+            },
+            "value": {
+              "type": "object",
+              "properties": {
+                "contribution": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "designDecision": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "outcome": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "screenshotAlt": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "screenshotCaption": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "screenshotWidth": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "screenshotHeight": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "contribution",
+                "designDecision",
+                "outcome",
+                "screenshotAlt",
+                "screenshotCaption",
+                "screenshotWidth",
+                "screenshotHeight"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "discriminant",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": [
+    "title",
+    "order",
+    "notes",
+    "githubRepoId",
+    "githubUrl",
+    "description",
+    "problemStatement",
+    "solution",
+    "image",
+    "technologies",
+    "highlights",
+    "category",
+    "status",
+    "completedYear",
+    "caseStudy"
+  ],
+  "additionalProperties": false
+}

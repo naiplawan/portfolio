@@ -117,12 +117,16 @@ export function Component({ prop }: ComponentProps) {
 
 ## Project-Specific Patterns
 
-### Content (Keystatic)
-- Editable content lives in `content/` as JSON and is edited at `/keystatic` (local files in dev, GitHub branches in production; production returns 404 until the GitHub App env vars are set)
-- `keystatic.config.ts` defines the admin; `lib/content/schemas.ts` mirrors it in zod and `lib/content/index.ts` parses each file at import. Change both together — `lib/content/__tests__/content.test.ts` fails when they disagree
-- Curated projects are a collection (`content/projects/<slug>.json`, loaded by `lib/content/projects.ts`); screenshots live in `public/assets/projects/<slug>/` so Keystatic never renames them
-- `lib/content` is server-only (zod). Client components that need site facts import `lib/constants.ts`, which reads the raw `content/site.json`
-- Page titles/descriptions: `export const metadata = pageSeo('/path')` for pages listed in SEO → Pages
+### Content (Go API + Postgres)
+- Editable content is stored in Postgres behind the Go API in `backend/` (Fiber, deployed on Railway; see `backend/README.md`) and edited at `/admin`
+- `pnpm build` runs `scripts/pull-content.ts` first: with `CONTENT_API_URL` set it replaces `content/` with the API's data (zod-validated; failures fail the build), otherwise the committed `content/` snapshot is used (CI, local)
+- `lib/content/schemas.ts` (zod) is the single source of validation rules. After changing it run `pnpm content:schemas` to regenerate `backend/internal/content/schemas/*.json`; `lib/content/__tests__/content.test.ts` fails while they are stale
+- `lib/content/index.ts` parses each `content/*.json` at import (server-only); curated projects are `content/projects/<slug>.json`, loaded by `lib/content/projects.ts`, with screenshots in `public/assets/projects/<slug>/`
+- Client components that need site facts import `lib/constants.ts`, which reads the raw `content/site.json` (keeps zod out of the browser)
+- Text in home/about/faq can use `{name}`, `{jobTitle}`, `{company}`, `{location}`, `{email}` (resolved from the site document in `lib/content/index.ts`; a test rejects unknown placeholders)
+- `/admin` server actions must call `requireSession()` (`lib/admin/session.ts`); the session token lives in an httpOnly cookie scoped to `/admin`, and admin API calls carry `ADMIN_PROXY_SECRET`
+- Page titles/descriptions: `export const metadata = pageSeo('/path')` for pages listed in the SEO document
+- Go code: `gofmt`, `go vet ./...`, `go test -race ./...` (store tests need `TEST_DATABASE_URL`)
 
 ### GitHub Integration
 - Projects are fetched from GitHub API via `/api/github/projects`
@@ -140,8 +144,8 @@ export function Component({ prop }: ComponentProps) {
 - Every page exports `metadata = pageSeo(path)` (content-managed) or `pageMetadata({ title, description, path })` from `lib/seo.ts` (canonical + OG + Twitter). Client pages put it in a sibling `layout.tsx` (see `app/contact`)
 - JSON-LD lives in `components/seo/structured-data.tsx`: one Person/WebSite graph in the root layout (stable `@id`s in `SCHEMA_IDS`), plus ProfilePage + FAQPage on home, ItemList on `/projects`, BreadcrumbList on subpages. Never add a second Person
 - FAQ answers (`content/faq.json`, exposed by `lib/data/faq-data.ts`) are written in the third person, self-contained, and reused verbatim for the visible section, FAQPage and `llms.txt`
-- `/llms.txt` is generated from site data; `robots.txt` explicitly allows search and AI crawlers and blocks only `/api/` and `/keystatic`; add new pages to `app/sitemap.xml/route.ts`
-- Project names/descriptions/live URLs that GitHub gets wrong go in `content/project-overrides.json` (Keystatic: Projects → GitHub corrections)
+- `/llms.txt` is generated from site data; `robots.txt` explicitly allows search and AI crawlers and blocks only `/api/` and `/admin`; add new pages to `app/sitemap.xml/route.ts`
+- Project names/descriptions/live URLs that GitHub gets wrong go in the `project-overrides` document (admin: GitHub corrections)
 
 ### Dark Mode
 - Toggle component: `components/ui/dark-mode-toggle.tsx`

@@ -9,7 +9,7 @@ export interface FaqItem {
 
 /**
  * Short, self-contained answers written for search snippets and AI answer engines,
- * edited in Keystatic (Home → FAQ). Each answer must make sense on its own,
+ * edited in the admin (FAQ). Each answer must make sense on its own,
  * without the question or the page around it.
  */
 export const FAQ_ITEMS: readonly FaqItem[] = FAQ.items.map(({ question, usePersonSummary, answer }) => ({

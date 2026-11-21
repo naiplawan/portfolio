@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "personSummary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320
+    },
+    "homeTitle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "defaultTitle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "defaultDescription": {
+      "type": "string",
+      "minLength": 1
+    },
+    "socialDescription": {
+      "type": "string",
+      "minLength": 1
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "knowsAbout": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "manifestDescription": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "/about",
+              "/projects",
+              "/services",
+              "/booking",
+              "/contact"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "path",
+          "title",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "personSummary",
+    "homeTitle",
+    "defaultTitle",
+    "defaultDescription",
+    "socialDescription",
+    "keywords",
+    "knowsAbout",
+    "manifestDescription",
+    "pages"
+  ],
+  "additionalProperties": false
+}

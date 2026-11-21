@@ -12,7 +12,7 @@ export default function AboutMe() {
         <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-20">
           <div className="space-y-6 text-xl leading-relaxed">
             {paragraphs.map((paragraph, index) => (
-              <p key={paragraph} className={index > 0 ? 'text-muted-foreground' : undefined}>
+              <p key={index} className={index > 0 ? 'text-muted-foreground' : undefined}>
                 {paragraph}
               </p>
             ))}

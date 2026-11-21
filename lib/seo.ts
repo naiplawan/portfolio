@@ -39,7 +39,7 @@ export function pageMetadata({ title, description, path }: PageMetadataInput): M
   };
 }
 
-/** Metadata for a page whose title and description are edited in Keystatic (SEO → Pages). */
+/** Metadata for a page whose title and description are edited in the admin (SEO → pages). */
 export function pageSeo(path: SeoPagePath): Metadata {
   const page = SEO.pages.find((entry) => entry.path === path);
   if (!page) throw new Error(`Missing SEO entry for ${path} in content/seo.json`);

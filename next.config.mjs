@@ -1,5 +1,5 @@
-/** Site-wide CSP; the Keystatic admin also shows GitHub avatars. */
-const contentSecurityPolicy = (extraImgSrc = '') =>
+/** Site-wide Content Security Policy. */
+const contentSecurityPolicy = () =>
   [
     "default-src 'self'",
     // Note: unsafe-inline is kept for compatibility with Next.js dev mode and libraries
@@ -8,7 +8,7 @@ const contentSecurityPolicy = (extraImgSrc = '') =>
     // unsafe-inline for styles is required by Tailwind CSS and some UI libraries
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     // Removed http: - only allow HTTPS images
-    `img-src 'self' data: blob: https://opengraph.githubassets.com https://github.com${extraImgSrc}`,
+    "img-src 'self' data: blob: https://opengraph.githubassets.com https://github.com",
     "font-src 'self' data: https://fonts.gstatic.com",
     "connect-src 'self' https://api.github.com https://*.vercel-insights.com https://vercel.live https://api.emailjs.com",
     "frame-src 'self' https://vercel.live",
@@ -23,9 +23,6 @@ const contentSecurityPolicy = (extraImgSrc = '') =>
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-
-  // Keystatic's GitHub mode signs in through 127.0.0.1 under `next dev`
-  allowedDevOrigins: ['127.0.0.1'],
 
   // Curated projects are read from content/projects/ at render time (ISR on /projects)
   outputFileTracingIncludes: {
@@ -66,7 +63,7 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   
-  // Screenshots moved into per-project folders managed by Keystatic
+  // Screenshots moved into per-project folders (public/assets/projects/<slug>/)
   async redirects() {
     return [
       ['/assets/projects/perd-wai.png', '/assets/projects/perd-wai/image.png'],
@@ -107,15 +104,6 @@ const nextConfig = {
             value: 'max-age=31536000; includeSubDomains',
           },
           { key: 'Content-Security-Policy', value: contentSecurityPolicy() },
-        ],
-      },
-      {
-        source: '/keystatic/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: contentSecurityPolicy(' https://avatars.githubusercontent.com'),
-          },
         ],
       },
     ];

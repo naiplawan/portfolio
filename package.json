@@ -18,10 +18,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx scripts/pull-content.ts && next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "content:schemas": "tsx scripts/content-json-schemas.ts",
+    "content:pull": "tsx scripts/pull-content.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
@@ -30,8 +32,6 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@gsap/react": "^2.1.2",
-    "@keystatic/core": "0.6.10",
-    "@keystatic/next": "5.0.5",
     "@radix-ui/react-slot": "^1.3.0",
     "baseline-browser-mapping": "^2.10.43",
     "caniuse-lite": "^1.0.30001806",
