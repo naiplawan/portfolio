@@ -1,0 +1,50 @@
+{
+  "notes": "Corrections on top of GitHub repository metadata, keyed by lowercase repository name. Live URLs come from the Vercel project list (vercel project ls), checked 2026-10-11. Removed URLs: the GitHub homepages pointed at deployments that no longer exist. Curated projects always win over these corrections.",
+  "items": [
+    {
+      "repo": "layer-3d",
+      "title": "Layer 3D",
+      "description": "Website for Layer, a Bangkok 3D-printing service: prototypes, finished parts and small production runs, quoted over LINE in about 10 minutes.",
+      "liveUrl": {
+        "discriminant": "replace",
+        "value": "https://layer-3d.vercel.app"
+      }
+    },
+    {
+      "repo": "rob-ban",
+      "title": "Rob Baan",
+      "description": "Rob Baan (รอบบ้าน): a wildlife dex for Bangkok's public parks. Spot the animals and plants around you and collect them like a field guide.",
+      "liveUrl": {
+        "discriminant": "replace",
+        "value": "https://rob-baan.vercel.app"
+      }
+    },
+    {
+      "repo": "kiddugorn-backend",
+      "title": "",
+      "description": "",
+      "liveUrl": {
+        "discriminant": "remove",
+        "value": null
+      }
+    },
+    {
+      "repo": "to-do-list-next-js",
+      "title": "",
+      "description": "",
+      "liveUrl": {
+        "discriminant": "remove",
+        "value": null
+      }
+    },
+    {
+      "repo": "tourist-attraction-webpage",
+      "title": "",
+      "description": "",
+      "liveUrl": {
+        "discriminant": "remove",
+        "value": null
+      }
+    }
+  ]
+}

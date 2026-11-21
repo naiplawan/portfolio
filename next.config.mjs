@@ -24,6 +24,11 @@ const contentSecurityPolicy = (extraImgSrc = '') =>
 const nextConfig = {
   reactStrictMode: true,
 
+  // Curated projects are read from content/projects/ at render time (ISR on /projects)
+  outputFileTracingIncludes: {
+    '/**': ['./content/**/*'],
+  },
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -58,6 +63,16 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   
+  // Screenshots moved into per-project folders managed by Keystatic
+  async redirects() {
+    return [
+      ['/assets/projects/perd-wai.png', '/assets/projects/perd-wai/image.png'],
+      ['/assets/projects/layer-3d.png', '/assets/projects/layer-3d/image.png'],
+      ['/assets/projects/cafe-nme.webp', '/assets/projects/cafe-nme/image.webp'],
+      ['/assets/byte-track.png', '/assets/projects/bytetrack/image.png'],
+    ].map(([source, destination]) => ({ source, destination, permanent: true }))
+  },
+
   // Security headers
   async headers() {
     return [

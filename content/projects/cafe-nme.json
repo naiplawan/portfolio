@@ -1,0 +1,34 @@
+{
+  "title": "Cafe’nMe",
+  "order": 3,
+  "notes": "Editorial selection, independent of repository activity or star counts. Claims and screenshot checked against the public README on 2026-10-23: https://github.com/naiplawan/cafe-nme#readme (docs/screenshots/pos-sale.webp). The outcome describes implemented functionality, not measured adoption or impact.",
+  "githubRepoId": 1417399631,
+  "githubUrl": "https://github.com/naiplawan/cafe-nme",
+  "description": "A café point-of-sale application connecting tablet checkout, shop administration and LINE membership.",
+  "problemStatement": "Café staff, owners and customers need different interfaces that share orders, menu data and loyalty rewards.",
+  "solution": "A tablet POS, web admin and LINE member card backed by a NestJS API and PostgreSQL.",
+  "image": "/assets/projects/cafe-nme/image.webp",
+  "technologies": [
+    "Next.js",
+    "TypeScript",
+    "NestJS",
+    "PostgreSQL",
+    "LINE LIFF"
+  ],
+  "highlights": [],
+  "category": "fullstack",
+  "status": "development",
+  "completedYear": 2026,
+  "caseStudy": {
+    "discriminant": true,
+    "value": {
+      "contribution": "Built checkout and menu-management flows alongside the API and LINE membership integration.",
+      "designDecision": "Keep the staff checkout, owner admin and customer member card distinct, while sharing the order and loyalty data behind them.",
+      "outcome": "The implemented flow connects orders and payments to stamps and rewards, with sales reports for owners. The screenshot uses demo café data.",
+      "screenshotAlt": "Cafe’nMe tablet checkout with a drink menu, customizable cart items and payment total",
+      "screenshotCaption": "Tablet checkout using the repository’s demo café and orders.",
+      "screenshotWidth": 1280,
+      "screenshotHeight": 800
+    }
+  }
+}

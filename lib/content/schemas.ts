@@ -50,3 +50,71 @@ export const faqSchema = z.object({
     )
     .min(1),
 })
+
+export const PROJECT_CATEGORIES = [
+  'web', 'fullstack', 'mobile', 'backend', 'ai', 'enterprise', 'wellness', 'gaming', 'tools', 'other',
+] as const
+export const PROJECT_STATUSES = ['live', 'development', 'archived'] as const
+
+/** Keystatic omits an empty optional URL (or stores `null`); the site treats it as absent. */
+const optionalUrl = z
+  .url()
+  .nullish()
+  .transform((value) => value ?? undefined)
+
+/** Keystatic writes an empty conditional branch with `value: null` or without `value`. */
+const emptyValue = z.null().optional()
+
+const caseStudySchema = z.discriminatedUnion('discriminant', [
+  z.object({ discriminant: z.literal(false), value: emptyValue }),
+  z.object({
+    discriminant: z.literal(true),
+    value: z.object({
+      contribution: text,
+      designDecision: text,
+      outcome: text,
+      screenshotAlt: text,
+      screenshotCaption: text,
+      screenshotWidth: z.number().int().positive(),
+      screenshotHeight: z.number().int().positive(),
+    }),
+  }),
+])
+
+/** One file in `content/projects/`; the file name is the slug. */
+export const projectSchema = z.object({
+  title: text,
+  order: z.number().int(),
+  notes: z.string(),
+  githubRepoId: z.number().int().positive(),
+  githubUrl: z.url(),
+  liveUrl: optionalUrl,
+  description: text,
+  problemStatement: text,
+  solution: text,
+  image: z.string().regex(/^\/assets\/projects\/[a-z0-9-]+\/image\.(png|jpe?g|webp|avif)$/),
+  technologies: z.array(text),
+  highlights: z.array(text),
+  category: z.enum(PROJECT_CATEGORIES),
+  status: z.enum(PROJECT_STATUSES),
+  completedYear: z.number().int().min(2000).max(2100),
+  caseStudy: caseStudySchema,
+})
+
+const liveUrlOverrideSchema = z.discriminatedUnion('discriminant', [
+  z.object({ discriminant: z.literal('keep'), value: emptyValue }),
+  z.object({ discriminant: z.literal('replace'), value: z.url() }),
+  z.object({ discriminant: z.literal('remove'), value: emptyValue }),
+])
+
+export const projectOverridesSchema = z.object({
+  notes: z.string(),
+  items: z.array(
+    z.object({
+      repo: z.string().regex(/^[a-z0-9._-]+$/, 'Use the lowercase GitHub repository name'),
+      title: z.string(),
+      description: z.string(),
+      liveUrl: liveUrlOverrideSchema,
+    })
+  ),
+})
