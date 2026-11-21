@@ -1,0 +1,35 @@
+{
+  "title": "Layer 3D",
+  "order": 2,
+  "notes": "Editorial selection, independent of repository activity or star counts. Claims and screenshot checked against the public README on 2026-10-23: https://github.com/naiplawan/layer-3d#readme (docs/screenshots/hero.png). The outcome describes implemented functionality, not measured adoption or impact.",
+  "githubRepoId": 1414464311,
+  "githubUrl": "https://github.com/naiplawan/layer-3d",
+  "liveUrl": "https://layer-3d.vercel.app",
+  "description": "A Thai-language website for a Bangkok 3D-printing studio, from material selection to a LINE quote request.",
+  "problemStatement": "Customers need to understand the printing options and find a clear way to request a quote.",
+  "solution": "A responsive service website with material comparisons, project examples and an interactive 3D printer preview.",
+  "image": "/assets/projects/layer-3d/image.png",
+  "technologies": [
+    "Next.js",
+    "TypeScript",
+    "React Three Fiber",
+    "GSAP",
+    "Tailwind CSS"
+  ],
+  "highlights": [],
+  "category": "web",
+  "status": "live",
+  "completedYear": 2026,
+  "caseStudy": {
+    "discriminant": true,
+    "value": {
+      "contribution": "Built the Next.js page, interactive printer scene and service-to-quote flow, including Thai typography and mobile layouts.",
+      "designDecision": "Load the 3D scene separately, pause it outside the viewport and respect reduced motion so the illustration does not need to run continuously.",
+      "outcome": "Visitors can compare materials, browse sample work and continue to LINE to request a quote from the same page.",
+      "screenshotAlt": "Layer 3D website with Thai service information, quote buttons and an interactive printer preview",
+      "screenshotCaption": "Desktop landing page and its interactive printer preview.",
+      "screenshotWidth": 1440,
+      "screenshotHeight": 900
+    }
+  }
+}

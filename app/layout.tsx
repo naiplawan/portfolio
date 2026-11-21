@@ -9,11 +9,13 @@ const Analytics = nextDynamic(() => import('@/components/analytics').then(mod =>
 })
 import { SkipLink } from '@/components/accessibility/skip-link'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
+import { SiteChrome } from '@/components/layout/site-chrome'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { KonamiCode } from '@/components/motion/KonamiCode'
 import { SiteStructuredData } from '@/components/seo/structured-data'
 import { SITE_URL } from '@/lib/constants'
+import { SEO } from '@/lib/content'
 import { Geist, Inter, JetBrains_Mono, Silkscreen } from 'next/font/google'
 
 const geist = Geist({
@@ -52,25 +54,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Rachaphol Plookaom — Frontend Developer',
+    default: SEO.defaultTitle,
     template: '%s | Rachaphol Plookaom'
   },
-  description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
-  keywords: [
-    'frontend developer',
-    'React developer',
-    'Next.js developer',
-    'TypeScript',
-    'Go developer',
-    'Flutter',
-    'performance optimization',
-    'web development',
-    'software engineer',
-    'Unixdev',
-    'Bangkok developer',
-    'portfolio',
-    'hire developer'
-  ],
+  description: SEO.defaultDescription,
+  keywords: SEO.keywords,
   authors: [{ name: 'Rachaphol Plookaom', url: SITE_URL }],
   creator: 'Rachaphol Plookaom',
   publisher: 'Rachaphol Plookaom',
@@ -83,14 +71,14 @@ export const metadata = {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    title: 'Rachaphol Plookaom — Frontend Developer',
-    description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.',
+    title: SEO.defaultTitle,
+    description: SEO.defaultDescription,
     siteName: 'Rachaphol Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Rachaphol Plookaom — Frontend Developer',
-    description: 'Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products.',
+    title: SEO.defaultTitle,
+    description: SEO.socialDescription,
     creator: '@rachaphol'
   },
   robots: {
@@ -156,17 +144,26 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <SiteStructuredData />
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen font-body overflow-x-hidden max-w-full">
-        <SkipLink />
         <Providers>
-          <Analytics />
-          <NavBar />
-          <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
+          <SiteChrome
+            header={
+              <>
+                <SkipLink />
+                <Analytics />
+                <NavBar />
+              </>
+            }
+            footer={
+              <>
+                <Footer />
+                <KonamiCode />
+              </>
+            }
+          >
             <ClientErrorBoundary>
               {children}
             </ClientErrorBoundary>
-          </main>
-          <Footer />
-          <KonamiCode />
+          </SiteChrome>
         </Providers>
       </body>
     </html>

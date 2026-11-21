@@ -1,0 +1,30 @@
+{
+  "title": "ByteTrack",
+  "order": 4,
+  "notes": "",
+  "githubRepoId": 9999,
+  "githubUrl": "https://github.com/naiplawan/bytetrack",
+  "liveUrl": "https://bytetrack-vert.vercel.app/",
+  "description": "A bilingual calorie-tracking frontend demo with Thai food search, daily summaries and browser-local storage.",
+  "problemStatement": "People tracking their nutrition need a quick way to log food and understand their daily progress without navigating a complicated interface.",
+  "solution": "Built a responsive Next.js frontend with Thai/English interfaces, food search and a localStorage-backed demo data layer.",
+  "image": "/assets/projects/bytetrack/image.png",
+  "technologies": [
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "localStorage"
+  ],
+  "highlights": [
+    "Intuitive UI",
+    "Real-time Tracking",
+    "Personalized Insights",
+    "Cross-platform"
+  ],
+  "category": "wellness",
+  "status": "live",
+  "completedYear": 2025,
+  "caseStudy": {
+    "discriminant": false
+  }
+}

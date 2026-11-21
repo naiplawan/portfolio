@@ -1,0 +1,35 @@
+{
+  "title": "Perd Wai",
+  "order": 1,
+  "notes": "Editorial selection, independent of repository activity or star counts. Claims and screenshot checked against the public README on 2026-10-23: https://github.com/naiplawan/perd-wai#readme (docs/screenshots/desktop.png). The outcome describes implemented functionality, not measured adoption or impact.",
+  "githubRepoId": 1332191303,
+  "githubUrl": "https://github.com/naiplawan/perd-wai",
+  "liveUrl": "https://perd-wai.vercel.app",
+  "description": "A Thai-first café launch simulator for exploring costs, break-even sales and cash runway.",
+  "problemStatement": "Aspiring café owners need to see how rent, setup costs and daily sales affect their opening plan.",
+  "solution": "A bilingual planning flow with deterministic calculations, scenario comparisons and exportable forecasts.",
+  "image": "/assets/projects/perd-wai/image.png",
+  "technologies": [
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Vitest",
+    "Playwright"
+  ],
+  "highlights": [],
+  "category": "web",
+  "status": "live",
+  "completedYear": 2026,
+  "caseStudy": {
+    "discriminant": true,
+    "value": {
+      "contribution": "Built the planning interface, calculation engine and forecast views, with Thai/English copy and browser-saved plans.",
+      "designDecision": "Keep the forecast deterministic. Optional AI explains the calculated results but cannot change the numbers or the decision signal.",
+      "outcome": "Founders can compare three scenarios, inspect a six-month forecast and export a plan. The tool is ready for user validation; market validation is still pending.",
+      "screenshotAlt": "Perd Wai café planning screen with startup assumptions and scenario inputs",
+      "screenshotCaption": "Planning interface with example assumptions; full screenshot includes the forecast.",
+      "screenshotWidth": 1280,
+      "screenshotHeight": 3327
+    }
+  }
+}

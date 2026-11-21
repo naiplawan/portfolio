@@ -1,21 +1,10 @@
 import Link from 'next/link'
 import { ArrowDown, ArrowUpRight, Download } from 'lucide-react'
 import { MitosisHero } from '@/components/motion/MitosisHero'
-import { PROFESSIONAL_INFO, RESUME_PATH } from '@/lib/constants'
+import { RESUME_PATH } from '@/lib/constants'
+import { HOME } from '@/lib/content'
 
-const config = [
-  { key: 'role', value: `"${PROFESSIONAL_INFO.title} @ Unixdev"` },
-  { key: 'stack', value: '[react, next, typescript, go, flutter]' },
-  { key: 'based', value: '"Bangkok, TH"' },
-  { key: 'formerly', value: '"B.Sc. Biological Sciences, Mahidol"' },
-  { key: 'open_to', value: '"freelance + full-time"' },
-]
-
-const headline = [
-  { word: 'Biologist', accent: false },
-  { word: 'turned', accent: false },
-  { word: 'developer', accent: true },
-]
+const { config, headline, lead, detail } = HOME
 
 // CSS-only entrance so the hero still renders (and animates) without JS
 const HEADLINE_START = 450
@@ -43,7 +32,7 @@ export default function DeveloperHero() {
 
           <h1 className="max-w-4xl text-balance font-display text-[clamp(2.5rem,7vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
             {headline.map(({ word, accent }, i) => (
-              <span key={word}>
+              <span key={`${i}-${word}`}>
                 <span
                   className={`inline-block animate-pixel-in ${accent ? 'text-[hsl(var(--accent))]' : ''}`}
                   style={{ animationDelay: `${HEADLINE_START + i * WORD_STAGGER}ms` }}
@@ -56,15 +45,8 @@ export default function DeveloperHero() {
             ))}
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            I build websites and product interfaces for small businesses and
-            product teams, using React, Next.js and TypeScript. Currently a{' '}
-            {PROFESSIONAL_INFO.title} at {PROFESSIONAL_INFO.company} in Bangkok.
-          </p>
-          <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">
-            My biology background shapes how I work: form a hypothesis, change
-            one variable, measure the result.
-          </p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">{lead}</p>
+          <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">{detail}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
             <Link
