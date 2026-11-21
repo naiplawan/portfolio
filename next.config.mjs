@@ -24,6 +24,9 @@ const contentSecurityPolicy = (extraImgSrc = '') =>
 const nextConfig = {
   reactStrictMode: true,
 
+  // Keystatic's GitHub mode signs in through 127.0.0.1 under `next dev`
+  allowedDevOrigins: ['127.0.0.1'],
+
   // Curated projects are read from content/projects/ at render time (ISR on /projects)
   outputFileTracingIncludes: {
     '/**': ['./content/**/*'],

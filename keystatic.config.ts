@@ -4,6 +4,8 @@ import { PROJECT_CATEGORIES, PROJECT_STATUSES, SEO_PAGE_PATHS, TIMELINE_TYPES } 
 /**
  * Content schema for the Keystatic admin at /keystatic. Local files in
  * development; commits to `content/*` branches on GitHub in production.
+ * Set NEXT_PUBLIC_KEYSTATIC_STORAGE=github to use GitHub mode under `next dev`
+ * (needed once to create the GitHub App, and to test the production flow).
  *
  * Every entry is a JSON singleton under `content/`, imported statically and
  * validated by the zod schemas in `lib/content/schemas.ts`. Keep both in sync;
@@ -39,7 +41,7 @@ const notes = fields.text({
 
 export default config({
   storage:
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_KEYSTATIC_STORAGE !== 'github'
       ? { kind: 'local' }
       : { kind: 'github', repo: { owner: 'naiplawan', name: 'portfolio' }, branchPrefix: 'content/' },
   ui: {

@@ -252,3 +252,16 @@ Phases 1–3 can ship independently (each is a self-contained PR); phase 5 can m
 8. **Vercel deployment sync:** live URLs are currently checked by hand against `vercel project ls`. Keep that manual (record `verifiedOn` in the CMS), or add a scheduled CI link check that flags dead `liveUrl`s?
 9. **Career data drift:** which title is correct for Turfmapp — "Junior Full Stack Software Developer" or "Full Stack Software Developer"? (Needed to merge `EMPLOYMENT` into the timeline.)
 10. **Résumé:** should uploading a new résumé PDF be possible from the CMS, or stay a code change?
+
+---
+
+## 6. Implementation status (branch `rachaphol/keystatic-cms`)
+
+Done: phases 0, 1, 2, 3 and 5. Deviations from the design above, found while building:
+
+- **Singletons as JSON instead of YAML collections.** Each editable area is one JSON file (`content/site.json`, `seo.json`, `faq.json`, `home.json`, `about.json`, `timeline.json`, `services.json`, `booking.json`, `project-overrides.json`), with lists as Keystatic arrays (drag to reorder, no `order` field). Static JSON imports keep `export const metadata` synchronous and need no filesystem access at runtime. `lib/content/index.ts` parses them with zod (server-only); client components read the raw `content/site.json` through `lib/constants.ts` so zod stays out of the browser bundle.
+- **Projects are the one collection** (`content/projects/<slug>.json`, `order` field). Keystatic names images inside a singleton array by index (`items/0/image.png`) and renames them on reorder, so projects need a collection: its screenshots live at `public/assets/projects/<slug>/image.*`. The old screenshot URLs 308-redirect. `lib/content/projects.ts` reads the directory; `outputFileTracingIncludes` ships `content/` to the ISR functions.
+- **No separate `resources`/`legal` collections and no route registry (phase 4 deferred).** The resources page, downloads and the Vinly Fold policy belong to another team's uncommitted work, and the registry would edit `app/sitemap.xml/route.ts`, which that work also changes.
+- **Kept in code:** UI microcopy, section headings, the résumé PDF, the OG image tagline, and `EMPLOYMENT`/`EDUCATION` in `lib/constants.ts`. These were not merged into the timeline, because the Turfmapp title differs ("Junior Full Stack Software Developer" vs "Full Stack Software Developer") and the owner has to choose.
+- **Production gate:** `/keystatic` and `/api/keystatic` return 404 in production until all four GitHub App env vars exist. `NEXT_PUBLIC_KEYSTATIC_STORAGE=github` switches `next dev` to GitHub mode for the one-time app setup.
+- **PR-gating needs branch protection.** Keystatic can commit straight to `main` for anyone with push access. Only a protected `main` (require a PR and the `Verify` check) forces edits through `content/*` branches.

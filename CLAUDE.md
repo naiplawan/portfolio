@@ -117,9 +117,16 @@ export function Component({ prop }: ComponentProps) {
 
 ## Project-Specific Patterns
 
+### Content (Keystatic)
+- Editable content lives in `content/` as JSON and is edited at `/keystatic` (local files in dev, GitHub branches in production; production returns 404 until the GitHub App env vars are set)
+- `keystatic.config.ts` defines the admin; `lib/content/schemas.ts` mirrors it in zod and `lib/content/index.ts` parses each file at import. Change both together — `lib/content/__tests__/content.test.ts` fails when they disagree
+- Curated projects are a collection (`content/projects/<slug>.json`, loaded by `lib/content/projects.ts`); screenshots live in `public/assets/projects/<slug>/` so Keystatic never renames them
+- `lib/content` is server-only (zod). Client components that need site facts import `lib/constants.ts`, which reads the raw `content/site.json`
+- Page titles/descriptions: `export const metadata = pageSeo('/path')` for pages listed in SEO → Pages
+
 ### GitHub Integration
 - Projects are fetched from GitHub API via `/api/github/projects`
-- Falls back to `FALLBACK_PROJECTS` in `lib/data/projects-data.ts`
+- Falls back to the curated projects (`FALLBACK_PROJECTS` in `lib/data/projects-data.ts`, from `content/projects/`)
 - Environment variable: `NEXT_PUBLIC_GITHUB_USERNAME`
 
 ### Contact Form
@@ -130,11 +137,11 @@ export function Component({ prop }: ComponentProps) {
 
 ### SEO, AEO and GEO
 - Site URL comes from `SITE_URL` (`lib/constants.ts`, `NEXT_PUBLIC_APP_URL` or `https://rachaphol.vercel.app`); never hardcode a domain
-- Every page exports `metadata = pageMetadata({ title, description, path })` from `lib/seo.ts` (canonical + OG + Twitter). Client pages put it in a sibling `layout.tsx` (see `app/contact`)
+- Every page exports `metadata = pageSeo(path)` (content-managed) or `pageMetadata({ title, description, path })` from `lib/seo.ts` (canonical + OG + Twitter). Client pages put it in a sibling `layout.tsx` (see `app/contact`)
 - JSON-LD lives in `components/seo/structured-data.tsx`: one Person/WebSite graph in the root layout (stable `@id`s in `SCHEMA_IDS`), plus ProfilePage + FAQPage on home, ItemList on `/projects`, BreadcrumbList on subpages. Never add a second Person
-- FAQ answers (`lib/data/faq-data.ts`) are written in the third person, self-contained, and reused verbatim for the visible section, FAQPage and `llms.txt`
-- `/llms.txt` is generated from site data; `robots.txt` explicitly allows search and AI crawlers and blocks only `/api/`; add new pages to `app/sitemap.xml/route.ts`
-- Project names/descriptions/live URLs that GitHub gets wrong go in `PROJECT_OVERRIDES` (`lib/data/projects-data.ts`)
+- FAQ answers (`content/faq.json`, exposed by `lib/data/faq-data.ts`) are written in the third person, self-contained, and reused verbatim for the visible section, FAQPage and `llms.txt`
+- `/llms.txt` is generated from site data; `robots.txt` explicitly allows search and AI crawlers and blocks only `/api/` and `/keystatic`; add new pages to `app/sitemap.xml/route.ts`
+- Project names/descriptions/live URLs that GitHub gets wrong go in `content/project-overrides.json` (Keystatic: Projects → GitHub corrections)
 
 ### Dark Mode
 - Toggle component: `components/ui/dark-mode-toggle.tsx`

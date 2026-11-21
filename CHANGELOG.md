@@ -8,6 +8,7 @@
 - Make site identity, contact links, SEO titles and descriptions, keywords, skills, manifest text and the FAQ editable in Keystatic, stored as validated JSON in `content/`.
 - Make curated projects (case studies, screenshots, order) and GitHub corrections editable in Keystatic; tests check screenshot dimensions and a 600 KB size budget.
 - Make the hero, capabilities, about prose, career timeline, services and booking options editable in Keystatic; tests check that case-study and timeline links resolve.
+- Document content editing and the one-time Keystatic GitHub App setup; `NEXT_PUBLIC_KEYSTATIC_STORAGE=github` runs the GitHub-mode admin under `pnpm dev`.
 - Add GitHub Actions checks for linting, type checking, tests, and production builds on pushes and pull requests.
 - Add three selected project case studies with local screenshots, contributions, design decisions, and qualitative outcomes.
 - Add a résumé download and regression tests for mobile navigation and homepage rendering without GitHub.

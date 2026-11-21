@@ -40,6 +40,8 @@ Requires Node.js 24 and pnpm 10.
 | `GITHUB_TOKEN` | Optional; raises the GitHub API rate limit |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional Google Analytics ID |
 | `GOOGLE_VERIFICATION_CODE` | Optional Search Console verification |
+| `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` | Content admin in production (see [Editing content](#editing-content)); without them `/keystatic` returns 404 in production |
+| `NEXT_PUBLIC_KEYSTATIC_STORAGE` | Set to `github` to use the GitHub-mode admin under `pnpm dev` |
 
 ## Scripts
 
@@ -65,8 +67,12 @@ components/
   portfolio/             NavBar, Footer, About page parts
   ui/                    Button, Input, Textarea, SectionHeading, theme toggle
   seo/ analytics/ layout/ accessibility/
+content/                 Editable content (Keystatic JSON): site, SEO, FAQ, home, about,
+                         timeline, services, booking, GitHub corrections, projects/<slug>.json
+keystatic.config.ts      Content admin schema (mirrored by zod schemas in lib/content/)
 lib/
-  data/                  Featured case studies, project fallback data and career timeline
+  content/               Validated loaders and zod schemas for content/
+  data/                  Adapters that turn content into the site's project and timeline types
   github-api.ts          GitHub API client
   utils/                 GitHub sync, rate limiter, class merging
 audit-screenshots/       Current light/dark and mobile screenshots of every page
@@ -76,7 +82,24 @@ audit-screenshots/       Current light/dark and mobile screenshots of every page
 
 Colors are HSL tokens in `app/globals.css` (`:root` and `.dark`) and are exposed to Tailwind through `tailwind.config.js`. Pages are built from a shared `SectionHeading` and ruled lists instead of cards. See [`CLAUDE.md`](CLAUDE.md) for the full conventions.
 
-Homepage case studies live in `lib/data/featured-projects.ts`. Their screenshots are stored in `public/assets/projects/`; source README and screenshot paths are recorded alongside the data. Keep results factual and qualitative unless measured evidence is available. Services link to the same case studies.
+Homepage case studies are the curated projects with "Show as a case study" checked (`content/projects/<slug>.json`). Screenshots live in `public/assets/projects/<slug>/`; each project's editor notes record the source README and screenshot path. Keep results factual and qualitative unless measured evidence is available. Services link to the same case studies.
+
+## Editing content
+
+Text, links, SEO metadata, projects and screenshots are edited in [Keystatic](https://keystatic.com) at `/keystatic`. Content is stored as JSON in `content/` and validated at build time, so a bad edit fails CI instead of reaching the site.
+
+- **Locally:** `pnpm dev`, open http://localhost:3000/keystatic, save, then commit the changed files in `content/` (and `public/assets/projects/`).
+- **In production:** sign in with GitHub at `/keystatic`. Create a branch from the branch picker (named `content/…`), save your edits there, then open the pull request Keystatic links to. CI runs, Vercel builds a preview, and merging publishes the change.
+
+UI microcopy (navigation, form labels, section headings, 404 text), the résumé PDF and the `EMPLOYMENT`/`EDUCATION` facts in `lib/constants.ts` are still edited in code.
+
+### One-time production setup
+
+1. Run `NEXT_PUBLIC_KEYSTATIC_STORAGE=github pnpm dev`, open http://127.0.0.1:3000/keystatic and follow **Create GitHub App**. Keystatic creates the app on your account and writes its credentials to `.env` (do not commit it).
+2. Install the app on the `naiplawan/portfolio` repository only.
+3. In the GitHub App settings, add the production callback URL `https://<your-domain>/api/keystatic/github/oauth/callback` next to the local one.
+4. Copy `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET` and `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` from `.env` into the Vercel project's environment variables (Production, and Preview if you want to edit on previews), then redeploy.
+5. Protect `main` (require a pull request and the `Verify` check) so content changes always go through review and CI.
 
 ## Deployment
 
