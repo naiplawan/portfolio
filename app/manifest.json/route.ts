@@ -1,8 +1,10 @@
+import { SEO } from '@/lib/content';
+
 export function GET() {
   const manifest = {
     name: 'Rachaphol Plookaom - Portfolio',
     short_name: 'Rachaphol Portfolio',
-    description: 'Experienced fullstack developer specializing in React, Next.js, Node.js, Python, and AI integration.',
+    description: SEO.manifestDescription,
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

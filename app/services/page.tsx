@@ -3,14 +3,9 @@ import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
-import { pageMetadata } from '@/lib/seo';
+import { pageSeo } from '@/lib/seo';
 
-export const metadata = pageMetadata({
-  title: 'Services',
-  description:
-    'Business websites, interactive web products and connected business tools by Rachaphol Plookaom. Clear deliverables, relevant project examples and a scoped handoff.',
-  path: '/services',
-});
+export const metadata = pageSeo('/services');
 
 const services = [
   {

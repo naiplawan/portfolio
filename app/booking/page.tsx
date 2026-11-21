@@ -3,14 +3,9 @@ import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
-import { pageMetadata } from '@/lib/seo';
+import { pageSeo } from '@/lib/seo';
 
-export const metadata = pageMetadata({
-  title: 'Book a call',
-  description:
-    'Book a 15 to 60 minute call with Rachaphol Plookaom to discuss a project, a collaboration or a technical review. Replies usually within 24 hours.',
-  path: '/booking',
-});
+export const metadata = pageSeo('/booking');
 
 const timeSlots = [
   { time: '15 minutes', type: 'Quick chat', description: 'Brief introduction or question' },

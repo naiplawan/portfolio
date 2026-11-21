@@ -5,6 +5,7 @@
 ### Added
 
 - Add a Keystatic content admin at `/keystatic`: local files in development, GitHub branches in production once the GitHub App credentials are set (404 until then); hidden from crawlers and the site navigation.
+- Make site identity, contact links, SEO titles and descriptions, keywords, skills, manifest text and the FAQ editable in Keystatic, stored as validated JSON in `content/`.
 - Add GitHub Actions checks for linting, type checking, tests, and production builds on pushes and pull requests.
 - Add three selected project case studies with local screenshots, contributions, design decisions, and qualitative outcomes.
 - Add a résumé download and regression tests for mobile navigation and homepage rendering without GitHub.
