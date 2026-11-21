@@ -5,6 +5,7 @@ import { createReader } from '@keystatic/core/reader'
 import { imageSize } from 'image-size'
 import { describe, expect, it } from 'vitest'
 import config from '@/keystatic.config'
+import { EMPLOYMENT } from '@/lib/constants'
 import { pageSeo } from '@/lib/seo'
 import { HOME, SERVICES, TIMELINE } from '..'
 import { PROJECTS } from '../projects'
@@ -94,6 +95,14 @@ describe('content', () => {
       expect(TIMELINE.items.map((item) => item.id)).toContain(timelineEntry[1])
     } else {
       expect(href).toMatch(/^(\/[\w/-]*|https:\/\/\S+)$/)
+    }
+  })
+
+  it('keeps the EMPLOYMENT facts (llms.txt) in line with the career timeline', () => {
+    const roles = TIMELINE.items.filter((item) => item.type === 'work')
+    for (const job of [EMPLOYMENT.current, EMPLOYMENT.previous]) {
+      const entry = roles.find((role) => job.company.startsWith(role.organization))
+      expect(entry?.title).toBe(job.title)
     }
   })
 

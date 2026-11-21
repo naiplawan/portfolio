@@ -22,6 +22,7 @@
 
 ### Fixed
 
+- Correct the Turfmapp job title in llms.txt to "Full Stack Software Developer", matching the résumé and career timeline, and test that the two stay in sync.
 - Keep mobile navigation controls inside the focus trap and release scroll locks and inert page state when resizing to desktop.
 - Run ambient cell animations only at desktop widths where the decoration is visible.
 - Correct ByteTrack's frontend-demo description and URL, and prevent unverified repository homepages from overriding curated project links.

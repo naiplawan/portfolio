@@ -51,7 +51,7 @@ export const EMPLOYMENT = {
     type: 'On-site',
   },
   previous: {
-    title: 'Junior Full Stack Software Developer',
+    title: 'Full Stack Software Developer',
     company: 'Turfmapp',
     period: 'Jan 2024 - Jan 2025',
   },
