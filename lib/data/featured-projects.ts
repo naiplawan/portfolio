@@ -52,7 +52,7 @@ const toFeatured = (item: CuratedItem): FeaturedProject | null => {
 };
 
 /**
- * Curated projects, edited in Keystatic (Projects → Curated projects). They
+ * Curated projects, edited in the admin (Curated projects). They
  * replace GitHub's metadata for the same repository and are the fallback list
  * when GitHub is unavailable. The editor notes record how claims were checked.
  */

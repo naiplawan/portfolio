@@ -20,7 +20,7 @@ export interface TimelineItem {
   };
 }
 
-/** Career entries, edited in Keystatic (About → Career timeline). */
+/** Career entries, edited in the admin (Career timeline). */
 export const timelineData: TimelineItem[] = TIMELINE.items.map(({ location, endDate, highlights, technologies, ...item }) => ({
   ...item,
   ...(location && { location }),

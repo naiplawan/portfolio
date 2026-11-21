@@ -19,7 +19,7 @@ import {
   timelineSchema,
 } from './schemas'
 
-/** Validated content edited in the Keystatic admin (`/keystatic`). Server-only. */
+/** Validated content (edited at `/admin`, pulled from the content API at build time). Server-only. */
 export const SITE = siteSchema.parse(siteJson)
 export const SEO = seoSchema.parse(seoJson)
 export const FAQ = faqSchema.parse(faqJson)

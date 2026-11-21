@@ -6,7 +6,7 @@ import { projectSchema } from './schemas'
 const DIRECTORY = path.join(process.cwd(), 'content', 'projects')
 
 /**
- * Curated projects from the Keystatic collection in `content/projects/`, one
+ * Curated projects from `content/projects/` (the API's projects collection), one
  * JSON file per slug, sorted by their `order` field. Server-only (reads files).
  */
 export const PROJECTS = readdirSync(DIRECTORY)

@@ -10,11 +10,11 @@ interface SiteChromeProps {
   children: React.ReactNode
 }
 
-/** Public pages get the site frame; the Keystatic admin renders alone. */
+/** Public pages get the site frame; the content admin renders alone. */
 export function SiteChrome({ header, footer, children }: SiteChromeProps) {
   const pathname = usePathname()
 
-  if (pathname?.startsWith('/keystatic')) return <>{children}</>
+  if (pathname?.startsWith('/admin')) return <>{children}</>
 
   return (
     <>

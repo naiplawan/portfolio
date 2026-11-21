@@ -6,7 +6,7 @@ import { CURATED_PROJECTS, FEATURED_PROJECTS } from './featured-projects';
 // GitHub username from environment variable
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 
-// Curated projects used by the portfolio (Keystatic: Projects → Curated projects).
+// Curated projects used by the portfolio (edited in the admin: Curated projects).
 const FALLBACK_PROJECTS = CURATED_PROJECTS;
 
 interface ProjectOverride {
@@ -19,7 +19,7 @@ interface ProjectOverride {
 
 /**
  * Corrections on top of GitHub repo metadata, keyed by repo name (lowercase),
- * edited in Keystatic (Projects → GitHub corrections).
+ * edited in the admin (GitHub corrections).
  */
 const PROJECT_OVERRIDES: Readonly<Record<string, ProjectOverride>> = Object.fromEntries(
   PROJECT_OVERRIDE_CONTENT.items.map(({ repo, title, description, liveUrl }) => [
