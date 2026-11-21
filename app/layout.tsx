@@ -9,6 +9,7 @@ const Analytics = nextDynamic(() => import('@/components/analytics').then(mod =>
 })
 import { SkipLink } from '@/components/accessibility/skip-link'
 import { ClientErrorBoundary } from '@/components/layout/error-boundary'
+import { SiteChrome } from '@/components/layout/site-chrome'
 import NavBar from '@/components/portfolio/NavBar'
 import Footer from '@/components/portfolio/Footer'
 import { KonamiCode } from '@/components/motion/KonamiCode'
@@ -156,17 +157,26 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <SiteStructuredData />
       </head>
       <body className="antialiased bg-background text-foreground min-h-screen font-body overflow-x-hidden max-w-full">
-        <SkipLink />
         <Providers>
-          <Analytics />
-          <NavBar />
-          <main id="main-content" tabIndex={-1} className="focus:outline-none min-h-screen pt-14">
+          <SiteChrome
+            header={
+              <>
+                <SkipLink />
+                <Analytics />
+                <NavBar />
+              </>
+            }
+            footer={
+              <>
+                <Footer />
+                <KonamiCode />
+              </>
+            }
+          >
             <ClientErrorBoundary>
               {children}
             </ClientErrorBoundary>
-          </main>
-          <Footer />
-          <KonamiCode />
+          </SiteChrome>
         </Providers>
       </body>
     </html>
