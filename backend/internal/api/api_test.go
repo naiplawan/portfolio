@@ -120,13 +120,19 @@ func newServer(t *testing.T) (*Server, *memoryStore, *countingPublisher) {
 		projects:  map[string]json.RawMessage{"perd-wai": repoContent(t, "projects/perd-wai.json")},
 	}
 	pub := &countingPublisher{}
-	return &Server{Store: mem, Validator: validator, Auth: a, Publisher: pub, Log: slog.New(slog.NewTextHandler(io.Discard, nil))}, mem, pub
+	return &Server{Store: mem, Validator: validator, Auth: a, Publisher: pub, Log: slog.New(slog.NewTextHandler(io.Discard, nil)), ProxySecret: []byte(proxySecret)}, mem, pub
 }
 
-func do(t *testing.T, s *Server, method, path, token, body string) (*http.Response, string) {
+const proxySecret = "proxy-secret-proxy-secret-proxy-secret"
+
+func do(t *testing.T, s *Server, method, path, token, body string, headers ...string) (*http.Response, string) {
 	t.Helper()
 	req := httptest.NewRequest(method, path, strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Admin-Proxy-Secret", proxySecret)
+	for i := 0; i+1 < len(headers); i += 2 {
+		req.Header.Set(headers[i], headers[i+1])
+	}
 	if token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
@@ -239,5 +245,32 @@ func TestSaveAndDeleteProject(t *testing.T) {
 	}
 	if pub.calls != 2 {
 		t.Fatalf("publisher called %d times, want 2", pub.calls)
+	}
+}
+
+func TestAdminAPIRequiresTheProxySecret(t *testing.T) {
+	s, _, _ := newServer(t)
+	for _, secret := range []string{"", "wrong-secret"} {
+		res, _ := do(t, s, http.MethodPost, "/api/admin/login", "", `{"password":"letmein"}`, "X-Admin-Proxy-Secret", secret)
+		if res.StatusCode != http.StatusNotFound {
+			t.Errorf("secret %q: status %d, want 404", secret, res.StatusCode)
+		}
+	}
+	// Public reads do not need it
+	if res, _ := do(t, s, http.MethodGet, "/api/content", "", "", "X-Admin-Proxy-Secret", ""); res.StatusCode != http.StatusOK {
+		t.Errorf("public read: %d", res.StatusCode)
+	}
+}
+
+func TestLoginLockoutUsesTheForwardedClient(t *testing.T) {
+	s, _, _ := newServer(t)
+	for i := 0; i < 5; i++ {
+		do(t, s, http.MethodPost, "/api/admin/login", "", `{"password":"nope"}`, "X-Client-IP", "198.51.100.7")
+	}
+	if res, _ := do(t, s, http.MethodPost, "/api/admin/login", "", `{"password":"letmein"}`, "X-Client-IP", "198.51.100.7"); res.StatusCode != http.StatusTooManyRequests {
+		t.Fatalf("locked client: %d", res.StatusCode)
+	}
+	if res, _ := do(t, s, http.MethodPost, "/api/admin/login", "", `{"password":"letmein"}`, "X-Client-IP", "203.0.113.1"); res.StatusCode != http.StatusOK {
+		t.Fatalf("other client: %d", res.StatusCode)
 	}
 }

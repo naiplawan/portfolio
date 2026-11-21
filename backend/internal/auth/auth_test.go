@@ -2,6 +2,7 @@ package auth
 
 import (
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -22,7 +23,7 @@ func newAuth(t *testing.T) (*Auth, *time.Time) {
 
 func TestLoginAndVerify(t *testing.T) {
 	a, now := newAuth(t)
-	token, expires, err := a.Login("correct horse")
+	token, expires, err := a.Login("203.0.113.1", "correct horse")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +41,7 @@ func TestLoginAndVerify(t *testing.T) {
 
 func TestVerifyRejectsForgedTokens(t *testing.T) {
 	a, _ := newAuth(t)
-	token, _, _ := a.Login("correct horse")
+	token, _, _ := a.Login("203.0.113.1", "correct horse")
 	other, _ := New(string(a.passwordHash), []byte(strings.Repeat("x", 32)), time.Hour)
 	for label, candidate := range map[string]string{
 		"empty":        "",
@@ -57,15 +58,15 @@ func TestVerifyRejectsForgedTokens(t *testing.T) {
 func TestLockoutAfterRepeatedFailures(t *testing.T) {
 	a, now := newAuth(t)
 	for i := 0; i < maxFailures; i++ {
-		if _, _, err := a.Login("wrong"); err != ErrInvalidCredentials {
+		if _, _, err := a.Login("203.0.113.1", "wrong"); err != ErrInvalidCredentials {
 			t.Fatalf("attempt %d: %v", i, err)
 		}
 	}
-	if _, _, err := a.Login("correct horse"); err != ErrLocked {
+	if _, _, err := a.Login("203.0.113.1", "correct horse"); err != ErrLocked {
 		t.Fatalf("while locked: %v", err)
 	}
 	*now = now.Add(lockout)
-	if _, _, err := a.Login("correct horse"); err != nil {
+	if _, _, err := a.Login("203.0.113.1", "correct horse"); err != nil {
 		t.Fatalf("after lockout: %v", err)
 	}
 }
@@ -77,5 +78,44 @@ func TestNewRejectsWeakConfig(t *testing.T) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte("x"), bcrypt.MinCost)
 	if _, err := New(string(hash), []byte("short"), time.Hour); err == nil {
 		t.Error("short secret accepted")
+	}
+}
+
+func TestLockoutIsPerClient(t *testing.T) {
+	a, _ := newAuth(t)
+	for i := 0; i < maxFailures; i++ {
+		_, _, _ = a.Login("198.51.100.7", "wrong")
+	}
+	if _, _, err := a.Login("198.51.100.7", "correct horse"); err != ErrLocked {
+		t.Fatalf("attacker should be locked: %v", err)
+	}
+	if _, _, err := a.Login("203.0.113.1", "correct horse"); err != nil {
+		t.Fatalf("another client must not be locked out: %v", err)
+	}
+}
+
+func TestParallelGuessesCannotExceedTheLimit(t *testing.T) {
+	hash, _ := bcrypt.GenerateFromPassword([]byte("correct horse"), 10) // slow enough to overlap
+	a, err := New(string(hash), []byte(strings.Repeat("s", 32)), time.Hour)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	checked := 0
+	for i := 0; i < 50; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if _, _, err := a.Login("198.51.100.7", "wrong"); err == ErrInvalidCredentials {
+				mu.Lock()
+				checked++
+				mu.Unlock()
+			}
+		}()
+	}
+	wg.Wait()
+	if checked > maxFailures {
+		t.Fatalf("%d passwords were checked, want at most %d", checked, maxFailures)
 	}
 }

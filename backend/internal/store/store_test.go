@@ -53,6 +53,7 @@ func TestPostgres(t *testing.T) {
 	_ = db.PutProject(ctx, "b", json.RawMessage(`{"order": 2}`))
 	_ = db.PutProject(ctx, "a", json.RawMessage(`{"order": 10}`))
 	_ = db.PutProject(ctx, "c", json.RawMessage(`{"order": 1}`))
+	_ = db.PutProject(ctx, "d", json.RawMessage(`{"order": 3000000000}`))
 	projects, err := db.Projects(ctx)
 	if err != nil {
 		t.Fatal(err)
@@ -61,8 +62,8 @@ func TestPostgres(t *testing.T) {
 	for _, p := range projects {
 		order += p.Slug
 	}
-	if order != "cba" {
-		t.Fatalf("project order = %s, want cba (numeric order)", order)
+	if order != "cbad" {
+		t.Fatalf("project order = %s, want cbad (numeric order, no int overflow)", order)
 	}
 	if err := db.DeleteProject(ctx, "b"); err != nil {
 		t.Fatal(err)

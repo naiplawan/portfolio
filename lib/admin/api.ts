@@ -5,6 +5,9 @@
  */
 
 export const CONTENT_API_URL = process.env.CONTENT_API_URL?.replace(/\/+$/, '')
+/** Shared with the Go API (ADMIN_PROXY_SECRET); without it the admin API answers 404. */
+const PROXY_SECRET = process.env.ADMIN_PROXY_SECRET ?? ''
+export const ADMIN_CONFIGURED = Boolean(CONTENT_API_URL && PROXY_SECRET)
 
 export class ContentApiError extends Error {
   constructor(
@@ -24,6 +27,7 @@ async function request(path: string, init: RequestInit & { token?: string } = {}
     signal: AbortSignal.timeout(15_000),
     headers: {
       'Content-Type': 'application/json',
+      ...(path.startsWith('/api/admin/') && { 'X-Admin-Proxy-Secret': PROXY_SECRET }),
       ...(token && { Authorization: `Bearer ${token}` }),
       ...headers,
     },
@@ -44,8 +48,15 @@ export async function getBundle(): Promise<ContentBundle> {
   return (await request('/api/content')).json()
 }
 
-export async function login(password: string): Promise<{ token: string; expiresAt: string }> {
-  return (await request('/api/admin/login', { method: 'POST', body: JSON.stringify({ password }) })).json()
+/** `clientIp` keys the API's lockout, so one attacker cannot lock the owner out. */
+export async function login(password: string, clientIp: string): Promise<{ token: string; expiresAt: string }> {
+  return (
+    await request('/api/admin/login', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+      headers: { 'X-Client-IP': clientIp },
+    })
+  ).json()
 }
 
 export async function verifySession(token: string): Promise<boolean> {

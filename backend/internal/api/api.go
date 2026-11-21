@@ -3,6 +3,7 @@
 package api
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -25,6 +26,10 @@ type Server struct {
 	Auth      *auth.Auth
 	Publisher publish.Publisher
 	Log       *slog.Logger
+	// ProxySecret must accompany every /api/admin request (X-Admin-Proxy-Secret).
+	// Only the Next.js server knows it, so the admin API is unreachable directly
+	// and the client IP it forwards (X-Client-IP) can be trusted for the lockout.
+	ProxySecret []byte
 	// Health is optional; when set, /healthz checks it.
 	Health func() error
 }
@@ -53,7 +58,7 @@ func (s *Server) App() *fiber.App {
 	public.Get("/projects", s.listProjects)
 	public.Get("/projects/:slug", s.getProject)
 
-	admin := app.Group("/api/admin")
+	admin := app.Group("/api/admin", s.requireProxy)
 	admin.Post("/login", s.login)
 	admin.Use(s.requireSession)
 	admin.Get("/session", func(c fiber.Ctx) error { return c.SendStatus(fiber.StatusNoContent) })
@@ -145,17 +150,29 @@ func (s *Server) login(c fiber.Ctx) error {
 	if err := json.Unmarshal(c.Body(), &body); err != nil || body.Password == "" {
 		return fiber.NewError(fiber.StatusBadRequest, "password is required")
 	}
-	token, expires, err := s.Auth.Login(body.Password)
+	client := c.Get("X-Client-IP")
+	if client == "" {
+		client = c.IP()
+	}
+	token, expires, err := s.Auth.Login(client, body.Password)
 	switch {
 	case errors.Is(err, auth.ErrLocked):
 		return fiber.NewError(fiber.StatusTooManyRequests, err.Error())
 	case errors.Is(err, auth.ErrInvalidCredentials):
-		s.Log.Warn("failed admin login")
+		s.Log.Warn("failed admin login", "client", client)
 		return fiber.NewError(fiber.StatusUnauthorized, "wrong password")
 	case err != nil:
 		return err
 	}
 	return c.JSON(fiber.Map{"token": token, "expiresAt": expires.UTC().Format(time.RFC3339)})
+}
+
+func (s *Server) requireProxy(c fiber.Ctx) error {
+	given := []byte(c.Get("X-Admin-Proxy-Secret"))
+	if len(s.ProxySecret) == 0 || subtle.ConstantTimeCompare(given, s.ProxySecret) != 1 {
+		return fiber.NewError(fiber.StatusNotFound, "not found")
+	}
+	return c.Next()
 }
 
 func (s *Server) requireSession(c fiber.Ctx) error {

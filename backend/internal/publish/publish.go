@@ -16,6 +16,9 @@ type Publisher interface {
 	Schedule()
 }
 
+// retryDelays are the waits between deploy hook attempts.
+var retryDelays = []time.Duration{2 * time.Second, 10 * time.Second, 30 * time.Second}
+
 // DeployHook calls a Vercel deploy hook URL.
 type DeployHook struct {
 	url    string
@@ -43,13 +46,41 @@ func (d *DeployHook) Schedule() {
 	if d.timer != nil {
 		d.timer.Stop()
 	}
-	d.timer = time.AfterFunc(d.delay, func() {
-		if err := d.trigger(context.Background()); err != nil {
-			d.log.Error("deploy hook failed", "error", err)
+	d.timer = time.AfterFunc(d.delay, func() { d.deploy(context.Background()) })
+}
+
+// Flush fires a pending deploy immediately, so a save made just before a
+// restart still reaches the site. Call it on shutdown.
+func (d *DeployHook) Flush(ctx context.Context) {
+	d.mu.Lock()
+	pending := d.timer != nil && d.timer.Stop()
+	d.timer = nil
+	d.mu.Unlock()
+	if pending {
+		d.deploy(ctx)
+	}
+}
+
+func (d *DeployHook) deploy(ctx context.Context) {
+	err := d.trigger(ctx)
+	for _, wait := range retryDelays {
+		if err == nil {
+			break
+		}
+		d.log.Warn("deploy hook failed; retrying", "error", err, "in", wait)
+		select {
+		case <-time.After(wait):
+		case <-ctx.Done():
+			d.log.Error("deploy hook abandoned", "error", ctx.Err())
 			return
 		}
-		d.log.Info("deploy hook triggered")
-	})
+		err = d.trigger(ctx)
+	}
+	if err != nil {
+		d.log.Error("deploy hook failed; publish manually from Vercel", "error", err)
+		return
+	}
+	d.log.Info("deploy hook triggered")
 }
 
 func (d *DeployHook) trigger(ctx context.Context) error {

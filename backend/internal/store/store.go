@@ -113,6 +113,7 @@ func (p *Postgres) Documents(ctx context.Context) (map[string]json.RawMessage, e
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	documents := map[string]json.RawMessage{}
 	for rows.Next() {
 		var name, data string
@@ -146,10 +147,12 @@ func (p *Postgres) PutDocument(ctx context.Context, name string, data json.RawMe
 }
 
 func (p *Postgres) Projects(ctx context.Context) ([]Project, error) {
-	rows, err := p.pool.Query(ctx, `SELECT slug, data::text FROM projects ORDER BY (data->>'order')::int, slug`)
+	// numeric, not int: a large order must not make every read fail
+	rows, err := p.pool.Query(ctx, `SELECT slug, data::text FROM projects ORDER BY (data->>'order')::numeric, slug`)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	projects := []Project{}
 	for rows.Next() {
 		var slug, data string

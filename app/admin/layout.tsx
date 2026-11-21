@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { CONTENT_API_URL } from '@/lib/admin/api'
+import { ADMIN_CONFIGURED } from '@/lib/admin/api'
 
 export const metadata: Metadata = {
   title: 'Content admin',
@@ -11,13 +11,15 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  if (!CONTENT_API_URL) {
+  if (!ADMIN_CONFIGURED) {
     if (process.env.NODE_ENV === 'production') notFound()
     return (
       <div className="container-premium section-padding">
-        <p className="mono-tag">Set CONTENT_API_URL (the Go content API in backend/) to use the admin.</p>
+        <p className="mono-tag">
+          Set CONTENT_API_URL and ADMIN_PROXY_SECRET (shared with the Go content API in backend/) to use the admin.
+        </p>
       </div>
     )
   }
-  return <div className="container-premium py-10 sm:py-14">{children}</div>
+  return <div className="container-premium section-padding">{children}</div>
 }

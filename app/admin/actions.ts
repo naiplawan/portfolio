@@ -1,5 +1,6 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { ContentApiError, deleteProject, login, putDocument, putProject } from '@/lib/admin/api'
@@ -17,8 +18,11 @@ const PUBLISH_NOTE = 'Saved. The site rebuilds automatically in a minute or two.
 export async function loginAction(_previous: ActionState, form: FormData): Promise<ActionState> {
   const password = String(form.get('password') ?? '')
   if (!password) return { ok: false, message: 'Enter the password.' }
+  // Vercel sets x-forwarded-for to the visitor's address (first entry)
+  const forwarded = (await headers()).get('x-forwarded-for') ?? ''
+  const clientIp = forwarded.split(',')[0]?.trim() || 'unknown'
   try {
-    const { token, expiresAt } = await login(password)
+    const { token, expiresAt } = await login(password, clientIp)
     await setSessionCookie(token, expiresAt)
   } catch (error) {
     return { ok: false, message: error instanceof ContentApiError ? error.message : 'The content API is unreachable.' }
@@ -55,7 +59,7 @@ async function save(write: () => Promise<void>): Promise<ActionState> {
 
 export async function saveDocumentAction(name: string, _previous: ActionState, form: FormData): Promise<ActionState> {
   const token = await requireSession()
-  if (!(name in CONTENT_DOCUMENTS)) return { ok: false, message: 'Unknown document.' }
+  if (!Object.hasOwn(CONTENT_DOCUMENTS, name)) return { ok: false, message: 'Unknown document.' }
   const parsed = parse(CONTENT_DOCUMENTS[name as ContentDocumentName], form.get('json'))
   if ('error' in parsed) return { ok: false, message: parsed.error }
   return save(() => putDocument(token, name, parsed.data))
