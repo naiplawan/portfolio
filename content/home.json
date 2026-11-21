@@ -1,0 +1,74 @@
+{
+  "headline": [
+    {
+      "word": "Biologist",
+      "accent": false
+    },
+    {
+      "word": "turned",
+      "accent": false
+    },
+    {
+      "word": "developer",
+      "accent": true
+    }
+  ],
+  "lead": "I build websites and product interfaces for small businesses and product teams, using React, Next.js and TypeScript. Currently a Frontend Developer at Unixdev Co., Ltd. in Bangkok.",
+  "detail": "My biology background shapes how I work: form a hypothesis, change one variable, measure the result.",
+  "config": [
+    {
+      "key": "role",
+      "value": "\"Frontend Developer @ Unixdev\""
+    },
+    {
+      "key": "stack",
+      "value": "[react, next, typescript, go, flutter]"
+    },
+    {
+      "key": "based",
+      "value": "\"Bangkok, TH\""
+    },
+    {
+      "key": "formerly",
+      "value": "\"B.Sc. Biological Sciences, Mahidol\""
+    },
+    {
+      "key": "open_to",
+      "value": "\"freelance + full-time\""
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Product interfaces",
+      "tools": "React · Next.js · TypeScript · Tailwind CSS",
+      "evidence": "Bilingual planning forms, scenario inputs and forecast views in Perd Wai.",
+      "href": "#project-perd-wai",
+      "link": "Explore Perd Wai"
+    },
+    {
+      "name": "Motion & interaction",
+      "tools": "React Three Fiber · GSAP · Responsive design",
+      "evidence": "An interactive printer preview in Layer 3D, with lazy loading, offscreen pausing and reduced-motion support.",
+      "href": "#project-layer-3d",
+      "link": "Explore Layer 3D"
+    },
+    {
+      "name": "APIs & application data",
+      "tools": "NestJS · PostgreSQL · LINE LIFF",
+      "evidence": "Connected checkout, shop administration and customer loyalty flows in Cafe’nMe.",
+      "href": "#project-cafe-nme",
+      "link": "Explore Cafe’nMe"
+    },
+    {
+      "name": "Working in product teams",
+      "tools": "React · Node.js · Express · Django · PostgreSQL",
+      "evidence": "Developed web applications, managed databases and integrated LLM/RAG features at Turfmapp.",
+      "href": "/about#work-2",
+      "link": "Read about my role"
+    }
+  ],
+  "aboutParagraphs": [
+    "I studied Biological Sciences at Mahidol University: titrations, microscopes, lab notebooks. In 2023 I traded the bench for a keyboard through an intensive bootcamp.",
+    "The method carried over. A bug is an unexpected result; a fix is a controlled experiment. Today I build product interfaces with React, Next.js and TypeScript, and work across Go APIs and Flutter apps when the product calls for it."
+  ]
+}

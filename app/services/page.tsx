@@ -3,40 +3,17 @@ import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
+import { SERVICES } from '@/lib/content';
 import { pageSeo } from '@/lib/seo';
 
 export const metadata = pageSeo('/services');
 
-const services = [
-  {
-    title: 'Business websites',
-    suitableFor: 'Small businesses that need to explain their services and turn interest into an enquiry.',
-    deliverable: 'A responsive website with service pages, clear contact paths, search metadata and deployment.',
-    features: ['Content and navigation shaped around your customers', 'Mobile layouts and accessible interactions', 'Source code and a guide to updating the content'],
-    example: { name: 'Layer 3D — services, material comparison and LINE quote requests', href: '/#project-layer-3d' },
-  },
-  {
-    title: 'Interactive web products',
-    suitableFor: 'Founders and product teams testing a useful tool or turning a defined workflow into an application.',
-    deliverable: 'A working web application with forms, application logic and clear results, ready to put in front of users.',
-    features: ['A focused scope built around the main user journey', 'Validation, loading and error states', 'Tests for critical behavior and a documented handoff'],
-    example: { name: 'Perd Wai — planning inputs, scenario comparisons and forecasts', href: '/#project-perd-wai' },
-  },
-  {
-    title: 'Connected business tools',
-    suitableFor: 'Teams that need staff workflows, customer interactions and operational data to work together.',
-    deliverable: 'An application connecting the agreed interfaces, API and database, with access rules and reporting for each role.',
-    features: ['Staff and admin interfaces tailored to their tasks', 'API and data integration for the core workflow', 'Deployment, documentation and team walkthrough'],
-    example: { name: 'Cafe’nMe — checkout, shop admin and LINE membership', href: '/#project-cafe-nme' },
-  },
-];
+const services = SERVICES.offers.map(({ exampleName, exampleHref, ...service }) => ({
+  ...service,
+  example: { name: exampleName, href: exampleHref },
+}));
 
-const process = [
-  { step: '01', title: 'Discovery', description: 'We discuss your project requirements, goals, and timeline.' },
-  { step: '02', title: 'Proposal', description: 'I provide a detailed proposal with scope, timeline, and pricing.' },
-  { step: '03', title: 'Development', description: 'I build your solution with regular updates and iterations.' },
-  { step: '04', title: 'Delivery', description: 'Final review, deployment, and handoff with documentation.' },
-];
+const process = SERVICES.process.map((step, index) => ({ step: String(index + 1).padStart(2, '0'), ...step }));
 
 export default function ServicesPage() {
   return (

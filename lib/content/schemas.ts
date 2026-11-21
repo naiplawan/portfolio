@@ -118,3 +118,65 @@ export const projectOverridesSchema = z.object({
     })
   ),
 })
+
+export const TIMELINE_TYPES = ['work', 'education', 'achievement', 'project'] as const
+
+const yearMonth = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Use YYYY-MM')
+const titled = z.array(z.object({ title: text, description: text }))
+
+export const homeSchema = z.object({
+  headline: z.array(z.object({ word: text, accent: z.boolean() })).min(1),
+  lead: text,
+  detail: text,
+  config: z.array(z.object({ key: text, value: text.max(60) })),
+  capabilities: z.array(z.object({ name: text, tools: text, evidence: text, href: text, link: text })),
+  aboutParagraphs: z.array(text).min(1),
+})
+
+export const aboutSchema = z.object({
+  paragraphs: z.array(text).min(1),
+  capabilities: titled,
+})
+
+export const timelineSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        id: z.string().regex(/^[a-z0-9-]+$/),
+        type: z.enum(TIMELINE_TYPES),
+        title: text,
+        organization: text,
+        location: z.string(),
+        date: yearMonth,
+        endDate: yearMonth.or(z.literal('')),
+        description: text,
+        highlights: z.array(text),
+        technologies: z.array(text),
+        commit: z.object({ hash: text, message: text, world: text }),
+      })
+    )
+    .min(1)
+    .refine((items) => new Set(items.map((item) => item.id)).size === items.length, {
+      message: 'Timeline anchor ids must be unique',
+    }),
+})
+
+export const servicesSchema = z.object({
+  offers: z.array(
+    z.object({
+      title: text,
+      suitableFor: text,
+      deliverable: text,
+      features: z.array(text),
+      exampleName: text,
+      exampleHref: text,
+    })
+  ),
+  process: titled,
+})
+
+export const bookingSchema = z.object({
+  timeSlots: z.array(z.object({ time: text, type: text, description: text })),
+  topics: titled,
+  preparation: titled,
+})

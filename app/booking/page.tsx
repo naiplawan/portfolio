@@ -3,29 +3,16 @@ import { ArrowUpRight } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { BreadcrumbStructuredData } from '@/components/seo/structured-data';
 import { ROUTES } from '@/lib/constants/routes';
+import { BOOKING } from '@/lib/content';
 import { pageSeo } from '@/lib/seo';
 
 export const metadata = pageSeo('/booking');
 
-const timeSlots = [
-  { time: '15 minutes', type: 'Quick chat', description: 'Brief introduction or question' },
-  { time: '30 minutes', type: 'Consultation', description: 'Project discussion' },
-  { time: '45 minutes', type: 'Deep dive', description: 'Technical discussion' },
-  { time: '60 minutes', type: 'Full meeting', description: 'Comprehensive consultation' },
-];
+const timeSlots = BOOKING.timeSlots;
 
-const topics = [
-  { title: 'Project inquiry', description: 'Discuss a new project or opportunity' },
-  { title: 'Collaboration', description: 'Explore working together' },
-  { title: 'Technical review', description: 'Code review or architecture discussion' },
-  { title: 'General inquiry', description: 'Any other questions or opportunities' },
-];
+const topics = BOOKING.topics;
 
-const preparation = [
-  { title: 'Come prepared with questions', description: 'Share your project details, challenges, and goals beforehand' },
-  { title: 'Be on time', description: 'I respect your time and ask the same in return' },
-  { title: 'Bring your team', description: 'Feel free to invite stakeholders or decision makers' },
-];
+const preparation = BOOKING.preparation;
 
 const meetingRequestHref = (subject: string) =>
   `${ROUTES.CONTACT}?subject=${encodeURIComponent(subject)}`;

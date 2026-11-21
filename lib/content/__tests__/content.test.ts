@@ -6,8 +6,21 @@ import { imageSize } from 'image-size'
 import { describe, expect, it } from 'vitest'
 import config from '@/keystatic.config'
 import { pageSeo } from '@/lib/seo'
+import { HOME, SERVICES, TIMELINE } from '..'
 import { PROJECTS } from '../projects'
-import { SEO_PAGE_PATHS, faqSchema, projectOverridesSchema, projectSchema, seoSchema, siteSchema } from '../schemas'
+import {
+  SEO_PAGE_PATHS,
+  aboutSchema,
+  bookingSchema,
+  faqSchema,
+  homeSchema,
+  projectOverridesSchema,
+  projectSchema,
+  seoSchema,
+  servicesSchema,
+  siteSchema,
+  timelineSchema,
+} from '../schemas'
 
 const root = path.resolve(__dirname, '../../..')
 const reader = createReader(root, config)
@@ -18,6 +31,11 @@ const singletons = {
   seo: seoSchema,
   faq: faqSchema,
   projectOverrides: projectOverridesSchema,
+  home: homeSchema,
+  about: aboutSchema,
+  timeline: timelineSchema,
+  services: servicesSchema,
+  booking: bookingSchema,
 } as const
 type SingletonKey = keyof typeof singletons
 
@@ -59,6 +77,24 @@ describe('content', () => {
     const metadata = pageSeo(pagePath)
     expect(metadata.alternates?.canonical).toBe(pagePath)
     expect(metadata.description).toBeTruthy()
+  })
+
+  const internalLinks = [
+    ...HOME.capabilities.map(({ name, href }) => [`home capability "${name}"`, href] as const),
+    ...SERVICES.offers.map(({ title, exampleHref }) => [`service "${title}"`, exampleHref] as const),
+  ]
+
+  it.each(internalLinks)('%s links to something that exists (%s)', (_label, href) => {
+    const caseStudy = href.match(/^\/?#project-(.+)$/)
+    const timelineEntry = href.match(/^\/about#(.+)$/)
+    if (caseStudy) {
+      const slugs = PROJECTS.filter((project) => project.caseStudy.discriminant).map((project) => project.slug)
+      expect(slugs).toContain(caseStudy[1])
+    } else if (timelineEntry) {
+      expect(TIMELINE.items.map((item) => item.id)).toContain(timelineEntry[1])
+    } else {
+      expect(href).toMatch(/^(\/[\w/-]*|https:\/\/\S+)$/)
+    }
   })
 
   it('loads every project file', async () => {

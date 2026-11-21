@@ -1,5 +1,5 @@
 import { collection, config, fields, singleton } from '@keystatic/core'
-import { PROJECT_CATEGORIES, PROJECT_STATUSES, SEO_PAGE_PATHS } from './lib/content/schemas'
+import { PROJECT_CATEGORIES, PROJECT_STATUSES, SEO_PAGE_PATHS, TIMELINE_TYPES } from './lib/content/schemas'
 
 /**
  * Content schema for the Keystatic admin at /keystatic. Local files in
@@ -11,6 +11,7 @@ import { PROJECT_CATEGORIES, PROJECT_STATUSES, SEO_PAGE_PATHS } from './lib/cont
  */
 
 const json = { data: 'json' } as const
+const yearMonth = { regex: /^\d{4}-(0[1-9]|1[0-2])$/, message: 'Use YYYY-MM' }
 
 const required = { isRequired: true } as const
 const textList = (label: string, itemLabel: string) =>
@@ -18,6 +19,18 @@ const textList = (label: string, itemLabel: string) =>
     label,
     itemLabel: (props) => props.value,
   })
+const multiline = (label: string, description?: string) =>
+  fields.text({ label, multiline: true, validation: required, ...(description && { description }) })
+const titled = (label: string) =>
+  fields.array(
+    fields.object({
+      title: fields.text({ label: 'Title', validation: required }),
+      description: multiline('Description'),
+    }),
+    { label, itemLabel: (props) => props.fields.title.value }
+  )
+const linkDescription =
+  'A case study anchor such as /#project-perd-wai (or #project-perd-wai on the home page), or /about#<timeline id>. The tests check that the target exists.'
 const notes = fields.text({
   label: 'Editor notes',
   description: 'Sources and checks behind this content. Not shown on the site.',
@@ -33,7 +46,9 @@ export default config({
     brand: { name: 'Portfolio content' },
     navigation: {
       Settings: ['site', 'seo'],
-      Home: ['faq'],
+      Home: ['home', 'faq'],
+      About: ['about', 'timeline'],
+      Services: ['services', 'booking'],
       Projects: ['projects', 'projectOverrides'],
     },
   },
@@ -130,6 +145,142 @@ export default config({
           }),
           { label: 'Questions', itemLabel: (props) => props.fields.question.value }
         ),
+      },
+    }),
+    home: singleton({
+      label: 'Home page',
+      path: 'content/home',
+      format: json,
+      schema: {
+        headline: fields.array(
+          fields.object({
+            word: fields.text({ label: 'Word', validation: required }),
+            accent: fields.checkbox({ label: 'Accent colour', defaultValue: false }),
+          }),
+          {
+            label: 'Hero headline',
+            description: 'One word per item; each word pops in on its own. A full stop is added after the last word.',
+            itemLabel: (props) => props.fields.word.value,
+          }
+        ),
+        lead: multiline('Hero introduction'),
+        detail: multiline('Hero second paragraph'),
+        config: fields.array(
+          fields.object({
+            key: fields.text({ label: 'Key', validation: required }),
+            value: fields.text({
+              label: 'Value',
+              description: 'Shown as code: include the quotes or brackets, e.g. "Bangkok, TH". Keep it under 60 characters so the typing animation stays short.',
+              validation: { isRequired: true, length: { max: 60 } },
+            }),
+          }),
+          { label: 'rachaphol.config.ts lines', itemLabel: (props) => props.fields.key.value }
+        ),
+        capabilities: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Name', validation: required }),
+            tools: fields.text({ label: 'Tools', description: 'Separate with " · ".', validation: required }),
+            evidence: multiline('Evidence'),
+            href: fields.text({ label: 'Link target', description: linkDescription, validation: required }),
+            link: fields.text({ label: 'Link text', validation: required }),
+          }),
+          { label: 'Capabilities', itemLabel: (props) => props.fields.name.value }
+        ),
+        aboutParagraphs: fields.array(multiline('Paragraph'), {
+          label: 'About section paragraphs',
+          itemLabel: (props) => props.value.slice(0, 60),
+        }),
+      },
+    }),
+    about: singleton({
+      label: 'About page',
+      path: 'content/about',
+      format: json,
+      schema: {
+        paragraphs: fields.array(multiline('Paragraph'), {
+          label: 'Introduction',
+          description: 'The first paragraph is shown larger.',
+          itemLabel: (props) => props.value.slice(0, 60),
+        }),
+        capabilities: titled('Capabilities'),
+      },
+    }),
+    timeline: singleton({
+      label: 'Career timeline',
+      path: 'content/timeline',
+      format: json,
+      schema: {
+        items: fields.array(
+          fields.object({
+            id: fields.text({
+              label: 'Anchor id',
+              description: 'Used in links such as /about#work-2. Changing it breaks those links.',
+              validation: { isRequired: true, pattern: { regex: /^[a-z0-9-]+$/, message: 'Lowercase letters, numbers and hyphens' } },
+            }),
+            type: fields.select({
+              label: 'Type',
+              options: TIMELINE_TYPES.map((value) => ({ label: value, value })),
+              defaultValue: 'work',
+            }),
+            title: fields.text({ label: 'Title', validation: required }),
+            organization: fields.text({ label: 'Organization', validation: required }),
+            location: fields.text({ label: 'Location' }),
+            date: fields.text({ label: 'Start (YYYY-MM)', validation: { isRequired: true, pattern: yearMonth } }),
+            endDate: fields.text({ label: 'End (YYYY-MM)', description: 'Leave empty for a current role.' }),
+            description: multiline('Description'),
+            highlights: textList('Highlights', 'Highlight'),
+            technologies: textList('Technologies', 'Technology'),
+            commit: fields.object(
+              {
+                hash: fields.text({ label: 'Commit hash', validation: required }),
+                message: fields.text({ label: 'Commit message', validation: required }),
+                world: fields.text({ label: 'Level-map world', description: 'e.g. 3-1', validation: required }),
+              },
+              { label: 'git log entry (home page)' }
+            ),
+          }),
+          {
+            label: 'Entries',
+            description: 'Shown newest first by start date.',
+            itemLabel: (props) => `${props.fields.title.value} — ${props.fields.organization.value}`,
+          }
+        ),
+      },
+    }),
+    services: singleton({
+      label: 'Services page',
+      path: 'content/services',
+      format: json,
+      schema: {
+        offers: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Title', validation: required }),
+            suitableFor: multiline('For'),
+            deliverable: multiline('You receive'),
+            features: textList('Features', 'Feature'),
+            exampleName: fields.text({ label: 'Example link text', validation: required }),
+            exampleHref: fields.text({ label: 'Example link target', description: linkDescription, validation: required }),
+          }),
+          { label: 'Offers', itemLabel: (props) => props.fields.title.value }
+        ),
+        process: titled('Process steps'),
+      },
+    }),
+    booking: singleton({
+      label: 'Booking page',
+      path: 'content/booking',
+      format: json,
+      schema: {
+        timeSlots: fields.array(
+          fields.object({
+            time: fields.text({ label: 'Length', description: 'e.g. 30 minutes', validation: required }),
+            type: fields.text({ label: 'Name', validation: required }),
+            description: fields.text({ label: 'Description', validation: required }),
+          }),
+          { label: 'Call lengths', itemLabel: (props) => props.fields.time.value }
+        ),
+        topics: titled('Topics'),
+        preparation: titled('Before we meet'),
       },
     }),
     projectOverrides: singleton({

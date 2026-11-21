@@ -1,0 +1,109 @@
+{
+  "items": [
+    {
+      "id": "work-1",
+      "type": "work",
+      "title": "Frontend Developer",
+      "organization": "Unixdev",
+      "location": "Bangkok, Thailand",
+      "date": "2025-02",
+      "endDate": "",
+      "description": "Design and implement innovative user-facing features that enhance digital product functionality and user experience. Architect modular, scalable code solutions with a focus on reusability and maintainability.",
+      "highlights": [
+        "Built and deployed web applications using React.js 19, Next.js 15 (App Router), and Tailwind CSS",
+        "Architect modular, scalable code solutions with focus on reusability and industry best practices",
+        "Facilitate cross-functional collaboration between design, development, and product management teams",
+        "Drive continuous technological innovation by researching and integrating emerging web technologies"
+      ],
+      "technologies": [
+        "React.js 19",
+        "Next.js 15",
+        "Tailwind CSS",
+        "Flutter",
+        "TypeScript"
+      ],
+      "commit": {
+        "hash": "f3e91c2",
+        "message": "feat: frontend developer @ unixdev",
+        "world": "3-1"
+      }
+    },
+    {
+      "id": "work-2",
+      "type": "work",
+      "title": "Full Stack Software Developer",
+      "organization": "Turfmapp",
+      "location": "Bangkok, Thailand",
+      "date": "2024-01",
+      "endDate": "2025-01",
+      "description": "Developed and maintained web applications using a comprehensive technology stack. Managed backend databases and integrated AI technologies including LLM and RAG systems.",
+      "highlights": [
+        "Developed web applications using React.js, Node.js, Express.js, Django, and Tailwind CSS",
+        "Managed backend databases with MongoDB and PostgreSQL ensuring data integrity",
+        "Deployed and optimized applications on DigitalOcean with Cloudflare",
+        "Integrated AI technologies including LLM and RAG systems to improve functionality",
+        "Utilized Postman for comprehensive API testing and documentation"
+      ],
+      "technologies": [
+        "React.js",
+        "Node.js",
+        "Express.js",
+        "Django",
+        "MongoDB",
+        "PostgreSQL",
+        "DigitalOcean",
+        "Cloudflare",
+        "LLM",
+        "RAG"
+      ],
+      "commit": {
+        "hash": "9b2d7a4",
+        "message": "feat: full stack developer @ turfmapp",
+        "world": "2-2"
+      }
+    },
+    {
+      "id": "edu-2",
+      "type": "education",
+      "title": "Coding Bootcamp",
+      "organization": "TechUp",
+      "location": "Bangkok, Thailand",
+      "date": "2023-06",
+      "endDate": "2023-10",
+      "description": "Intensive full-stack development bootcamp covering modern web development technologies and practices.",
+      "highlights": [
+        "HTML, CSS, JavaScript, Node.js, Express.js",
+        "MongoDB and PostgreSQL database management",
+        "Software testing methodologies",
+        "Hands-on project-based learning"
+      ],
+      "technologies": [],
+      "commit": {
+        "hash": "4c18e0b",
+        "message": "checkout -b software (techup bootcamp)",
+        "world": "2-1"
+      }
+    },
+    {
+      "id": "edu-1",
+      "type": "education",
+      "title": "Bachelor's Degree in Biological Sciences",
+      "organization": "Mahidol University",
+      "location": "Bangkok, Thailand",
+      "date": "2015-08",
+      "endDate": "2018-05",
+      "description": "Bachelor's degree in Biological Sciences with a strong foundation in analytical thinking and scientific methodology.",
+      "highlights": [
+        "Biology/Biological Sciences program",
+        "Strong analytical and problem-solving skills",
+        "Scientific research methodology"
+      ],
+      "technologies": [],
+      "commit": {
+        "hash": "0000001",
+        "message": "initial commit: b.sc. biological sciences",
+        "world": "1-1"
+      }
+    }
+  ]
+}
