@@ -7,10 +7,11 @@ import SkillsSection from '@/components/sections/SkillsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 import FaqSection from '@/components/sections/FaqSection'
+import { SEO } from '@/lib/content'
 import { OG_IMAGE, PERSON_SUMMARY } from '@/lib/seo'
 import type { Metadata } from 'next'
 
-const HOME_TITLE = 'Rachaphol Plookaom — Biologist turned Frontend Developer'
+const HOME_TITLE = SEO.homeTitle
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },

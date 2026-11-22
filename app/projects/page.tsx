@@ -2,14 +2,9 @@ import { ProjectList } from '@/components/sections/ProjectsSection'
 import { BreadcrumbStructuredData, ProjectsStructuredData } from '@/components/seo/structured-data'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { getProjects } from '@/lib/data/projects-data'
-import { pageMetadata } from '@/lib/seo'
+import { pageSeo } from '@/lib/seo'
 
-export const metadata = pageMetadata({
-  title: 'Projects',
-  description:
-    'Web and mobile projects by Rachaphol Plookaom, built with React, Next.js, TypeScript, Go and Flutter, with live demos and source code on GitHub.',
-  path: '/projects',
-})
+export const metadata = pageSeo('/projects')
 
 export default async function ProjectsPage() {
   const projects = await getProjects()

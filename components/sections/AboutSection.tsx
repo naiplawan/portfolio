@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { LevelMap } from '@/components/motion/LevelMap'
 import { RevealRows } from '@/components/motion/RevealRows'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { HOME } from '@/lib/content'
 import { cn } from '@/lib/utils/cn'
 import { formatTimelinePeriod, getTimelineSorted } from '@/lib/data/timeline-data'
 
@@ -16,17 +17,9 @@ export default function AboutSection() {
 
         <div className="grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-20">
           <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
-            <p>
-              I studied Biological Sciences at Mahidol University: titrations,
-              microscopes, lab notebooks. In 2023 I traded the bench for a
-              keyboard through an intensive bootcamp.
-            </p>
-            <p>
-              The method carried over. A bug is an unexpected result; a fix is a
-              controlled experiment. Today I build product interfaces with React,
-              Next.js and TypeScript, and work across Go APIs and Flutter apps
-              when the product calls for it.
-            </p>
+            {HOME.aboutParagraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
             <Link
               href="/about"
               className="ed-link inline-flex items-center gap-1 text-base text-foreground"

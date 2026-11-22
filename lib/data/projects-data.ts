@@ -1,33 +1,13 @@
 import { Project } from '../types/types';
 import { fetchProjectsFromGitHub } from '../utils/github-sync';
-import { FEATURED_PROJECTS } from './featured-projects';
+import { PROJECT_OVERRIDES as PROJECT_OVERRIDE_CONTENT } from '../content';
+import { CURATED_PROJECTS, FEATURED_PROJECTS } from './featured-projects';
 
 // GitHub username from environment variable
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'naiplawan';
 
-// Curated projects used by the portfolio.
-const FALLBACK_PROJECTS: readonly Project[] = [
-  ...FEATURED_PROJECTS,
-  {
-    id: 9999,
-    title: 'ByteTrack',
-    description:
-      'A bilingual calorie-tracking frontend demo with Thai food search, daily summaries and browser-local storage.',
-    problemStatement:
-      'People tracking their nutrition need a quick way to log food and understand their daily progress without navigating a complicated interface.',
-    solution:
-      'Built a responsive Next.js frontend with Thai/English interfaces, food search and a localStorage-backed demo data layer.',
-    image: '/assets/byte-track.png',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'localStorage'],
-    githubUrl: 'https://github.com/naiplawan/bytetrack',
-    liveUrl: 'https://bytetrack-vert.vercel.app/',
-    highlights: ['Intuitive UI', 'Real-time Tracking', 'Personalized Insights', 'Cross-platform'],
-    category: 'wellness',
-    status: 'live',
-    featured: true,
-    completedYear: 2025,
-  },
-] as const;
+// Curated projects used by the portfolio (Keystatic: Projects → Curated projects).
+const FALLBACK_PROJECTS = CURATED_PROJECTS;
 
 interface ProjectOverride {
   /** Product name when it differs from the repo name */
@@ -38,27 +18,20 @@ interface ProjectOverride {
 }
 
 /**
- * Corrections on top of GitHub repo metadata, keyed by repo name (lowercase).
- * Live URLs come from the Vercel project list (`vercel project ls`), checked 2026-10-11.
+ * Corrections on top of GitHub repo metadata, keyed by repo name (lowercase),
+ * edited in Keystatic (Projects → GitHub corrections).
  */
-const PROJECT_OVERRIDES: Readonly<Record<string, ProjectOverride>> = {
-  'layer-3d': {
-    title: 'Layer 3D',
-    description:
-      'Website for Layer, a Bangkok 3D-printing service: prototypes, finished parts and small production runs, quoted over LINE in about 10 minutes.',
-    liveUrl: 'https://layer-3d.vercel.app',
-  },
-  'rob-ban': {
-    title: 'Rob Baan',
-    description:
-      "Rob Baan (รอบบ้าน): a wildlife dex for Bangkok's public parks. Spot the animals and plants around you and collect them like a field guide.",
-    liveUrl: 'https://rob-baan.vercel.app',
-  },
-  // No longer deployed: the GitHub homepages point at dead URLs
-  'kiddugorn-backend': { liveUrl: null },
-  'to-do-list-next-js': { liveUrl: null },
-  'tourist-attraction-webpage': { liveUrl: null },
-};
+const PROJECT_OVERRIDES: Readonly<Record<string, ProjectOverride>> = Object.fromEntries(
+  PROJECT_OVERRIDE_CONTENT.items.map(({ repo, title, description, liveUrl }) => [
+    repo,
+    {
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(liveUrl.discriminant === 'replace' && { liveUrl: liveUrl.value }),
+      ...(liveUrl.discriminant === 'remove' && { liveUrl: null }),
+    },
+  ])
+);
 
 const repoName = (githubUrl: string) => githubUrl.replace(/\/+$/, '').split('/').pop()?.toLowerCase() ?? '';
 

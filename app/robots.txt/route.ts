@@ -1,7 +1,8 @@
 import { SITE_URL } from '@/lib/constants';
 
 /**
- * Search engines and AI answer engines are welcome everywhere except the API.
+ * Search engines and AI answer engines are welcome everywhere except the API
+ * and the content admin.
  * AI crawlers are listed explicitly so the opt-in is unambiguous (GEO); all
  * user agents in one group share the same rules (RFC 9309).
  */
@@ -25,6 +26,7 @@ export function GET() {
 ${AI_CRAWLERS.map((bot) => `User-agent: ${bot}`).join('\n')}
 Allow: /
 Disallow: /api/
+Disallow: /keystatic
 
 Sitemap: ${SITE_URL}/sitemap.xml
 `;

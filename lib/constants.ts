@@ -1,19 +1,22 @@
-// Social Media Links
+// Raw JSON on purpose: client components (NavBar, contact form) import these
+// constants, and zod should not ship to the browser. `lib/content` validates the
+// same file on the server at build time and in the content tests.
+import SITE from '@/content/site.json';
+
+// Social Media Links (edited in Keystatic: Site & contact)
 export const SOCIAL_LINKS = {
-  github: 'https://github.com/naiplawan',
-  linkedin: 'https://www.linkedin.com/in/rachaphol-plookaom',
-  facebook: 'https://www.facebook.com/mos.jrpt',
-  email: 'rachaphol.plo@gmail.com',
+  github: SITE.github,
+  linkedin: SITE.linkedin,
+  facebook: SITE.facebook,
+  email: SITE.email,
 } as const;
 
-// Professional Information
+// Professional Information (edited in Keystatic: Site & contact)
 export const PROFESSIONAL_INFO = {
-  name: 'Rachaphol Plookaom',
-  title: 'Frontend Developer',
-  company: 'Unixdev Co., Ltd.',
-  location: 'Bangkok, Thailand',
-  experience: '3+',
-  technologies: '20+',
+  name: SITE.name,
+  title: SITE.jobTitle,
+  company: SITE.company,
+  location: SITE.location,
 } as const;
 
 // Site URLs
@@ -48,7 +51,7 @@ export const EMPLOYMENT = {
     type: 'On-site',
   },
   previous: {
-    title: 'Junior Full Stack Software Developer',
+    title: 'Full Stack Software Developer',
     company: 'Turfmapp',
     period: 'Jan 2024 - Jan 2025',
   },

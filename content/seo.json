@@ -1,0 +1,68 @@
+{
+  "personSummary": "Rachaphol Plookaom is a Bangkok-based frontend developer at Unixdev Co., Ltd. who moved into software from biology: a B.Sc. in Biological Sciences from Mahidol University, then the TechUp coding bootcamp in 2023.",
+  "homeTitle": "Rachaphol Plookaom — Biologist turned Frontend Developer",
+  "defaultTitle": "Rachaphol Plookaom — Frontend Developer",
+  "defaultDescription": "Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products with React, Next.js, TypeScript, Go, and Flutter.",
+  "socialDescription": "Biologist turned frontend developer in Bangkok, building fast, accessible web and mobile products.",
+  "keywords": [
+    "frontend developer",
+    "React developer",
+    "Next.js developer",
+    "TypeScript",
+    "Go developer",
+    "Flutter",
+    "performance optimization",
+    "web development",
+    "software engineer",
+    "Unixdev",
+    "Bangkok developer",
+    "portfolio",
+    "hire developer"
+  ],
+  "knowsAbout": [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "GSAP",
+    "Go",
+    "Go Fiber",
+    "Node.js",
+    "Python",
+    "Django",
+    "Flutter",
+    "Dart",
+    "PostgreSQL",
+    "Web performance",
+    "Accessibility",
+    "Biological Sciences"
+  ],
+  "manifestDescription": "Experienced fullstack developer specializing in React, Next.js, Node.js, Python, and AI integration.",
+  "pages": [
+    {
+      "path": "/about",
+      "title": "About",
+      "description": "About Rachaphol Plookaom: B.Sc. Biological Sciences at Mahidol University, TechUp coding bootcamp in 2023, now a frontend developer at Unixdev in Bangkok."
+    },
+    {
+      "path": "/projects",
+      "title": "Projects",
+      "description": "Web and mobile projects by Rachaphol Plookaom, built with React, Next.js, TypeScript, Go and Flutter, with live demos and source code on GitHub."
+    },
+    {
+      "path": "/services",
+      "title": "Services",
+      "description": "Business websites, interactive web products and connected business tools by Rachaphol Plookaom. Clear deliverables, relevant project examples and a scoped handoff."
+    },
+    {
+      "path": "/booking",
+      "title": "Book a call",
+      "description": "Book a 15 to 60 minute call with Rachaphol Plookaom to discuss a project, a collaboration or a technical review. Replies usually within 24 hours."
+    },
+    {
+      "path": "/contact",
+      "title": "Contact",
+      "description": "Contact Rachaphol Plookaom, a frontend developer in Bangkok, about freelance projects or full-time roles by email, phone or the contact form."
+    }
+  ]
+}

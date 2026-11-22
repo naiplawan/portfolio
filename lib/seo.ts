@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { EDUCATION, PROFESSIONAL_INFO, SITE_URL, SOCIAL_LINKS } from './constants';
+import { SEO } from './content';
+import type { SeoPagePath } from './content/schemas';
 
 /** Stable JSON-LD node ids so every page describes the same entities. */
 export const SCHEMA_IDS = {
@@ -9,27 +11,9 @@ export const SCHEMA_IDS = {
 } as const;
 
 /** One-sentence, citable summary reused by meta descriptions, JSON-LD and llms.txt. */
-export const PERSON_SUMMARY =
-  'Rachaphol Plookaom is a Bangkok-based frontend developer at Unixdev Co., Ltd. who moved into software from biology: a B.Sc. in Biological Sciences from Mahidol University, then the TechUp coding bootcamp in 2023.';
+export const PERSON_SUMMARY = SEO.personSummary;
 
-export const KNOWS_ABOUT = [
-  'React',
-  'Next.js',
-  'TypeScript',
-  'Tailwind CSS',
-  'GSAP',
-  'Go',
-  'Go Fiber',
-  'Node.js',
-  'Python',
-  'Django',
-  'Flutter',
-  'Dart',
-  'PostgreSQL',
-  'Web performance',
-  'Accessibility',
-  'Biological Sciences',
-];
+export const KNOWS_ABOUT = SEO.knowsAbout;
 
 /** Page-level `openGraph` replaces the layout's, so each page names the shared card image. */
 export const OG_IMAGE = '/opengraph-image';
@@ -53,6 +37,13 @@ export function pageMetadata({ title, description, path }: PageMetadataInput): M
     openGraph: { title: fullTitle, description, url: path, type: 'website', images: [OG_IMAGE] },
     twitter: { card: 'summary_large_image', title: fullTitle, description, images: [OG_IMAGE] },
   };
+}
+
+/** Metadata for a page whose title and description are edited in Keystatic (SEO → Pages). */
+export function pageSeo(path: SeoPagePath): Metadata {
+  const page = SEO.pages.find((entry) => entry.path === path);
+  if (!page) throw new Error(`Missing SEO entry for ${path} in content/seo.json`);
+  return pageMetadata(page);
 }
 
 /** Person + WebSite graph, rendered once in the root layout. */
